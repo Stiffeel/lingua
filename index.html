@@ -77,8 +77,8 @@ button{background:none;border:none;padding:0;cursor:pointer}
 /* ---------- cards / text ---------- */
 .card{border:1px solid var(--line);border-radius:16px;padding:22px 20px;background:var(--bg);box-shadow:var(--sh)}
 .sent{font-size:24px;line-height:1.62;font-weight:500;letter-spacing:.005em;word-break:break-word}
-.sent .w{cursor:pointer;border-bottom:1px solid transparent;padding:1px 0;border-radius:2px}
-.sent .w:active,.sent .w.on{background:var(--soft);border-bottom-color:var(--fg3)}
+.w{cursor:pointer;border-bottom:1px solid transparent;padding:1px 0;border-radius:2px}
+.w:active,.w.on{background:rgba(128,128,128,.18);border-bottom-color:var(--fg2)}
 .tb{font-family:"Noto Serif Tibetan","Kailasa","Microsoft Himalaya",serif;font-size:26px;line-height:2.1}
 .ar{font-family:"Noto Sans Arabic","Geeza Pro",serif;font-size:25px;line-height:2;direction:rtl;text-align:right}
 .jp{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
@@ -268,19 +268,186 @@ const LS = {
 
 const CFG_DEFAULT = {
   key: '', model: 'gpt-4.1', azKey: '', azReg: 'westeurope',
-  diff: {},        // 每种语言的难度微调，整数，0 = 基准
-  boPron: '',      // 用户自定义的安多话注音标准（样例对照表）
-  autoSpeak: false // 场景对话自动朗读
+  diff: {},         // 每种语言的难度微调，整数，0 = 基准
+  boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
+  autoSpeak: false, // 场景对话自动朗读
+  cardCap: 0        // 卡片上限，0 = 不限；超出时只回收已勾选「已添加」的旧卡片
 };
 const S = {
   cfg: Object.assign({}, CFG_DEFAULT, LS.get('lg.cfg', {})),
-  cards: LS.get('lg.cards', []),
+  cards: [],
+  seen: {},         // 每种语言最近读过的句子（难度基准线）
   trash: null,
-  stack: []
+  stack: [],
+  store: 'ls'       // 'idb' | 'ls'
 };
 if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
-const saveCfg = () => LS.set('lg.cfg', S.cfg);
-const saveCards = () => LS.set('lg.cards', S.cards);
+
+/* ---------------- 本地存储：IndexedDB 为主，localStorage 兜底 ----------------
+   iPhone 上两者都存在设备本地、不上云。选 IndexedDB 是因为 localStorage 在
+   WebKit 上只有约 5 MB，而 IndexedDB 的配额是磁盘容量的一个百分比，且可以
+   通过 navigator.storage.persist() 申请「持久化」，从而免于系统的存储回收。 */
+const DB_NAME = 'yulengua', DB_STORE = 'kv';
+let dbPromise = null;
+function openDB() {
+  if (dbPromise) return dbPromise;
+  dbPromise = new Promise((res, rej) => {
+    if (!window.indexedDB) { rej(new Error('no-idb')); return; }
+    let r;
+    try { r = indexedDB.open(DB_NAME, 1); } catch (e) { rej(e); return; }
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains(DB_STORE)) d.createObjectStore(DB_STORE);
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error || new Error('idb-open'));
+    r.onblocked = () => rej(new Error('idb-blocked'));
+    setTimeout(() => rej(new Error('idb-timeout')), 6000);
+  });
+  dbPromise.catch(() => { dbPromise = null; });
+  return dbPromise;
+}
+function idb(mode, fn) {
+  return openDB().then(d => new Promise((res, rej) => {
+    let tx;
+    try { tx = d.transaction(DB_STORE, mode); } catch (e) { rej(e); return; }
+    let out;
+    try { out = fn(tx.objectStore(DB_STORE)); } catch (e) { rej(e); return; }
+    tx.oncomplete = () => res(out && typeof out === 'object' && 'result' in out ? out.result : out);
+    tx.onerror = () => rej(tx.error);
+    tx.onabort = () => rej(tx.error);
+  }));
+}
+const idbGet = k => idb('readonly', st => st.get(k));
+const idbSet = (k, v) => idb('readwrite', st => { st.put(v, k); });
+
+function lsWrite(key, val) {
+  if (key === 'cards') LS.set('lg.cards', val);
+  else if (key === 'cfg') LS.set('lg.cfg', val);
+  else if (key === 'seen') LK.forEach(k => LS.set('lg.seen.' + k, val[k] || []));
+}
+function persistKey(key, val) {
+  if (S.store === 'idb') {
+    idbSet(key, val).catch(() => { S.store = 'ls'; try { lsWrite(key, val); } catch (e) {} });
+  } else lsWrite(key, val);
+}
+const saveCards = () => persistKey('cards', S.cards);
+const saveSeen = () => persistKey('seen', S.seen);
+/* cfg 很小，额外在 localStorage 留一份镜像，保证首屏不用等 IndexedDB 就能读到设置 */
+const saveCfg = () => { LS.set('lg.cfg', S.cfg); persistKey('cfg', S.cfg); };
+
+let persistState = 'unknown';
+async function requestPersist() {
+  try {
+    if (!navigator.storage) { persistState = 'unsupported'; return; }
+    if (navigator.storage.persisted && await navigator.storage.persisted()) { persistState = 'granted'; return; }
+    if (navigator.storage.persist) persistState = (await navigator.storage.persist()) ? 'granted' : 'denied';
+    else persistState = 'unsupported';
+  } catch (e) { persistState = 'unsupported'; }
+}
+async function storageInfo() {
+  let used = null, quota = null;
+  try {
+    if (navigator.storage && navigator.storage.estimate) {
+      const e = await navigator.storage.estimate();
+      used = e.usage; quota = e.quota;
+    }
+  } catch (e) {}
+  return { used: used, quota: quota, persist: persistState, store: S.store };
+}
+function fmtBytes(n) {
+  if (n == null) return '未知';
+  if (n < 1024) return n + ' B';
+  if (n < 1048576) return (n / 1024).toFixed(0) + ' KB';
+  if (n < 1073741824) return (n / 1048576).toFixed(1) + ' MB';
+  return (n / 1073741824).toFixed(2) + ' GB';
+}
+
+async function loadAll() {
+  try { await openDB(); S.store = 'idb'; } catch (e) { S.store = 'ls'; }
+
+  if (S.store === 'idb') {
+    try {
+      const cfg = await idbGet('cfg');
+      const cards = await idbGet('cards');
+      const seen = await idbGet('seen');
+      if (cfg) S.cfg = Object.assign({}, CFG_DEFAULT, cfg);
+      if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
+
+      if (Array.isArray(cards)) S.cards = cards;
+      else {                                    // 首次运行：从 localStorage 迁移
+        const old = LS.get('lg.cards', null);
+        S.cards = Array.isArray(old) ? old : [];
+        await idbSet('cards', S.cards);
+      }
+      if (seen && typeof seen === 'object') S.seen = seen;
+      else {
+        const o = {};
+        LK.forEach(k => { const v = LS.get('lg.seen.' + k, null); if (Array.isArray(v)) o[k] = v; });
+        S.seen = o;
+        await idbSet('seen', o);
+      }
+      if (!cfg) await idbSet('cfg', S.cfg);
+      /* 迁移完成后清掉 localStorage 里的大块数据，把那 5 MB 让出来 */
+      try {
+        localStorage.removeItem('lg.cards');
+        LK.forEach(k => localStorage.removeItem('lg.seen.' + k));
+      } catch (e) {}
+    } catch (e) { S.store = 'ls'; }
+  }
+  if (S.store === 'ls') {
+    S.cards = LS.get('lg.cards', []);
+    S.seen = {};
+    LK.forEach(k => { S.seen[k] = LS.get('lg.seen.' + k, []); });
+  }
+  if (!Array.isArray(S.cards)) S.cards = [];
+  if (!S.seen || typeof S.seen !== 'object') S.seen = {};
+  requestPersist();
+}
+
+/* 卡片上限：只回收已勾选「已添加」的旧卡片，未添加的永远不动 */
+function trimCards() {
+  const cap = S.cfg.cardCap | 0;
+  if (!cap || S.cards.length <= cap) return 0;
+  let over = S.cards.length - cap, removed = 0;
+  for (let i = S.cards.length - 1; i >= 0 && over > 0; i--) {
+    if (S.cards[i].added) { S.cards.splice(i, 1); over--; removed++; }
+  }
+  return removed;
+}
+
+function exportBackup() {
+  const data = { app: 'yulengua', v: 1, ts: Date.now(), cfg: S.cfg, cards: S.cards, seen: S.seen };
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'yulengua-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast('已导出 ' + S.cards.length + ' 张卡片');
+}
+function importBackup(input) {
+  const f = input.files && input.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const d = JSON.parse(rd.result);
+      if (!d || !Array.isArray(d.cards)) throw new Error('不是 Yulengua 备份文件');
+      if (!confirm('导入 ' + d.cards.length + ' 张卡片？\n同一句子的卡片会被备份里的版本覆盖，其余保留。')) return;
+      const m = new Map(S.cards.map(c => [c.lang + '|' + c.front, c]));
+      d.cards.forEach(c => { if (c && c.front) m.set(c.lang + '|' + c.front, c); });
+      S.cards = Array.from(m.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      if (d.seen && typeof d.seen === 'object') S.seen = Object.assign({}, S.seen, d.seen);
+      if (d.cfg) { S.cfg = Object.assign({}, CFG_DEFAULT, d.cfg); saveCfg(); }
+      saveCards(); saveSeen();
+      render(); toast('已导入，现有 ' + S.cards.length + ' 张卡片');
+    } catch (e) { toast('导入失败 · ' + e.message); }
+  };
+  rd.readAsText(f);
+  input.value = '';
+}
 
 /* ---------------- languages ---------------- */
 const LANGS = {
@@ -317,6 +484,88 @@ const LANGS = {
 };
 const LK = ['nl', 'bo', 'kk', 'es', 'ja'];
 const scriptCls = k => k === 'bo' ? 'tb' : (k === 'ja' ? 'jp' : '');
+
+/* ================= 哈萨克语：西里尔 → 新疆哈萨克文（töte jazu）=================
+   纯算法转换，不经过 AI。托特文正字法的关键规则：
+   1. 前元音 ә/ө/ү/і 与后元音 а/о/ұ/ы 共用同一个字母（ا و ۇ ى），
+      靠词首的软音符 ٴ (U+0674) 标记整个词读前元音；
+   2. 若词中已含 е/э（ە）或 к/г（ك گ），前元音身份已经确定，就不写软音符；
+   3. ъ/ь 不写。
+   转换结果已与另一套独立实现做过差分验证，并有 29 个已知词形的定点断言。 */
+const KK_C2A = {
+  'а': 'ا', 'ә': 'ا', 'б': 'ب', 'в': 'ۆ', 'г': 'گ', 'ғ': 'غ', 'д': 'د', 'е': 'ە', 'ё': 'يو',
+  'ж': 'ج', 'з': 'ز', 'и': 'ي', 'й': 'ي', 'к': 'ك', 'қ': 'ق', 'л': 'ل', 'м': 'م', 'н': 'ن',
+  'ң': 'ڭ', 'о': 'و', 'ө': 'و', 'п': 'پ', 'р': 'ر', 'с': 'س', 'т': 'ت', 'у': 'ۋ', 'ұ': 'ۇ',
+  'ү': 'ۇ', 'ф': 'ف', 'х': 'ح', 'һ': 'ھ', 'ц': 'تس', 'ч': 'چ', 'ш': 'ش', 'щ': 'شش',
+  'ъ': '', 'ы': 'ى', 'і': 'ى', 'ь': '', 'э': 'ە', 'ю': 'يۋ', 'я': 'يا'
+};
+const KK_C2L = {
+  'а': 'a', 'ә': 'ä', 'б': 'b', 'в': 'v', 'г': 'g', 'ғ': 'ğ', 'д': 'd', 'е': 'e', 'ё': 'yo',
+  'ж': 'j', 'з': 'z', 'и': 'ï', 'й': 'y', 'к': 'k', 'қ': 'q', 'л': 'l', 'м': 'm', 'н': 'n',
+  'ң': 'ñ', 'о': 'o', 'ө': 'ö', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ұ': 'ū',
+  'ү': 'ü', 'ф': 'f', 'х': 'h', 'һ': 'h', 'ц': 'ts', 'ч': 'ç', 'ш': 'ş', 'щ': 'şş',
+  'ъ': '', 'ы': 'ı', 'і': 'i', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+};
+const KK_THIN = 'әөүі';       // 前元音，需要软音符
+const KK_IMPLICIT = 'еэкг';   // 出现即可判定为前元音词，无需软音符
+const KK_HAMZA = 'ٴ';
+const KK_CYR_WORD = /[Ѐ-ԯ]+/g;
+
+function kkMapWord(w, table, useHamza) {
+  const low = w.toLowerCase();
+  let out = '';
+  for (const ch of low) out += (table[ch] !== undefined ? table[ch] : ch);
+  if (!useHamza) return out;
+  const cs = Array.from(low);
+  const need = cs.some(c => KK_THIN.indexOf(c) > -1) && !cs.some(c => KK_IMPLICIT.indexOf(c) > -1);
+  return (need ? KK_HAMZA : '') + out;
+}
+const kkArab = t => String(t == null ? '' : t).replace(KK_CYR_WORD, w => kkMapWord(w, KK_C2A, true));
+const kkLat = t => String(t == null ? '' : t).replace(KK_CYR_WORD, w => kkMapWord(w, KK_C2L, false));
+const hasCyr = t => /[Ѐ-ԯ]/.test(String(t == null ? '' : t));
+
+/* 详解后处理：让每一处哈萨克语都同时有西里尔和托特文两种写法。
+   连续的西里尔词（只以单个空格相连）作为一个整体转换；绝不跨行、
+   也不越过标点，否则会把答案线 --- 一起吞进括号里。 */
+const KK_RUN = /[Ѐ-ԯ]+(?:[-'’][Ѐ-ԯ]+)*(?: [Ѐ-ԯ]+(?:[-'’][Ѐ-ԯ]+)*)*/g;
+
+function kkDualInline(t) {
+  return t.replace(KK_RUN, (run, off, whole) => {
+    const after = whole.slice(off + run.length);
+    if (/^\s*（\s*[؀-ۿٴ]/.test(after)) return run;   // 已经并排过
+    return run + '（' + kkArab(run) + '）';
+  });
+}
+/* 答案线之前的原句独占一行，托特文另起一行写，比塞进括号好读 */
+function kkDualHead(head) {
+  const lines = head.split('\n');
+  for (let n = lines.length - 1; n >= 0; n--) {
+    if (hasCyr(lines[n])) { lines.splice(n + 1, 0, kkArab(lines[n])); break; }
+  }
+  return lines.join('\n');
+}
+function kkDual(text) {
+  const src = String(text == null ? '' : text);
+  const i = src.search(/^---[ \t]*$/m);
+  if (i < 0) return kkDualInline(src);
+  return kkDualHead(src.slice(0, i)) + kkDualInline(src.slice(i));
+}
+
+/* 逐字母对照表：完全本地生成，不依赖 AI */
+function kkLetterRows(word) {
+  const rows = [];
+  Array.from(String(word || '').toLowerCase()).forEach(ch => {
+    if (!/[Ѐ-ԯ]/.test(ch)) return;
+    const ar = KK_C2A[ch];
+    if (ar === undefined) return;
+    let note = '';
+    if (ar === '') note = '不单独书写';
+    else if (ar.length > 1) note = '写作两个字母的组合';
+    else if (KK_THIN.indexOf(ch) > -1) note = '与其后元音共用同一字母，靠词首软音符 ٴ 区分';
+    rows.push({ cy: ch, ar: ar, lat: KK_C2L[ch] || '', note: note });
+  });
+  return rows;
+}
 
 /* ---------------- dom helpers ---------------- */
 const $ = id => document.getElementById(id);
@@ -407,7 +656,16 @@ let voicesReady = false;
 function loadVoices() { try { speechSynthesis.getVoices(); voicesReady = true; } catch (e) {} }
 if (window.speechSynthesis) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
 
+/* 合成好的音频只留在内存里，上限 30 条，超出就回收最早的，不占设备存储 */
 const audioCache = new Map();
+function cacheAudio(ck, url) {
+  audioCache.set(ck, url);
+  while (audioCache.size > 30) {
+    const first = audioCache.keys().next().value;
+    try { URL.revokeObjectURL(audioCache.get(first)); } catch (e) {}
+    audioCache.delete(first);
+  }
+}
 
 function pickVoice(code) {
   const vs = speechSynthesis.getVoices() || [];
@@ -523,7 +781,7 @@ async function apiSpeak(text, btn) {
     }
     if (blob) {
       const url = URL.createObjectURL(blob);
-      audioCache.set(ck, url);
+      cacheAudio(ck, url);
       playUrl(url);
       if (why) toast('Azure 失败，已改用 OpenAI 语音 · ' + why);
     } else {
@@ -605,6 +863,11 @@ const NL_GENDER_RULE =
 
 const ES_GENDER_RULE = '【西班牙语词性标注规则】名词必须标出 el / la 及性数，不需要高亮。';
 
+/* 哈萨克语一律只写西里尔字母：新疆哈萨克文（托特文）由应用按正字法算法生成，
+   模型自己拼阿拉伯字母几乎必错，所以彻底禁止。 */
+const KK_CYR_ONLY = '【哈萨克语书写规则 —— 硬性要求】所有哈萨克语内容一律【只写哈萨克斯坦西里尔字母】。' +
+  '绝对不要输出任何阿拉伯字母 / 新疆哈萨克文（töte jazu）/ 拉丁转写——这些由应用按正字法规则自动生成并排显示，你写了反而会冲突。';
+
 /* 用户自定义的安多话注音标准 */
 function boPronRule() {
   const t = (S.cfg.boPron || '').trim();
@@ -635,7 +898,7 @@ function diffRule(k) {
 function sentencePrompt(k, avoid) {
   const L = LANGS[k];
   let extra = '';
-  if (k === 'kk') extra = '\n"text" 用哈萨克斯坦西里尔字母哈萨克文；"alt" 用中国新疆的阿拉伯字母哈萨克文（töte jazu）书写同一句；"translit" 用拉丁注音（哈萨克斯坦官方拉丁转写风格）。"tokens" 为 "text" 的西里尔词切分。';
+  if (k === 'kk') extra = '\n' + KK_CYR_ONLY + '\n"tokens" 为西里尔词切分。"alt" 和 "translit" 一律留空字符串。';
   if (k === 'bo') extra = '\n"text" 用藏文字母书写；"translit" 给出这句话的安多口语注音。' + boPronRule() +
     '\n"tokens" 为按词切分，每个 token 末尾保留音节点 ་（句末保留 །）。';
   if (k === 'ja') extra = '\n"translit" 给出全句假名读音 + 罗马字。"tokens" 按词（含助词单独成词）切分，拼接后须等于 "text"。';
@@ -668,11 +931,8 @@ function wordPrompt(k, word, sentence) {
     '\n若为名词，"gender" 填 "de" 或 "het"，forms 给出复数与（若有）指小形式；若为动词，forms 必须给出：现在时全人称、过去时单复数、过去分词（并注明完成时助动词 hebben/zijn）、以及是否可分动词。若为形容词，说明变格规则。';
   if (k === 'es') g = ES_GENDER_RULE +
     '\n若为名词，"gender" 填 "el" 或 "la"，forms 给出单复数；若为动词，forms 必须给出：不定式、现在时全人称（yo/tú/él/nosotros/vosotros/ellos）、简单过去时、未完成过去时、以及（如常用）虚拟式现在时和过去分词。';
-  if (k === 'kk') {
-    g = '"translit" 给出该词的拉丁注音，"alt" 给出该词的阿拉伯字母哈萨克文（新疆 töte jazu）写法。' +
-      '若为动词，forms 给出词根与常见时态人称变化；若为名词，forms 给出常见格变化或领属形式。';
-    extraJson = ',"letters":[{"cy":"西里尔字母","ar":"对应的新疆哈萨克阿拉伯字母（写基本独立形，不要加连接符）","lat":"拉丁转写","note":"可留空；仅在有特别之处时写一句，如「只与右侧相连」「表示元音 ü」"}]';
-  }
+  if (k === 'kk') g = KK_CYR_ONLY + '\n"alt" 和 "translit" 一律留空字符串（应用会自己算）。' +
+    '\n若为动词，forms 给出词根与常见时态人称变化；若为名词，forms 给出常见格变化或领属形式。';
   if (k === 'bo') g = '"translit" 给出该词的安多口语注音。' + boPronRule() +
     '\nforms 说明该词的语法功能（如助动词、格助词、动词的时态形式等）。';
   if (k === 'ja') g = '"translit" 给出假名读音 + 罗马字。若为动词，forms 给出词类（一段/五段/サ变）、ます形、て形、た形、否定形；若为形容词，给出い/な类别与变形。';
@@ -687,8 +947,7 @@ function wordPrompt(k, word, sentence) {
         '"forms":[{"k":"标签","v":"内容"}],"note":"详细解释：构词法、用法搭配、易混淆点、在本句中的语法作用。用中文书写，可分行，控制在 300 字以内。"' +
         extraJson + '}' +
         '\nforms 是数组，每项 {"k":"如 现在时","v":"如 ik kom | jij komt | hij komt | wij komen"}；若该词无需变位则给空数组 []。' +
-        (k === 'kk' ? '\n"letters" 必须按该词【西里尔拼写的字母顺序】逐个列出，每个字母一项，不要跳过任何字母（包括元音）。' +
-          '若某个西里尔字母在新疆哈萨克文里对应两个字符或不单独对应，在 note 里说明。' : '')
+        ''
     }
   ];
 }
@@ -717,7 +976,7 @@ const DETAIL_SPEC = `【输出格式规范（必须严格遵守）】
    荷兰语：名词必须标 de-woord / het-woord 与复数。【只有 het-woord 要加高亮】（如 [T#!!fedcb6#het-woord]），de-woord 直接写出、不加任何高亮。动词必须给出现在时人称变位、过去时、过去分词，并说明可分/不可分前缀与完成时助动词。
    西班牙语：名词必须标 el/la 与性数（不加高亮）；动词必须给出不定式与相关时态的人称变位表。
    日语：动词标词类与ます形/て形/た形；助词单独解释。
-   哈萨克语：给出词根、附加成分拆解、以及拉丁注音。
+   哈萨克语：给出词根与附加成分拆解。只写西里尔字母，不要写阿拉伯字母或拉丁转写。
    藏语（安多）：给出安多口语注音，并说明助词/助动词的作用。
 6. 若能自然带出同类构词规律，可以补一小组同类词举例（3–8 条），这是本格式的特色。
 7. 全部解释用中文。不要写「以下是解析」之类的开场白，直接从中文翻译开始。
@@ -772,6 +1031,7 @@ function detailPrompt(k, sent, qa) {
         (sent.translit ? '\n（注音）：' + sent.translit : '') +
         '\n参考翻译：' + sent.zh + ctx +
         (k === 'bo' ? '\n\n' + boPronRule() : '') +
+        (k === 'kk' ? '\n\n' + KK_CYR_ONLY : '') +
         '\n\n' + DETAIL_SPEC + '\n\n' + DETAIL_SAMPLE
     }
   ];
@@ -801,7 +1061,8 @@ function lookupPrompt(q) {
         '候选语言只有这五种：荷兰语(nl)、安多藏语(bo)、哈萨克语(kk)、西班牙语(es)、日语(ja)。\n' +
         '用户可能输入：目标语言的词（可能拼写有误、变位形式、或只是词的一部分）、中文、英文、罗马字/拉丁注音、假名、西里尔或阿拉伯字母哈萨克文、藏文。\n' +
         '请返回 1–5 个最可能的匹配（跨语言混合，按可能性排序）。若输入是中文/英文，则给出各语言中对应的词。\n\n' +
-        '输出 JSON：{"items":[{"lang":"nl|bo|kk|es|ja","word":"该语言的词（原形）","alt":"哈萨克语给阿拉伯字母写法，否则空","translit":"哈/藏/日给注音，否则空","pos":"词性（中文）","gender":"荷兰语 de/het，西班牙语 el/la，否则空","zh":"中文释义","en":"英文释义（荷/西必填，其余可空）","forms":["最多3条：动词给原形与关键变位、名词给复数或格变化"],"example":{"text":"一个简短例句","zh":"中文翻译"}}]}\n' +
+        KK_CYR_ONLY + '（用户即使用阿拉伯字母哈萨克文来查询，你也要在 word 里回西里尔形式。）\n\n' +
+        '输出 JSON：{"items":[{"lang":"nl|bo|kk|es|ja","word":"该语言的词（原形，哈萨克语用西里尔）","alt":"一律留空","translit":"藏/日给注音，否则空","pos":"词性（中文）","gender":"荷兰语 de/het，西班牙语 el/la，否则空","zh":"中文释义","en":"英文释义（荷/西必填，其余可空）","forms":["最多3条：动词给原形与关键变位、名词给复数或格变化"],"example":{"text":"一个简短例句","zh":"中文翻译"}}]}\n' +
         '保持轻量：释义简短，例句一句，forms 最多 3 条。'
     }
   ];
@@ -830,6 +1091,7 @@ function wordCardPrompt(item, qa) {
         (item.lang === 'nl' ? '\n\n' + NL_GENDER_RULE : '') +
         (item.lang === 'es' ? '\n\n' + ES_GENDER_RULE : '') +
         (item.lang === 'bo' ? '\n\n' + boPronRule() : '') +
+        (item.lang === 'kk' ? '\n\n' + KK_CYR_ONLY : '') +
         '\n\n【输出格式】\n第一行：中文释义（简短）\n空行\n第二行：' + L.zh + '单词本身\n空行\n--- 单独成行\n' +
         '之后是解析：词性、（荷/西）冠词与性、变位或变格、构词法、常见搭配、1–2 个例句（带中文翻译）、以及同类词规律举例。\n' +
         '可用 [T#!d16056#文字] 字体高亮 与 [T#!!fff895#文字] 背景高亮，全篇 1–4 处。\n' +
@@ -848,9 +1110,16 @@ function dlgOpenPrompt(k, topic) {
         '设计一个' + L.zh + '（' + L.dialogue + '水平）的情景对话练习。用户给的提示是：「' + topic + '」\n' +
         '请据此设定一个具体、自然的场景，并说出对话的第一句（由你扮演的角色先开口）。\n' +
         '语言难度必须严格控制在' + L.dialogue + '，句子简短自然，像真实口语。\n\n' +
-        '输出 JSON：{"scene":"用中文简述场景：地点、你扮演谁、用户扮演谁、对话目标","role":"你扮演的角色（中文）","line":"' + L.zh + '第一句话","zh":"中文翻译","en":"' + (L.en ? '英文翻译' : '留空') + '"}'
+        '输出 JSON：{"scene":"用中文简述场景：地点、你扮演谁、用户扮演谁、对话目标","role":"你扮演的角色（中文）","line":"' + L.zh + '第一句话","zh":"中文翻译","en":"' + (L.en ? '英文翻译' : '留空') + '","tokens":["line 的逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"]}' +
+        '\n' + TOKEN_RULE(k)
     }
   ];
+}
+
+function TOKEN_RULE(k) {
+  const base = '"gloss" 数组长度必须与 "tokens" 完全一致，每项只写 2–8 个字的核心词义（助词/介词写其语法作用，如「（宾格助词）」）。';
+  if (k === 'ja') return '"tokens" 按词切分（助词单独成词），拼接后须等于原句。' + base;
+  return '"tokens" 按词切分（标点可并入相邻词），用空格连接后须还原原句。' + base;
 }
 
 function dlgTurnPrompt(k, scene, history, userLine) {
@@ -863,7 +1132,8 @@ function dlgTurnPrompt(k, scene, history, userLine) {
       '\n· 不要在 corrected 里写解释、括号注释、"应改为"、箭头、删除线或任何标记，只写那一句正确的' + L.zh + '。' +
       '\n· 如果用户原句已经完全正确，corrected 就填一个在该场景下【最自然地道的说法】（可以和原句相同，也可以是更地道的等价说法）。' +
       '\n· 所有的解释、错在哪、为什么，全部放进 note 字段，用中文写。' +
-      '\n\n输出 JSON：{"feedback":{"verdict":"ok 或 fix","corrected":"最终正确版本的完整句子","note":"中文讲解，说明错在哪、为什么；若原句已正确则说明为何这样说更自然。60–150 字"},"line":"' + L.zh + '你的下一句话","zh":"中文翻译","en":"' + (L.en ? '英文翻译' : '留空') + '"}'
+      '\n\n输出 JSON：{"feedback":{"verdict":"ok 或 fix","corrected":"最终正确版本的完整句子","note":"中文讲解，说明错在哪、为什么；若原句已正确则说明为何这样说更自然。60–150 字","ctokens":["corrected 的逐词切分"],"cgloss":["与 ctokens 一一对应的极简中文词义"]},"line":"' + L.zh + '你的下一句话","zh":"中文翻译","en":"' + (L.en ? '英文翻译' : '留空') + '","tokens":["line 的逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"]}' +
+      '\n' + TOKEN_RULE(k) + '\nctokens / cgloss 对 corrected 用同样的规则。'
   }];
   history.forEach(m => {
     if (m.who === 'sys') msgs.push({ role: 'assistant', content: m.line });
@@ -996,13 +1266,47 @@ VIEWS.set = function () {
     '<button class="btn wide" onclick="testKey(this)">测试 OpenAI 连接</button>' +
     '<div id="setmsg"></div>' +
 
-    '<div class="sec" style="margin-top:40px">数据</div>' +
-    '<div class="row"><button class="btn sm" onclick="exportAll()">导出卡片库</button>' +
+    '<div class="sec" style="margin-top:40px">本地存储</div>' +
+    '<div id="stinfo" class="note" style="margin-top:0">' + LOADER + '</div>' +
+
+    '<label class="lb">卡片上限</label>' +
+    '<div class="row">' + CAPS.map(n =>
+      '<button class="btn sm' + ((S.cfg.cardCap | 0) === n ? ' on' : '') + '" onclick="setCap(' + n + ')">' +
+      (n ? n + ' 张' : '不限') + '</button>').join('') + '</div>' +
+    '<p class="note">超出上限时，只回收最早的、你已经勾选「已添加」的卡片；没勾的永远不会被删。设成「不限」也没关系——卡片是纯文本，一千张也才几 MB。</p>' +
+
+    '<label class="lb">备份</label>' +
+    '<div class="row">' +
+    '<button class="btn sm" onclick="exportBackup()">导出备份文件</button>' +
+    '<button class="btn sm" onclick="$(\'impf\').click()">从备份恢复</button>' +
+    '<input type="file" id="impf" accept="application/json,.json" style="display:none" onchange="importBackup(this)">' +
+    '</div>' +
+    '<p class="note">备份文件包含全部卡片、设置、注音模板和难度记录。换手机、清过浏览器数据之后可以直接恢复。</p>' +
+
+    '<label class="lb">其他</label>' +
+    '<div class="row"><button class="btn sm" onclick="exportAll()">复制全部详解</button>' +
     '<button class="btn sm" onclick="clearSeen()">清空难度基准记录</button>' +
-    '<button class="btn sm" onclick="wipe()">清空全部数据</button></div>' +
-    '<p class="note">卡片库当前有 ' + S.cards.length + ' 张卡片。</p>';
+    '<button class="btn sm" onclick="wipe()">清空全部数据</button></div>';
   shell('设置', h);
+  paintStorage();
 };
+
+const CAPS = [0, 200, 500, 1000];
+function setCap(n) { S.cfg.cardCap = n; saveCfg(); const d = trimCards(); if (d) { saveCards(); toast('已回收 ' + d + ' 张旧的已添加卡片'); } render(); }
+
+async function paintStorage() {
+  const el = $('stinfo'); if (!el) return;
+  const i = await storageInfo();
+  const eng = i.store === 'idb' ? 'IndexedDB' : 'localStorage（约 5 MB 上限）';
+  const pm = { granted: '已开启，系统不会自动回收', denied: '未获批准，长期不打开可能被系统回收', unsupported: '本浏览器不支持', unknown: '检测中' }[i.persist];
+  el.innerHTML =
+    '数据全部存在这台设备本地，不上传任何服务器。<br>' +
+    '存储引擎：' + eng + '<br>' +
+    '持久化：' + pm + (i.persist === 'denied' ? ' <button class="btn sm" style="margin-left:4px" onclick="reqPersist(this)">再申请一次</button>' : '') + '<br>' +
+    '已用空间：' + fmtBytes(i.used) + (i.quota ? ' / 可用配额约 ' + fmtBytes(i.quota) : '') + '<br>' +
+    '卡片 ' + S.cards.length + ' 张，难度基准记录 ' + LK.reduce((a, k) => a + ((S.seen[k] || []).length), 0) + ' 句。';
+}
+async function reqPersist(btn) { btn.innerHTML = '···'; persistState = 'unknown'; await requestPersist(); paintStorage(); }
 
 function fillBoTpl() { const t = $('fBo'); if (!t.value.trim()) t.value = BO_TEMPLATE; else toast('已有内容，先清空再插入'); }
 
@@ -1057,14 +1361,15 @@ function exportAll() {
 }
 function clearSeen() {
   if (!confirm('清空所有语言「最近读过的句子」记录？难度基准会重新从基准水平开始，卡片库不受影响。')) return;
-  LK.forEach(k => localStorage.removeItem('lg.seen.' + k));
-  toast('已清空基准记录');
+  S.seen = {}; saveSeen();
+  render(); toast('已清空基准记录');
 }
 function wipe() {
-  if (!confirm('确定清空所有卡片和设置？此操作不可撤销。')) return;
-  LK.forEach(k => localStorage.removeItem('lg.seen.' + k));
-  localStorage.removeItem('lg.cards'); localStorage.removeItem('lg.cfg');
-  S.cards = []; S.cfg = Object.assign({}, CFG_DEFAULT, { diff: {} });
+  if (!confirm('确定清空所有卡片和设置？此操作不可撤销。建议先导出一份备份文件。')) return;
+  S.cards = []; S.seen = {}; S.trash = null;
+  S.cfg = Object.assign({}, CFG_DEFAULT, { diff: {} });
+  saveCards(); saveSeen(); saveCfg();
+  try { LK.forEach(k => localStorage.removeItem('lg.seen.' + k)); localStorage.removeItem('lg.cards'); } catch (e) {}
   home(); toast('已清空');
 }
 /* ================= Yulengua · 句子阅读 ================= */
@@ -1072,11 +1377,10 @@ function wipe() {
 const R = { lang: null, hist: [], idx: -1, busy: false, err: '' };
 const cur = () => R.hist[R.idx] || null;
 
-const seenKey = k => 'lg.seen.' + k;
-const getSeen = k => LS.get(seenKey(k), []);
+const getSeen = k => (S.seen && Array.isArray(S.seen[k])) ? S.seen[k] : [];
 function pushSeen(k, t) {
-  const a = getSeen(k); a.push(t);
-  LS.set(seenKey(k), a.slice(-40));
+  S.seen[k] = getSeen(k).concat([t]).slice(-40);
+  saveSeen();
 }
 
 VIEWS.read = function (k) {
@@ -1167,9 +1471,12 @@ async function nextSent() {
     const j = await aiJson(sentencePrompt(R.lang, getSeen(R.lang)));
     const tokens = Array.isArray(j.tokens) ? j.tokens.filter(t => String(t).trim()) : [];
     const gloss = Array.isArray(j.gloss) ? j.gloss.map(x => String(x || '')) : [];
+    const txt = (j.text || '').trim();
     R.hist.push({
       sent: {
-        text: (j.text || '').trim(), alt: (j.alt || '').trim(), translit: (j.translit || '').trim(),
+        text: txt,
+        alt: R.lang === 'kk' ? kkArab(txt) : (j.alt || '').trim(),
+        translit: R.lang === 'kk' ? kkLat(txt) : (j.translit || '').trim(),
         zh: (j.zh || '').trim(), en: (j.en || '').trim(), tokens: tokens, gloss: gloss
       },
       qa: [], show: false
@@ -1201,14 +1508,15 @@ function kkForms(ar) {
     fin: ZWJ + s
   };
 }
-function kkTable(letters) {
-  if (!Array.isArray(letters) || !letters.length) return '';
+function kkTable(word) {
+  const letters = kkLetterRows(word);
+  if (!letters.length) return '';
   const cell = v => v == null ? '<b class="na">—</b>' : '<b>' + esc(v) + '</b>';
   let h = '<div class="sec" style="margin-bottom:8px">字母对照</div><div class="klt">' +
     '<div class="hd"><span>西里尔</span><span class="fm">' +
     '<span>单立</span><span>前连</span><span>中连</span><span>后连</span></span><span class="lt">拉丁</span></div>';
   letters.forEach(l => {
-    const f = kkForms(l.ar);
+    const f = l.ar ? kkForms(l.ar) : null;
     h += '<div class="rw"><span class="cy">' + esc(l.cy || '') + '</span>' +
       '<span class="fm">' + (f ? cell(f.iso) + cell(f.ini) + cell(f.med) + cell(f.fin) : cell(null) + cell(null) + cell(null) + cell(null)) + '</span>' +
       '<span class="lt">' + esc(l.lat || '') + '</span>' +
@@ -1228,31 +1536,42 @@ function tokAt(i) {
   return { raw: raw, word: clean, gloss: (s.gloss && s.gloss[i]) || '' };
 }
 
-function openWord(i, el) {
-  document.querySelectorAll('.sent .w.on').forEach(n => n.classList.remove('on'));
-  el && el.classList.add('on');
-  const t = tokAt(i);
-  const k = R.lang;
-  const ck = k + '|' + t.word + '|' + cur().sent.text;
+/* 通用词卡：句子阅读和场景对话共用。
+   第一层用随句返回的简译，瞬时、零请求；第二层才调 AI。 */
+let WSHEET = null;
+
+function showWord(k, word, gloss, context) {
+  if (!word) return;
+  WSHEET = { k: k, word: word, context: context || word };
+  const ck = k + '|' + word + '|' + WSHEET.context;
   if (wordCache.has(ck)) { sheet(wordHtml(wordCache.get(ck))); return; }
   sheet(
-    '<div class="wh"><span class="ww ' + scriptCls(k) + '">' + esc(t.word) + '</span></div>' +
-    '<div class="gl">' + (t.gloss ? esc(t.gloss) : '<span class="hint">这个词没有随句简译，点下方展开详解</span>') + '</div>' +
-    (LANGS[k].tts ? '<div class="row" style="margin-top:14px">' + speakBtn(k, t.word) + '</div>' : '') +
+    '<div class="wh"><span class="ww ' + scriptCls(k) + '">' + esc(word) + '</span></div>' +
+    (k === 'kk' ? '<div class="ar" style="font-size:22px;margin-top:8px">' + esc(kkArab(word)) + '</div>' +
+      '<div class="translit" style="margin-top:4px">' + esc(kkLat(word)) + '</div>' : '') +
+    '<div class="gl">' + (gloss ? esc(gloss) : '<span class="hint">这个词没有随句简译，点下方展开详解</span>') + '</div>' +
+    (LANGS[k] && LANGS[k].tts ? '<div class="row" style="margin-top:14px">' + speakBtn(k, word) + '</div>' : '') +
     '<div class="spacer"></div>' +
-    '<button class="btn pri wide" onclick="expandWord(' + i + ',this)">展开详解</button>' +
+    '<button class="btn pri wide" onclick="expandWord(this)">展开详解</button>' +
     '<p class="note" style="text-align:center">展开会调用 AI，生成词性、变位、例句与详细解释</p>'
   );
 }
 
-async function expandWord(i, btn) {
-  if (needKey()) return;
-  const t = tokAt(i), k = R.lang;
-  const ck = k + '|' + t.word + '|' + cur().sent.text;
+function openWord(i, el) {
+  document.querySelectorAll('.sent .w.on').forEach(n => n.classList.remove('on'));
+  el && el.classList.add('on');
+  const t = tokAt(i);
+  showWord(R.lang, t.word, t.gloss, cur().sent.text);
+}
+
+async function expandWord(btn) {
+  if (needKey() || !WSHEET) return;
+  const w = WSHEET;
+  const ck = w.k + '|' + w.word + '|' + w.context;
   btn.innerHTML = LOADER + ' 正在解析'; btn.disabled = true;
   try {
-    const j = await aiJson(wordPrompt(k, t.word, cur().sent.text));
-    j._lang = k;
+    const j = await aiJson(wordPrompt(w.k, w.word, w.context));
+    j._lang = w.k;
     wordCache.set(ck, j);
     sheet(wordHtml(j));
   } catch (e) {
@@ -1263,8 +1582,34 @@ async function expandWord(i, btn) {
   }
 }
 
+/* 把一句话渲染成可点击的词；tokens/gloss 缺失时按空格切分兜底 */
+const cleanTok = s => String(s || '').replace(/^[\s.,!?;:«»""''()\[\]—–·-]+|[\s.,!?;:«»""''()\[\]—–·-]+$/g, '') || String(s || '');
+function tapWords(k, text, tokens, gloss, group) {
+  const toks = (Array.isArray(tokens) && tokens.length) ? tokens : String(text || '').split(/\s+/);
+  const j = (k === 'ja' || k === 'bo') ? '' : ' ';
+  return toks.map((t, i) =>
+    '<span class="w" data-tw="' + group + '" data-ti="' + i + '">' + esc(t) + '</span>').join(j);
+}
+function bindTapWords(k, getSource) {
+  document.querySelectorAll('[data-tw]').forEach(el => {
+    el.onclick = () => {
+      const src = getSource(el.dataset.tw);
+      if (!src) return;
+      const i = +el.dataset.ti;
+      const toks = (Array.isArray(src.tokens) && src.tokens.length) ? src.tokens : String(src.text || '').split(/\s+/);
+      document.querySelectorAll('[data-tw].on').forEach(n => n.classList.remove('on'));
+      el.classList.add('on');
+      showWord(k, cleanTok(toks[i]), (src.gloss && src.gloss[i]) || '', src.text);
+    };
+  });
+}
+
 function wordHtml(j) {
   const k = j._lang, L = LANGS[k];
+  if (k === 'kk') {
+    j.alt = kkArab(j.word || '');
+    j.translit = kkLat(j.word || '');
+  }
   const het = k === 'nl' && /het/i.test(j.gender || '');
   let h = '<div class="wh">' +
     '<span class="ww ' + scriptCls(k) + '">' + esc(j.word || '') + '</span>' +
@@ -1280,6 +1625,8 @@ function wordHtml(j) {
   if (j.example && j.example.text) {
     h += '<div class="ex"><span class="' + scriptCls(k) + '">' + esc(j.example.text) + '</span> ' +
       speakBtn(k, j.example.text, false) +
+      (k === 'kk' ? '<div class="ar" style="font-size:19px;margin-top:4px">' + esc(kkArab(j.example.text)) + '</div>' +
+        '<div class="translit" style="margin-top:2px">' + esc(kkLat(j.example.text)) + '</div>' : '') +
       '<s>' + esc(j.example.zh || '') + '</s></div>';
   }
   if (Array.isArray(j.forms) && j.forms.length) {
@@ -1287,7 +1634,7 @@ function wordHtml(j) {
       '<div><b>' + esc(f.k || '') + '</b><span>' + esc(f.v || '') + '</span></div>').join('') + '</div>';
   }
   if (j.note) h += '<div class="expl">' + esc(j.note) + '</div>';
-  if (k === 'kk') h += kkTable(j.letters);
+  if (k === 'kk') h += kkTable(j.word || '');
   return h;
 }
 
@@ -1315,7 +1662,8 @@ async function makeDetail(btn) {
   const c = cur(); if (!c) return;
   const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在生成详解'; btn.disabled = true;
   try {
-    const txt = await ai(detailPrompt(R.lang, c.sent, c.qa), false);
+    let txt = await ai(detailPrompt(R.lang, c.sent, c.qa), false);
+    if (R.lang === 'kk') txt = kkDual(txt);
     DE.mode = 'raw';
     go('dedit', { lang: R.lang, front: c.sent.text, text: txt.trim() });
   } catch (e) {
@@ -1380,8 +1728,9 @@ function saveDetail() {
     id: 'c' + Date.now() + Math.random().toString(36).slice(2, 6),
     lang: cu.lang, front: cu.front, detail: text, added: false, ts: Date.now()
   });
+  const dropped = trimCards();
   saveCards(); back();
-  toast('已存入卡片库（共 ' + S.cards.length + ' 张）');
+  toast('已存入卡片库（共 ' + S.cards.length + ' 张）' + (dropped ? ' · 已回收 ' + dropped + ' 张旧的已添加卡片' : ''));
 }
 /* ================= Yulengua · 场景对话 ================= */
 
@@ -1424,19 +1773,22 @@ function paintDlg() {
 
   let body = '<div class="tbar">' + autoSpeakBtn() +
     '<button class="btn sm" onclick="resetDlg()">换一个场景</button></div>' +
-    '<div class="scene"><b>场景</b>' + esc(D.scene) + (D.role ? '（对方：' + esc(D.role) + '）' : '') + '</div>';
+    '<div class="scene"><b>场景</b>' + esc(D.scene) + (D.role ? '（对方：' + esc(D.role) + '）' : '') +
+    '<div class="hint" style="margin-top:9px">点对方的话或批改句里的任意单词可查看释义</div></div>';
 
   D.msgs.forEach((m, i) => {
     if (m.fix) {
       body += '<div class="fix"><b class="h">' + (m.fix.verdict === 'ok' ? '批改 · 正确' : '批改 · 修正后') + '</b>' +
         (m.fix.corrected
-          ? '<div class="cor"><span class="' + scriptCls(k) + '">' + esc(m.fix.corrected) + '</span>' +
+          ? '<div class="cor"><span class="' + scriptCls(k) + '">' +
+            tapWords(k, m.fix.corrected, m.fix.ctokens, m.fix.cgloss, 'f' + i) + '</span>' +
             (L.tts ? '<button class="btn sm" data-fx="' + i + '">&#9654;</button>' : '') + '</div>'
           : '') +
         '<div class="nt">' + esc(m.fix.note || '') + '</div></div>';
     }
     body += '<div class="msg ' + (m.who === 'me' ? 'me' : 'sys') + '">' +
-      '<div class="bub ' + scriptCls(k) + '">' + esc(m.line) + '</div>';
+      '<div class="bub ' + scriptCls(k) + '">' +
+      (m.who === 'sys' ? tapWords(k, m.line, m.tokens, m.gloss, 's' + i) : esc(m.line)) + '</div>';
     if (m.who === 'sys') {
       body += '<div class="tr' + (m.show ? ' on' : '') + '">' + esc(m.zh || '') +
         (L.en && m.en ? '<div class="e">' + esc(m.en) + '</div>' : '') + '</div>' +
@@ -1466,6 +1818,13 @@ function paintDlg() {
   document.querySelectorAll('[data-fx]').forEach(b => {
     b.onclick = () => say(k, D.msgs[+b.dataset.fx].fix.corrected, b);
   });
+  bindTapWords(k, g => {
+    const m = D.msgs[+g.slice(1)];
+    if (!m) return null;
+    return g[0] === 'f'
+      ? { text: m.fix.corrected, tokens: m.fix.ctokens, gloss: m.fix.cgloss }
+      : { text: m.line, tokens: m.tokens, gloss: m.gloss };
+  });
   window.scrollTo(0, document.body.scrollHeight);
 }
 
@@ -1480,7 +1839,10 @@ async function startDlg() {
   try {
     const j = await aiJson(dlgOpenPrompt(D.lang, t));
     D.scene = j.scene || t; D.role = j.role || '';
-    D.msgs = [{ who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false }];
+    D.msgs = [{
+      who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
+      tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : []
+    }];
     D.started = true;
     paintDlg();
     if (S.cfg.autoSpeak) say(D.lang, D.msgs[0].line);
@@ -1502,10 +1864,13 @@ async function sendDlg() {
     const fb = j.feedback || {};
     D.msgs.push({
       who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
+      tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : [],
       fix: {
         verdict: fb.verdict === 'ok' ? 'ok' : 'fix',
         corrected: (fb.corrected || '').trim(),
-        note: fb.note || ''
+        note: fb.note || '',
+        ctokens: Array.isArray(fb.ctokens) ? fb.ctokens : [],
+        cgloss: Array.isArray(fb.cgloss) ? fb.cgloss : []
       }
     });
     D.busy = false; paintDlg();
@@ -1546,7 +1911,9 @@ function paintLookup() {
         '<div class="def" style="font-size:15.5px">' + esc(it.zh || '') +
         (it.en ? '<div class="hint" style="margin-top:4px;font-size:13px">' + esc(it.en) + '</div>' : '') + '</div>' +
         (it.example && it.example.text
-          ? '<div class="ex"><span class="' + scriptCls(it.lang) + '">' + esc(it.example.text) + '</span><s>' + esc(it.example.zh || '') + '</s></div>' : '') +
+          ? '<div class="ex"><span class="' + scriptCls(it.lang) + '">' + esc(it.example.text) + '</span>' +
+            (it.lang === 'kk' ? '<div class="ar" style="font-size:18px;margin-top:4px">' + esc(kkArab(it.example.text)) + '</div>' : '') +
+            '<s>' + esc(it.example.zh || '') + '</s></div>' : '') +
         (Array.isArray(it.forms) && it.forms.length
           ? '<div class="forms">' + it.forms.map(f => '<div><span>' + esc(typeof f === 'string' ? f : (f.k ? f.k + '：' + f.v : f.v)) + '</span></div>').join('') + '</div>' : '') +
         '<div class="row" style="margin-top:16px">' +
@@ -1592,6 +1959,9 @@ async function doLookup() {
   try {
     const j = await aiJson(lookupPrompt(q));
     W.items = (j.items || []).filter(x => x && x.word && LANGS[x.lang]);
+    W.items.forEach(it => {
+      if (it.lang === 'kk') { it.alt = kkArab(it.word); it.translit = kkLat(it.word); }
+    });
     if (!W.items.length) W.err = '没有找到匹配的词，换个写法试试。';
   } catch (e) { W.err = '查询失败 · ' + e.message; }
   W.busy = false; paintLookup();
@@ -1616,7 +1986,8 @@ async function makeWordCard(i, btn) {
   const it = W.items[i];
   const old = btn.innerHTML; btn.innerHTML = '生成中…'; btn.disabled = true;
   try {
-    const txt = await ai(wordCardPrompt(it, W.qa), false);
+    let txt = await ai(wordCardPrompt(it, W.qa), false);
+    if (it.lang === 'kk') txt = kkDual(txt);
     DE.mode = 'raw';
     go('dedit', { lang: it.lang, front: it.word, text: txt.trim() });
   } catch (e) {
@@ -1730,8 +2101,14 @@ function saveEdit() {
 $('mask').onclick = closeSheet;
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 window.addEventListener('error', e => { try { toast('脚本错误：' + e.message); } catch (x) {} });
-S.stack = [{ view: 'home' }];
-render();
+
+app().innerHTML = '<div class="screen on"><div class="body">' +
+  '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>五语学习</p></div></div></div>';
+
+loadAll().catch(() => {}).then(() => {
+  S.stack = [{ view: 'home' }];
+  render();
+});
 </script>
 </body>
 </html>
