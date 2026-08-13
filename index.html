@@ -425,44 +425,112 @@ function nativeSpeak(text, code, rate) {
   speechSynthesis.speak(u);
 }
 
-/* Kazakh: Azure (best) -> OpenAI TTS -> iOS Russian voice (rough fallback) */
+/* ---- iOS 自动播放解锁：必须在用户手势里同步调用一次 ---- */
+const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=';
+let audioEl = null, audioUnlocked = false;
+function primeAudio() {
+  if (!audioEl) {
+    audioEl = new Audio();
+    audioEl.setAttribute('playsinline', '');
+    audioEl.preload = 'auto';
+  }
+  if (!audioUnlocked) {
+    audioUnlocked = true;
+    try { audioEl.src = SILENT_WAV; const p = audioEl.play(); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+  }
+  return audioEl;
+}
+function playUrl(url) {
+  const el = primeAudio();
+  el.src = url;
+  try {
+    const p = el.play();
+    if (p && p.catch) p.catch(() => toast('浏览器拦截了自动播放，请再点一次发音'));
+  } catch (e) { toast('播放失败'); }
+}
+
+/* ---- Azure Speech SDK（浏览器端唯一受支持的方式，走 WebSocket，不受跨域限制）---- */
+const AZ_VOICE = 'kk-KZ-AigulNeural';
+const SDK_URLS = [
+  'https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1.51.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js',
+  'https://unpkg.com/microsoft-cognitiveservices-speech-sdk@1.51.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js'
+];
+let sdkPromise = null;
+function loadSpeechSDK() {
+  if (window.SpeechSDK) return Promise.resolve(window.SpeechSDK);
+  if (sdkPromise) return sdkPromise;
+  sdkPromise = new Promise((resolve, reject) => {
+    let i = 0;
+    const tryNext = () => {
+      if (i >= SDK_URLS.length) { sdkPromise = null; reject(new Error('SDK_LOAD')); return; }
+      const s = document.createElement('script');
+      s.src = SDK_URLS[i++]; s.async = true;
+      s.onload = () => { if (window.SpeechSDK) resolve(window.SpeechSDK); else tryNext(); };
+      s.onerror = tryNext;
+      document.head.appendChild(s);
+    };
+    tryNext();
+  });
+  return sdkPromise;
+}
+
+const normReg = r => String(r || 'westeurope').trim().toLowerCase().replace(/\s+/g, '');
+
+async function azureSynth(text) {
+  const SDK = await loadSpeechSDK();
+  const cfg = SDK.SpeechConfig.fromSubscription((S.cfg.azKey || '').trim(), normReg(S.cfg.azReg));
+  cfg.speechSynthesisVoiceName = AZ_VOICE;
+  cfg.speechSynthesisOutputFormat = SDK.SpeechSynthesisOutputFormat.Audio24Khz48KBitRateMonoMp3;
+  const syn = new SDK.SpeechSynthesizer(cfg, null);   // null = 不自动播放，只拿音频数据
+  try {
+    const res = await new Promise((resolve, reject) => {
+      syn.speakTextAsync(text, resolve, e => reject(new Error(String(e))));
+    });
+    if (res.reason === SDK.ResultReason.SynthesizingAudioCompleted && res.audioData && res.audioData.byteLength) {
+      return new Blob([res.audioData], { type: 'audio/mpeg' });
+    }
+    throw new Error(res.errorDetails || ('合成未完成（reason ' + res.reason + '）'));
+  } finally { try { syn.close(); } catch (e) {} }
+}
+
+function azureHint(msg) {
+  const m = String(msg || '');
+  if (/SDK_LOAD/.test(m)) return '语音组件没能从 CDN 加载。检查网络后重试。';
+  if (/401|Unauthorized/i.test(m)) return 'Key 与区域对不上。最常见原因：区域填错了。请到 Azure 门户打开你的 Speech 资源，看「位置」写的是什么，去掉空格全部小写填进来（West Europe → westeurope）。';
+  if (/1006|WebSocket|ConnectionFailure|ENOTFOUND|getaddrinfo/i.test(m))
+    return '连不上 Azure。多半是区域代码拼错了（会解析到一个不存在的域名），也可能是网络被拦截。';
+  if (/403|Forbidden/i.test(m)) return '被拒绝：资源可能已停用、超出免费额度，或该区域不提供 kk-KZ 音色（建议用 westeurope 或 eastus）。';
+  if (/429|TooManyRequests|Quota/i.test(m)) return '超出配额或请求过于频繁，稍后再试。';
+  if (/400/.test(m)) return '请求被拒（400）：通常是区域字符串里混入了空格或多余字符。';
+  return m || '未知错误';
+}
+
+/* Kazakh: Azure -> OpenAI TTS -> iOS 俄语音色（最后兜底） */
 async function apiSpeak(text, btn) {
+  primeAudio();                                  // 必须在手势里同步执行
   const ck = 'kk|' + text;
-  if (audioCache.has(ck)) { audioCache.get(ck).play(); return; }
+  if (audioCache.has(ck)) { playUrl(audioCache.get(ck)); return; }
   const old = btn ? btn.innerHTML : null;
   if (btn) { btn.innerHTML = '···'; btn.disabled = true; }
   try {
-    let blob = null;
-    if (S.cfg.azKey) blob = await azureTTS(text);
-    else if (S.cfg.key) blob = await openaiTTS(text);
+    let blob = null, why = '';
+    if ((S.cfg.azKey || '').trim()) {
+      try { blob = await azureSynth(text); }
+      catch (e) { why = azureHint(e.message); }
+    }
+    if (!blob && (S.cfg.key || '').trim()) {
+      try { blob = await openaiTTS(text); } catch (e) { if (!why) why = 'OpenAI 语音失败 · ' + e.message; }
+    }
     if (blob) {
-      const a = new Audio(URL.createObjectURL(blob));
-      audioCache.set(ck, a); a.play();
+      const url = URL.createObjectURL(blob);
+      audioCache.set(ck, url);
+      playUrl(url);
+      if (why) toast('Azure 失败，已改用 OpenAI 语音 · ' + why);
     } else {
       nativeSpeak(text, 'ru-RU', 0.85);
-      toast('用俄语音色近似朗读，建议在设置中填 Azure Key');
+      toast(why || '未配置语音，已用俄语音色近似朗读');
     }
-  } catch (e) {
-    nativeSpeak(text, 'ru-RU', 0.85);
-    toast('语音接口失败，已回退近似朗读');
   } finally { if (btn) { btn.innerHTML = old; btn.disabled = false; } }
-}
-
-async function azureTTS(text) {
-  const reg = (S.cfg.azReg || 'westeurope').trim();
-  const ssml = '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="kk-KZ">' +
-    '<voice name="kk-KZ-AigulNeural"><prosody rate="-8%">' + esc(text) + '</prosody></voice></speak>';
-  const r = await fetch('https://' + reg + '.tts.speech.microsoft.com/cognitiveservices/v1', {
-    method: 'POST',
-    headers: {
-      'Ocp-Apim-Subscription-Key': S.cfg.azKey.trim(),
-      'Content-Type': 'application/ssml+xml',
-      'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3'
-    },
-    body: ssml
-  });
-  if (!r.ok) throw new Error('azure ' + r.status);
-  return await r.blob();
 }
 async function openaiTTS(text) {
   const r = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -910,17 +978,22 @@ VIEWS.set = function () {
     'placeholder="点上面「插入模板」开始，或直接按 藏文 = 注音（汉字） 的格式自己写">' + esc(c.boPron) + '</textarea>' +
 
     '<div class="sec" style="margin-top:36px">语音</div>' +
-    '<p class="note" style="margin-top:0">荷兰语、西班牙语、日语直接调用 iOS 内置语音，无需配置。<br>安多藏语目前没有可用的语音合成，改为显示注音。<br>哈萨克语 iOS 无内置音色，可选填 Azure 免费额度获得真人音质；不填则用 OpenAI 语音近似朗读。</p>' +
+    '<p class="note" style="margin-top:0">荷兰语、西班牙语、日语直接调用 iOS 内置语音，无需配置。<br>安多藏语目前没有可用的语音合成，改为显示注音。<br>哈萨克语 iOS 无内置音色：填了 Azure Key 就用真人音色 ' + AZ_VOICE + '（免费额度每月 50 万字符），不填则用 OpenAI 语音近似朗读。<br>第一次播放哈萨克语时会从 CDN 加载一次约 370 KB 的语音组件，之后不再重复加载。</p>' +
 
     '<label class="lb">Azure Speech Key（可选 · 哈萨克语）</label>' +
     '<input class="fld" id="fAz" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="留空则使用 OpenAI 语音" value="' + esc(c.azKey) + '">' +
     '<label class="lb">Azure 区域</label>' +
-    '<input class="fld" id="fAzR" autocapitalize="off" spellcheck="false" placeholder="westeurope" value="' + esc(c.azReg) + '">' +
+    '<input class="fld" id="fAzR" list="azregs" autocapitalize="off" spellcheck="false" placeholder="westeurope" value="' + esc(c.azReg) + '">' +
+    '<datalist id="azregs">' + AZ_REGIONS.map(r => '<option value="' + r + '">').join('') + '</datalist>' +
+    '<p class="note">区域必须是资源所在区域的<b>短代码</b>：Azure 门户 → 你的 Speech 资源 → 概述 → 「位置」。把看到的名字去掉空格、全部小写填进来（West Europe → westeurope）。保存时会自动帮你规范化。<br>Key 和区域必须来自<b>同一个</b> Speech 资源。</p>' +
+    '<div class="spacer"></div>' +
+    '<button class="btn wide" onclick="testAzure(this)">测试哈萨克语语音</button>' +
+    '<div id="azmsg"></div>' +
 
     '<div class="spacer"></div><div class="spacer"></div>' +
     '<button class="btn pri wide" onclick="saveSet()">保存设置</button>' +
     '<div class="spacer"></div>' +
-    '<button class="btn wide" onclick="testKey(this)">测试连接</button>' +
+    '<button class="btn wide" onclick="testKey(this)">测试 OpenAI 连接</button>' +
     '<div id="setmsg"></div>' +
 
     '<div class="sec" style="margin-top:40px">数据</div>' +
@@ -933,13 +1006,40 @@ VIEWS.set = function () {
 
 function fillBoTpl() { const t = $('fBo'); if (!t.value.trim()) t.value = BO_TEMPLATE; else toast('已有内容，先清空再插入'); }
 
-function saveSet() {
+const AZ_REGIONS = ['westeurope', 'northeurope', 'swedencentral', 'francecentral', 'germanywestcentral',
+  'uksouth', 'switzerlandnorth', 'eastus', 'eastus2', 'westus', 'westus2', 'westus3', 'centralus',
+  'canadacentral', 'southeastasia', 'eastasia', 'japaneast', 'japanwest', 'koreacentral', 'australiaeast'];
+
+function saveSet(quiet) {
   S.cfg.key = $('fKey').value.trim();
   S.cfg.model = $('fModel').value.trim() || 'gpt-4.1';
   S.cfg.azKey = $('fAz').value.trim();
-  S.cfg.azReg = $('fAzR').value.trim() || 'westeurope';
+  S.cfg.azReg = normReg($('fAzR').value) || 'westeurope';
+  $('fAzR').value = S.cfg.azReg;
   S.cfg.boPron = $('fBo').value.trim();
-  saveCfg(); toast('已保存');
+  saveCfg(); if (!quiet) toast('已保存');
+}
+
+async function testAzure(btn) {
+  saveSet(true);
+  primeAudio();                                   // 必须在点击手势里同步执行
+  const m = $('azmsg');
+  if (!S.cfg.azKey) {
+    m.innerHTML = '<div class="err">还没填 Azure Key。留空也能用——哈萨克语会改用 OpenAI 语音朗读，只是发音没那么准。</div>';
+    return;
+  }
+  const old = btn.innerHTML;
+  btn.innerHTML = LOADER + ' 正在测试'; btn.disabled = true;
+  m.innerHTML = '';
+  try {
+    const blob = await azureSynth('Сәлеметсіз бе! Сіз шай ішесіз бе, әлде кофе ішесіз бе?');
+    playUrl(URL.createObjectURL(blob));
+    m.innerHTML = '<div class="err">连接成功 · 音色 ' + AZ_VOICE + ' · 区域 ' + esc(S.cfg.azReg) +
+      '<br>正在播放测试语音，听到女声说哈萨克语就说明配好了。</div>';
+  } catch (e) {
+    m.innerHTML = '<div class="err">失败 · ' + esc(azureHint(e.message)) +
+      '<div class="note" style="margin-top:8px">原始错误：' + esc(String(e.message).slice(0, 200)) + '</div></div>';
+  } finally { btn.innerHTML = old; btn.disabled = false; }
 }
 async function testKey(btn) {
   saveSet();
