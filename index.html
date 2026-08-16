@@ -163,6 +163,22 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .gl{font-size:20px;line-height:1.6;margin:16px 0 2px}
 .gl .sub{color:var(--fg3);font-size:13px;margin-top:6px;font-style:italic}
 
+/* tibetan: my pronunciation + recording */
+.w{position:relative}
+.w.has::after,.w.pron::after{content:"";position:absolute;left:50%;bottom:-5px;width:5px;height:5px;
+  margin-left:-2.5px;border-radius:50%;background:var(--fg)}
+.w.pron::after{background:none;border:1px solid var(--fg3);width:4px;height:4px;margin-left:-2px}
+.bopn{margin-top:18px;border:1px solid var(--line2);border-radius:12px;padding:14px 15px;background:var(--soft)}
+.bopn .hd{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3);
+  margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.bopn .hd span{font-family:"Noto Serif Tibetan",serif;font-size:17px;color:var(--fg2);letter-spacing:0;text-transform:none}
+.bopn .pv{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bopn .pv b{font-size:17px;font-weight:600;flex:1;min-width:120px;word-break:break-word}
+.bopn .pv i{font-size:13px;color:var(--fg3);flex:1;min-width:120px}
+.bopn textarea{background:var(--bg)}
+.btn.rec{border-color:var(--fg);animation:pulse 1.1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
 /* kazakh letter table */
 .klt{margin-top:14px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .klt .hd,.klt .rw{display:grid;grid-template-columns:38px 1fr 56px;gap:10px;padding:10px 12px;
@@ -283,12 +299,16 @@ const CFG_DEFAULT = {
   boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
   autoSpeak: false, // 场景对话自动朗读
   cardCap: 0,       // 卡片上限，0 = 不限；超出时只回收已勾选「已添加」的旧卡片
-  lastBackup: 0     // 上次导出备份的时间戳
+  lastBackup: 0,    // 上次导出备份的时间戳
+  cfgTs: 0,         // 设置最后一次修改的时间戳（云端合并用）
+  lastCloud: 0,     // 上次云端同步成功的时间戳
+  oss: null         // 阿里云 OSS：{ep,bucket,ak,sk,on,cache}。AccessKey 只存本机
 };
 const S = {
   cfg: Object.assign({}, CFG_DEFAULT, LS.get('lg.cfg', {})),
   cards: [],
   seen: {},         // 每种语言最近读过的句子（难度基准线）
+  bo: {},           // 藏语发音库：归一化词 -> {w,p 注音,h 音频哈希,x 扩展名,ts}
   trash: null,
   stack: [],
   store: 'ls'       // 'idb' | 'ls'
@@ -336,6 +356,7 @@ const idbSet = (k, v) => idb('readwrite', st => { st.put(v, k); });
 function lsWrite(key, val) {
   if (key === 'cards') LS.set('lg.cards', val);
   else if (key === 'cfg') LS.set('lg.cfg', val);
+  else if (key === 'bo') LS.set('lg.bo', val);
   else if (key === 'seen') LK.forEach(k => LS.set('lg.seen.' + k, val[k] || []));
 }
 function persistKey(key, val) {
@@ -343,10 +364,16 @@ function persistKey(key, val) {
     idbSet(key, val).catch(() => { S.store = 'ls'; try { lsWrite(key, val); } catch (e) {} });
   } else lsWrite(key, val);
 }
-const saveCards = () => persistKey('cards', S.cards);
-const saveSeen = () => persistKey('seen', S.seen);
+/* quiet = true 表示这次写入本身就是云端同步的结果，不要再触发一次回传 */
+const saveCards = q => { persistKey('cards', S.cards); if (!q) cloudTouch(); };
+const saveSeen = q => { persistKey('seen', S.seen); if (!q) cloudTouch(); };
+const saveBo = q => { persistKey('bo', S.bo); if (!q) cloudTouch(); };
 /* cfg 很小，额外在 localStorage 留一份镜像，保证首屏不用等 IndexedDB 就能读到设置 */
-const saveCfg = () => { LS.set('lg.cfg', S.cfg); persistKey('cfg', S.cfg); };
+const saveCfg = q => {
+  if (!q) S.cfg.cfgTs = Date.now();
+  LS.set('lg.cfg', S.cfg); persistKey('cfg', S.cfg);
+  if (!q) cloudTouch();
+};
 
 let persistState = 'unknown';
 async function requestPersist() {
@@ -383,6 +410,8 @@ async function loadAll() {
       const cfg = await idbGet('cfg');
       const cards = await idbGet('cards');
       const seen = await idbGet('seen');
+      const bo = await idbGet('bo');
+      if (bo && typeof bo === 'object') S.bo = bo;
       if (cfg) S.cfg = Object.assign({}, CFG_DEFAULT, cfg);
       if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
 
@@ -409,11 +438,13 @@ async function loadAll() {
   }
   if (S.store === 'ls') {
     S.cards = LS.get('lg.cards', []);
+    S.bo = LS.get('lg.bo', {}) || {};
     S.seen = {};
     LK.forEach(k => { S.seen[k] = LS.get('lg.seen.' + k, []); });
   }
   if (!Array.isArray(S.cards)) S.cards = [];
   if (!S.seen || typeof S.seen !== 'object') S.seen = {};
+  if (!S.bo || typeof S.bo !== 'object') S.bo = {};
   requestPersist();
 }
 
@@ -429,7 +460,9 @@ function trimCards() {
 }
 
 function exportBackup() {
-  const data = { app: 'yulengua', v: 1, ts: Date.now(), cfg: S.cfg, cards: S.cards, seen: S.seen };
+  /* 备份文件是「删掉图标后重装」的唯一退路，所以连同 Key 一起导出。
+     文件里含密钥，别随手转发给别人。云端的 data.json 则永远不含 Key。 */
+  const data = { app: 'yulengua', v: 2, ts: Date.now(), cfg: S.cfg, cards: S.cards, seen: S.seen, bo: S.bo };
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -454,8 +487,22 @@ function importBackup(input) {
       d.cards.forEach(c => { if (c && c.front) m.set(c.lang + '|' + c.front, c); });
       S.cards = Array.from(m.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
       if (d.seen && typeof d.seen === 'object') S.seen = Object.assign({}, S.seen, d.seen);
-      if (d.cfg) { S.cfg = Object.assign({}, CFG_DEFAULT, d.cfg); saveCfg(); }
-      saveCards(); saveSeen();
+      if (d.bo && typeof d.bo === 'object') {
+        Object.keys(d.bo).forEach(k => {
+          const r = d.bo[k], mine = S.bo[k];
+          if (r && (!mine || (r.ts || 0) > (mine.ts || 0))) S.bo[k] = r;
+        });
+      }
+      if (d.cfg) {
+        /* 备份里若没带密钥（老版本或手工删过），保留本机现有的，别把它清空 */
+        const keep = { key: S.cfg.key, azKey: S.cfg.azKey, oss: S.cfg.oss };
+        S.cfg = Object.assign({}, CFG_DEFAULT, d.cfg);
+        if (!S.cfg.key) S.cfg.key = keep.key;
+        if (!S.cfg.azKey) S.cfg.azKey = keep.azKey;
+        if (!S.cfg.oss || !S.cfg.oss.sk) S.cfg.oss = keep.oss;
+        saveCfg();
+      }
+      saveCards(); saveSeen(); saveBo();
       render(); toast('已导入，现有 ' + S.cards.length + ' 张卡片');
     } catch (e) { toast('导入失败 · ' + e.message); }
   };
@@ -1025,6 +1072,359 @@ function renderCodes(raw) {
   s = s.replace(/^---\s*$/gm, '<hr>');
   return s;
 }
+/* ================= Yulengua · 阿里云 OSS 云端存储 =================
+   浏览器端直接调用 OSS REST API，用 V4 签名（OSS4-HMAC-SHA256）。
+   签名算法与官方 ali-oss 的 signUtils.authorizationV4 逐字节对齐，
+   并在构建期做过定点对拍。AccessKey 只存本机，绝不写入云端对象。 */
+
+const OSS_DEFAULT = {
+  ep: 'oss-eu-central-1.aliyuncs.com',   // 地域 Endpoint（不带 bucket 前缀）
+  bucket: '',
+  ak: '', sk: '',
+  on: false,          // 是否启用云端
+  cache: true         // 是否在本机缓存已下载的音频
+};
+
+/* ---------- 低层工具 ---------- */
+const te = new TextEncoder();
+function hex(buf) {
+  const b = new Uint8Array(buf);
+  let s = '';
+  for (let i = 0; i < b.length; i++) s += (b[i] < 16 ? '0' : '') + b[i].toString(16);
+  return s;
+}
+function subtle() {
+  const c = (typeof crypto !== 'undefined' && crypto.subtle) ? crypto.subtle : null;
+  if (!c) throw new Error('NO_CRYPTO');
+  return c;
+}
+async function sha256hex(str) {
+  return hex(await subtle().digest('SHA-256', te.encode(str)));
+}
+async function hmacRaw(keyBytes, msg) {
+  const k = await subtle().importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return new Uint8Array(await subtle().sign('HMAC', k, te.encode(msg)));
+}
+
+/* URI 编码：与 ali-oss 的 encodeString 一致（保留 / 不编码） */
+function ossEnc(s) {
+  return encodeURIComponent(String(s == null ? '' : s))
+    .replace(/[!'()*]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+}
+const ossEncPath = s => ossEnc(s).replace(/%2F/g, '/');
+
+/* ---------- 配置读取 ---------- */
+function ossCfg() { return Object.assign({}, OSS_DEFAULT, S.cfg.oss || {}); }
+function ossHostname() {
+  const o = ossCfg();
+  const ep = String(o.ep || '').trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  return { ep: ep, host: o.bucket ? o.bucket + '.' + ep : ep };
+}
+/* oss-eu-central-1.aliyuncs.com -> eu-central-1 */
+function ossRegion() {
+  const ep = ossHostname().ep;
+  const m = /^oss-([a-z0-9-]+?)(?:-internal)?\.aliyuncs\.com$/i.exec(ep);
+  return m ? m[1].toLowerCase() : ep.replace(/^oss-/, '').replace(/\..*$/, '').toLowerCase();
+}
+function ossReady() {
+  const o = ossCfg();
+  return !!(o.on && o.bucket && o.ak && o.sk && ossHostname().ep);
+}
+
+/* ---------- V4 签名 ---------- */
+function ossStamp(d) {
+  const p = n => (n < 10 ? '0' : '') + n;
+  return d.getUTCFullYear() + p(d.getUTCMonth() + 1) + p(d.getUTCDate()) + 'T' +
+    p(d.getUTCHours()) + p(d.getUTCMinutes()) + p(d.getUTCSeconds()) + 'Z';
+}
+
+/* headers：只含参与签名的头（content-type / content-md5 / x-oss-*），全部小写 */
+async function ossAuth(method, bucket, key, query, headers, region, ak, sk, stamp) {
+  const names = Object.keys(headers).map(h => h.toLowerCase()).sort();
+  const canonHeaders = names.map(n => n + ':' + String(headers[n]).trim() + '\n').join('');
+  const qs = Object.keys(query || {}).sort((a, b) => a.localeCompare(b))
+    .map(k => query[k] === null ? ossEnc(k) : ossEnc(k) + '=' + ossEnc(query[k])).join('&');
+
+  const canonReq = [
+    method.toUpperCase(),
+    ossEncPath('/' + (bucket ? bucket + '/' : '') + (key || '')),
+    qs,
+    canonHeaders,
+    '',
+    headers['x-oss-content-sha256'] || 'UNSIGNED-PAYLOAD'
+  ].join('\n');
+
+  const day = stamp.slice(0, 8);
+  const scope = day + '/' + region + '/oss/aliyun_v4_request';
+  const sts = ['OSS4-HMAC-SHA256', stamp, scope, await sha256hex(canonReq)].join('\n');
+
+  let k = await hmacRaw(te.encode('aliyun_v4' + sk), day);
+  k = await hmacRaw(k, region);
+  k = await hmacRaw(k, 'oss');
+  k = await hmacRaw(k, 'aliyun_v4_request');
+  const sig = hex(await hmacRaw(k, sts));
+
+  return 'OSS4-HMAC-SHA256 Credential=' + ak + '/' + scope + ',Signature=' + sig;
+}
+
+/* ---------- 请求 ---------- */
+function ossErrFrom(status, xml) {
+  const code = (/<Code>([^<]+)<\/Code>/.exec(xml || '') || [])[1] || ('HTTP_' + status);
+  const msg = (/<Message>([^<]+)<\/Message>/.exec(xml || '') || [])[1] || '';
+  const e = new Error(code + (msg ? ' · ' + msg : ''));
+  e.code = code; e.status = status;
+  return e;
+}
+
+/* method: GET/PUT/DELETE/HEAD；body 可为 Blob/字符串/null */
+async function ossReq(method, key, body, contentType) {
+  const o = ossCfg();
+  if (!o.bucket) throw new Error('未填写 Bucket 名称');
+  if (!o.ak || !o.sk) throw new Error('未填写 AccessKey');
+  const { host } = ossHostname();
+  const stamp = ossStamp(new Date());
+  const sign = { 'x-oss-content-sha256': 'UNSIGNED-PAYLOAD', 'x-oss-date': stamp };
+  if (contentType) sign['content-type'] = contentType;
+
+  const auth = await ossAuth(method, o.bucket, key, null, sign, ossRegion(), o.ak.trim(), o.sk.trim(), stamp);
+  const headers = Object.assign({}, sign, { authorization: auth });
+
+  let r;
+  try {
+    r = await fetch('https://' + host + '/' + ossEncPath(key), {
+      method: method, headers: headers, body: body || undefined, mode: 'cors', cache: 'no-store'
+    });
+  } catch (e) {
+    const err = new Error('网络或跨域被拦截');
+    err.code = 'CORS_OR_NETWORK';
+    throw err;
+  }
+  if (!r.ok) {
+    let xml = '';
+    try { xml = await r.text(); } catch (e) {}
+    throw ossErrFrom(r.status, xml);
+  }
+  return r;
+}
+
+const ossPutText = (key, text) => ossReq('PUT', key, new Blob([text], { type: 'application/json' }), 'application/json');
+const ossPutBlob = (key, blob, ct) => ossReq('PUT', key, blob, ct || blob.type || 'application/octet-stream');
+async function ossGetText(key) { return (await ossReq('GET', key)).text(); }
+async function ossGetBlob(key) { return (await ossReq('GET', key)).blob(); }
+const ossDel = key => ossReq('DELETE', key);
+
+function ossHint(e) {
+  const c = (e && e.code) || '';
+  if (c === 'CORS_OR_NETWORK')
+    return '浏览器把请求拦下了。九成是 Bucket 的跨域规则（CORS）没配好：来源必须写成 https://你的用户名.github.io，不带路径、不带末尾斜杠，Methods 要勾满 GET/PUT/POST/DELETE/HEAD。';
+  if (c === 'NO_CRYPTO') return '当前页面不是 https，浏览器禁用了加密接口，无法签名。请用 https 打开。';
+  if (c === 'AccessDenied') return 'RAM 子用户没有权限，或 Bucket 名字写错了。检查权限策略里的 bucket 名与这里填的是否完全一致。';
+  if (c === 'SignatureDoesNotMatch') return '签名不匹配：AccessKey Secret 多半复制时带了空格或缺字符。也可能是手机时间不准（签名有效期 15 分钟）。';
+  if (c === 'InvalidAccessKeyId') return 'AccessKey ID 不存在或子用户已被停用。';
+  if (c === 'NoSuchBucket') return '这个 Bucket 不存在，或 Endpoint 的地域和 Bucket 所在地域对不上。';
+  if (c === 'RequestTimeTooSkewed') return '手机时间和服务器差得太远，去系统设置里打开「自动设置时间」。';
+  if (c === 'NoSuchKey') return '云端还没有这个文件。';
+  return (e && e.message) || '未知错误';
+}
+
+/* ---------- 音频对象 ---------- */
+const MIME_EXT = { 'audio/mp4': 'm4a', 'audio/aac': 'm4a', 'audio/mpeg': 'mp3', 'audio/webm': 'webm', 'audio/ogg': 'ogg', 'audio/wav': 'wav' };
+function extOf(mime) {
+  const base = String(mime || '').split(';')[0].trim().toLowerCase();
+  return MIME_EXT[base] || 'bin';
+}
+async function hashKey(s) { return (await sha256hex(String(s))).slice(0, 20); }
+const audioKey = rec => 'audio/' + rec.h + '.' + (rec.x || 'm4a');
+
+/* 本机音频缓存（IndexedDB，key 前缀 au:） */
+const auCacheGet = h => (S.store === 'idb' ? idbGet('au:' + h).catch(() => null) : Promise.resolve(null));
+const auCacheSet = (h, blob) => (S.store === 'idb' ? idbSet('au:' + h, blob).catch(() => {}) : Promise.resolve());
+const auCacheDel = h => (S.store === 'idb' ? idb('readwrite', st => { st.delete('au:' + h); }).catch(() => {}) : Promise.resolve());
+
+const auUrls = new Map();
+async function audioUrl(rec) {
+  if (!rec || !rec.h) return null;
+  if (auUrls.has(rec.h)) return auUrls.get(rec.h);
+  let blob = await auCacheGet(rec.h);
+  if (!blob) {
+    if (!ossReady()) throw new Error('云端未启用，本机也没有这段录音');
+    blob = await ossGetBlob(audioKey(rec));
+    if (ossCfg().cache) auCacheSet(rec.h, blob);
+  }
+  const url = URL.createObjectURL(blob);
+  auUrls.set(rec.h, url);
+  return url;
+}
+
+/* ---------- 藏语发音库 ---------- */
+/* 键归一化：去掉尾部的音节点 ་ 与句点 །/༎，去空白 */
+function boKey(w) {
+  return String(w == null ? '' : w).replace(/[\s་༌།༎]+$/g, '').replace(/^[\s་]+/, '').trim();
+}
+const boGet = w => { const k = boKey(w); const e = S.bo && S.bo[k]; return (e && !e.del) ? e : null; };
+function boSet(w, patch) {
+  const k = boKey(w);
+  if (!k) return null;
+  const e = Object.assign({ w: k, p: '', h: '', x: '', ts: 0 }, S.bo[k] || {}, patch);
+  e.w = k; e.ts = Date.now(); delete e.del;
+  S.bo[k] = e; saveBo();
+  return e;
+}
+function boDrop(w) {
+  const k = boKey(w);
+  const e = S.bo[k];
+  if (!e) return;
+  if (e.h) { auCacheDel(e.h); if (ossReady()) ossDel(audioKey(e)).catch(() => {}); }
+  S.bo[k] = { w: k, del: true, ts: Date.now() };
+  saveBo();
+}
+const boCount = () => Object.keys(S.bo || {}).filter(k => S.bo[k] && !S.bo[k].del).length;
+const boList = () => Object.keys(S.bo || {}).map(k => S.bo[k])
+  .filter(e => e && !e.del).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+/* 音节切分，用于「覆盖新音节才入选」的挑选 */
+const boSyls = w => String(w || '').split(/[་༌།༎\s]+/).filter(Boolean);
+
+/* ---------- data.json 同步 ---------- */
+const CLOUD_KEY = 'data.json';
+const CLOUD = { state: 'off', msg: '', last: 0, busy: false };
+
+function cloudSnapshot() {
+  return {
+    app: 'yulengua', v: 2, ts: Date.now(),
+    cards: S.cards, seen: S.seen, bo: S.bo,
+    cfg: {
+      ts: S.cfg.cfgTs || 0,
+      boPron: S.cfg.boPron, diff: S.cfg.diff,
+      cardCap: S.cfg.cardCap, autoSpeak: S.cfg.autoSpeak
+    }
+  };
+}
+
+/* 合并：一律以时间戳新的一方为准，不会因为换设备而丢东西 */
+function cloudMerge(rm) {
+  let changed = false;
+  if (Array.isArray(rm.cards)) {
+    const m = new Map();
+    S.cards.forEach(c => m.set(c.lang + '|' + c.front, c));
+    rm.cards.forEach(c => {
+      if (!c || !c.front) return;
+      const id = c.lang + '|' + c.front, mine = m.get(id);
+      if (!mine) { m.set(id, c); changed = true; }
+      else if ((c.ts || 0) > (mine.ts || 0)) { m.set(id, c); changed = true; }
+    });
+    const merged = Array.from(m.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    if (merged.length !== S.cards.length || changed) { S.cards = merged; changed = true; }
+  }
+  if (rm.bo && typeof rm.bo === 'object') {
+    Object.keys(rm.bo).forEach(k => {
+      const r = rm.bo[k], mine = S.bo[k];
+      if (!r) return;
+      if (!mine || (r.ts || 0) > (mine.ts || 0)) { S.bo[k] = r; changed = true; }
+    });
+  }
+  if (rm.seen && typeof rm.seen === 'object') {
+    LK.forEach(k => {
+      const a = Array.isArray(rm.seen[k]) ? rm.seen[k] : [];
+      if (!a.length) return;
+      const mine = Array.isArray(S.seen[k]) ? S.seen[k] : [];
+      const set = new Set(mine);
+      const add = a.filter(x => !set.has(x));
+      if (add.length) { S.seen[k] = mine.concat(add).slice(-40); changed = true; }
+    });
+  }
+  if (rm.cfg && (rm.cfg.ts || 0) > (S.cfg.cfgTs || 0)) {
+    if (typeof rm.cfg.boPron === 'string') S.cfg.boPron = rm.cfg.boPron;
+    if (rm.cfg.diff && typeof rm.cfg.diff === 'object') S.cfg.diff = rm.cfg.diff;
+    if (typeof rm.cfg.cardCap === 'number') S.cfg.cardCap = rm.cfg.cardCap;
+    if (typeof rm.cfg.autoSpeak === 'boolean') S.cfg.autoSpeak = rm.cfg.autoSpeak;
+    S.cfg.cfgTs = rm.cfg.ts;
+    saveCfg(true);
+    changed = true;
+  }
+  if (changed) { saveCards(); saveSeen(); saveBo(true); }
+  return changed;
+}
+
+/* 断网时录的音会先躺在本机，等下一次同步补传 */
+async function cloudPushPending() {
+  const pend = Object.keys(S.bo || {}).map(k => S.bo[k])
+    .filter(e => e && !e.del && e.h && e.up === false);
+  for (const e of pend) {
+    const blob = await auCacheGet(e.h);
+    if (!blob) { e.up = true; continue; }          // 本机也没有了，别再重试
+    try { await ossPutBlob(audioKey(e), blob); e.up = true; } catch (err) { break; }
+  }
+  if (pend.length) saveBo(true);
+}
+
+async function cloudSync(force) {
+  if (!ossReady()) { CLOUD.state = 'off'; return false; }
+  if (CLOUD.busy) return false;
+  CLOUD.busy = true; CLOUD.state = 'syncing'; CLOUD.msg = ''; paintCloudBar();
+  try {
+    let remote = null;
+    try { remote = JSON.parse(await ossGetText(CLOUD_KEY)); }
+    catch (e) { if (e.code !== 'NoSuchKey') throw e; }
+    if (remote && remote.app === 'yulengua') cloudMerge(remote);
+    await cloudPushPending();
+    await ossPutText(CLOUD_KEY, JSON.stringify(cloudSnapshot()));
+    CLOUD.state = 'ok'; CLOUD.last = Date.now(); CLOUD.msg = '';
+    S.cfg.lastCloud = CLOUD.last; saveCfg(true);
+    paintCloudBar();
+    return true;
+  } catch (e) {
+    CLOUD.state = 'err'; CLOUD.msg = ossHint(e);
+    paintCloudBar();
+    return false;
+  } finally { CLOUD.busy = false; }
+}
+
+let cloudTimer = null;
+/* 数据一变就排一次上传，4 秒内的连续改动合并成一次请求 */
+function cloudTouch() {
+  if (!ossReady()) return;
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(() => { cloudSync(true); }, 4000);
+}
+
+function paintCloudBar() {
+  const el = typeof $ === 'function' ? $('cloudst') : null;
+  if (!el) return;
+  const t = { off: '未启用', syncing: '同步中…', ok: '已同步', err: '同步失败' }[CLOUD.state] || '未启用';
+  const when = CLOUD.last ? '（' + new Date(CLOUD.last).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }) + '）' : '';
+  el.innerHTML = '<b>' + t + '</b>' + esc(when) +
+    (CLOUD.msg ? '<div class="err" style="margin:8px 0 0">' + esc(CLOUD.msg) + '</div>' : '');
+}
+
+/* 真实地跑一遍 PUT → GET → DELETE，把 OSS 的原始错误码摊开给用户看 */
+async function ossTest(btn) {
+  /* 用户多半是填完就直接点测试，先把输入框里的值落到配置里 */
+  if (typeof saveSet === 'function' && $('fEp')) saveSet(true);
+  const m = $('ossmsg');
+  const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在测试'; btn.disabled = true;
+  m.innerHTML = '';
+  const key = '_yulengua_test.txt';
+  const body = 'yulengua ' + new Date().toISOString();
+  const steps = [];
+  try {
+    if (!ossCfg().bucket) throw new Error('还没填 Bucket 名称');
+    await ossPutText(key, body); steps.push('写入 ✓');
+    const got = await ossGetText(key); steps.push('读回 ' + (got === body ? '✓' : '✗ 内容不一致'));
+    await ossDel(key); steps.push('删除 ✓');
+    m.innerHTML = '<div class="err"><b>云端连接成功</b><br>' + esc(steps.join(' → ')) +
+      '<br>Bucket ' + esc(ossCfg().bucket) + ' · 地域 ' + esc(ossRegion()) + '</div>';
+  } catch (e) {
+    m.innerHTML = '<div class="err"><b>失败于：' + esc(steps.length ? steps.join(' → ') + ' → 下一步' : '第一步写入') + '</b>' +
+      '<br>' + esc(ossHint(e)) +
+      '<div class="note" style="margin-top:8px">原始错误码：' + esc((e && e.code) || '无') +
+      '<br>' + esc(String((e && e.message) || '').slice(0, 200)) + '</div></div>';
+  } finally { btn.innerHTML = old; btn.disabled = false; }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ossAuth, ossEncPath, ossStamp, boKey, boSyls };
+}
 /* ================= Yulengua · AI ================= */
 
 function needKey() {
@@ -1089,17 +1489,41 @@ const RU_RULE = '【俄语书写规则 —— 硬性要求】\n' +
 const KK_CYR_ONLY = '【哈萨克语书写规则 —— 硬性要求】所有哈萨克语内容一律【只写哈萨克斯坦西里尔字母】。' +
   '绝对不要输出任何阿拉伯字母 / 新疆哈萨克文（töte jazu）/ 拉丁转写——这些由应用按正字法规则自动生成并排显示，你写了反而会冲突。';
 
-/* 用户自定义的安多话注音标准 */
+/* 用户在词卡里手改过的注音，反哺给模型。
+   全量塞进 prompt 会越用越贵，所以只挑「能带来新音节」的条目，最多 15 条：
+   同一个音节已经被别的样例覆盖过，就不再重复举例。 */
+const BO_FEED_MAX = 15;
+function boFeedSamples() {
+  if (typeof boList !== 'function') return [];
+  const out = [], cov = new Set();
+  boList().filter(e => e.p).forEach(e => {
+    if (out.length >= BO_FEED_MAX) return;
+    const syl = boSyls(e.w);
+    if (!syl.length || syl.some(s => !cov.has(s))) {
+      syl.forEach(s => cov.add(s));
+      out.push(e);
+    }
+  });
+  return out;
+}
+
 function boPronRule() {
   const t = (S.cfg.boPron || '').trim();
+  const mine = boFeedSamples();
+  const feed = mine.length
+    ? '\n\n【用户亲手改过的注音 —— 优先级最高，出现这些词时必须原样照抄】\n' +
+      mine.map(e => e.w + ' = ' + e.p).join('\n') +
+      '\n这些是用户逐个校对过的读音。遇到表中没有的词，请按这张表体现出来的拼写习惯类推。'
+    : '';
+
   if (!t) {
     return '【安多话注音】用拉丁转写反映【安多口语实际发音】（不是拉萨话，也不是古典书面藏文的逐字母转写），' +
-      '后加圆括号内的近似汉字注音。注意安多话保留复辅音前缀、不读部分后加字、元音无拉萨话式的变化。';
+      '后加圆括号内的近似汉字注音。注意安多话保留复辅音前缀、不读部分后加字、元音无拉萨话式的变化。' + feed;
   }
   return '【安多话注音标准 —— 用户已指定，必须严格遵守】\n' +
     '下面是用户给出的注音样例对照表。你写注音时必须完全采用同一套拼写体系、同一套符号约定、同一种格式：\n' +
     t +
-    '\n遇到样例中没出现过的音，按同一体系类推，不要混入其他转写方案（不要用 Wylie、不要用拉萨话读音）。';
+    '\n遇到样例中没出现过的音，按同一体系类推，不要混入其他转写方案（不要用 Wylie、不要用拉萨话读音）。' + feed;
 }
 
 /* 难度微调 */
@@ -1499,6 +1923,9 @@ VIEWS.set = function () {
     '<button class="btn sm" onclick="$(\'fBo\').value=\'\'">清空</button></div>' +
     '<textarea class="fld" id="fBo" style="min-height:180px;font-size:14px;font-family:ui-monospace,Menlo,monospace" ' +
     'placeholder="点上面「插入模板」开始，或直接按 藏文 = 注音（汉字） 的格式自己写">' + esc(c.boPron) + '</textarea>' +
+    '<div class="row" style="margin-top:12px">' +
+    '<button class="btn sm" onclick="go(\'borec\')">我的藏语发音' + (boCount() ? '（' + boCount() + '）' : '') + '</button></div>' +
+    '<p class="note">在句子阅读里点开任意藏语词，就能手写它的注音、录下自己的发音。你手改过的注音会自动反哺给 AI（最多取 15 条、按覆盖新音节挑选，不会把 prompt 撑大）。</p>' +
 
     '<div class="sec" style="margin-top:36px">语音</div>' +
     '<p class="note" style="margin-top:0">荷兰语、西班牙语、日语直接调用 iOS 内置语音，无需配置。<br>安多藏语目前没有可用的语音合成，改为显示注音。<br>哈萨克语 iOS 无内置音色：填了 Azure Key 就用真人音色 ' + AZ_VOICE + '（免费额度每月 50 万字符），不填则用 OpenAI 语音近似朗读。<br>第一次播放哈萨克语时会从 CDN 加载一次约 370 KB 的语音组件，之后不再重复加载。</p>' +
@@ -1519,6 +1946,8 @@ VIEWS.set = function () {
     '<button class="btn wide" onclick="testKey(this)">测试 OpenAI 连接</button>' +
     '<div id="setmsg"></div>' +
 
+    cloudSectionHtml() +
+
     '<div class="sec" style="margin-top:40px">本地存储</div>' +
     '<div id="stinfo" class="note" style="margin-top:0">' + LOADER + '</div>' +
 
@@ -1535,7 +1964,11 @@ VIEWS.set = function () {
     '<input type="file" id="impf" accept="application/json,.json" style="display:none" onchange="importBackup(this)">' +
     '</div>' +
     '<div id="bkinfo" class="note"></div>' +
-    '<p class="note">备份文件包含全部卡片、设置、注音模板和难度记录。<b>删掉主屏幕图标会连同数据一起被 iOS 清除</b>，这是系统行为、网页无法阻止——重装前务必先导出一次。</p>' +
+    '<p class="note">备份文件包含全部卡片、设置、注音模板、藏语发音记录，以及你填的各个 Key，别随手转发给别人。' +
+    '<b>删掉主屏幕图标会连同本机数据一起被 iOS 清除</b>，这是系统行为、网页无法阻止。' +
+    (ossReady()
+      ? '你已开了云端同步，卡片和录音在 OSS 里有一份，重装后填回 Key 就能拉回来——但 Key 本身只在这个备份文件里。'
+      : '重装前务必先导出一次，或者打开上面的云端同步。') + '</p>' +
 
     '<label class="lb">其他</label>' +
     '<div class="row"><button class="btn sm" onclick="exportAll()">复制全部详解</button>' +
@@ -1543,7 +1976,80 @@ VIEWS.set = function () {
     '<button class="btn sm" onclick="wipe()">清空全部数据</button></div>';
   shell('设置', h);
   paintStorage();
+  paintCloudBar();
 };
+
+/* ---------------- 云端同步（阿里云 OSS） ---------------- */
+function cloudSectionHtml() {
+  const o = ossCfg();
+  return '<div class="sec" style="margin-top:40px">云端同步（阿里云 OSS）</div>' +
+    '<p class="note" style="margin-top:0">开启后，卡片库、难度记录、注音模板、以及你录的藏语发音都会同步到你自己的 OSS Bucket。' +
+    '<b>所有 Key（OpenAI / Azure / OSS AccessKey）都不上云，只存这台设备。</b></p>' +
+
+    '<button class="swi' + (o.on ? ' on' : '') + '" style="margin-top:12px" onclick="toggleCloud()">' +
+    '<span class="kn"><i></i></span>' + (o.on ? '云端同步 开' : '云端同步 关') + '</button>' +
+
+    '<label class="lb">地域 Endpoint</label>' +
+    '<input class="fld" id="fEp" list="eplist" autocapitalize="off" spellcheck="false" placeholder="oss-eu-central-1.aliyuncs.com" value="' + esc(o.ep) + '">' +
+    '<datalist id="eplist">' + OSS_EPS.map(e => '<option value="' + e + '">').join('') + '</datalist>' +
+    '<label class="lb">Bucket 名称</label>' +
+    '<input class="fld" id="fBk" autocapitalize="off" spellcheck="false" placeholder="yulengua" value="' + esc(o.bucket) + '">' +
+    '<label class="lb">AccessKey ID</label>' +
+    '<input class="fld" id="fAk" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(o.ak) + '">' +
+    '<label class="lb">AccessKey Secret</label>' +
+    '<input class="fld" id="fSk" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(o.sk) + '">' +
+    '<p class="note">请用只能操作这一个 Bucket 的 RAM 子用户，不要用主账号的 AccessKey。</p>' +
+
+    '<button class="swi' + (o.cache ? ' on' : '') + '" style="margin-top:14px" onclick="toggleAuCache()">' +
+    '<span class="kn"><i></i></span>' + (o.cache ? '本机缓存音频 开' : '本机缓存音频 关') + '</button>' +
+    '<p class="note">开着的话，每段录音只从云端下载一次，之后走本机。关掉能省手机空间，但每次播放都会产生一次公网流量。</p>' +
+
+    '<div class="row" style="margin-top:16px">' +
+    '<button class="btn sm" onclick="ossTest(this)">测试云端连接</button>' +
+    '<button class="btn sm" onclick="cloudNow(this)">立即同步</button>' +
+    '</div>' +
+    '<div id="ossmsg"></div>' +
+    '<div id="cloudst" class="note" style="margin-top:10px"></div>';
+}
+
+const OSS_EPS = ['oss-eu-central-1.aliyuncs.com', 'oss-eu-west-1.aliyuncs.com',
+  'oss-cn-hangzhou.aliyuncs.com', 'oss-cn-shanghai.aliyuncs.com', 'oss-cn-beijing.aliyuncs.com',
+  'oss-cn-shenzhen.aliyuncs.com', 'oss-cn-hongkong.aliyuncs.com', 'oss-ap-southeast-1.aliyuncs.com',
+  'oss-us-west-1.aliyuncs.com', 'oss-us-east-1.aliyuncs.com'];
+
+function readOss() {
+  if (!$('fEp')) return S.cfg.oss || null;
+  return {
+    ep: $('fEp').value.trim().replace(/^https?:\/\//, '').replace(/\/+$/, ''),
+    bucket: $('fBk').value.trim(),
+    ak: $('fAk').value.trim(),
+    sk: $('fSk').value.trim(),
+    on: ossCfg().on,
+    cache: ossCfg().cache
+  };
+}
+function toggleCloud() {
+  const o = readOss();
+  o.on = !ossCfg().on;
+  S.cfg.oss = o; saveCfg();
+  if (o.on && !(o.bucket && o.ak && o.sk)) toast('还要填好 Bucket 和 AccessKey 才会真的同步');
+  render();
+  if (o.on && ossReady()) cloudSync(true);
+}
+function toggleAuCache() {
+  const o = readOss();
+  o.cache = !ossCfg().cache;
+  S.cfg.oss = o; saveCfg();
+  render();
+}
+async function cloudNow(btn) {
+  saveSet(true);
+  if (!ossReady()) { $('ossmsg').innerHTML = '<div class="err">云端还没启用，或 Bucket / AccessKey 没填全。</div>'; return; }
+  const old = btn.innerHTML; btn.innerHTML = LOADER + ' 同步中'; btn.disabled = true;
+  const ok = await cloudSync(true);
+  btn.innerHTML = old; btn.disabled = false;
+  toast(ok ? '已同步' : '同步失败，看下面的说明');
+}
 
 const CAPS = [0, 200, 500, 1000];
 function setCap(n) { S.cfg.cardCap = n; saveCfg(); const d = trimCards(); if (d) { saveCards(); toast('已回收 ' + d + ' 张旧的已添加卡片'); } render(); }
@@ -1565,11 +2071,13 @@ async function paintStorage() {
         : '<b>还从未备份过。现在导出一次，重装后就不会丢。</b>');
   }
   el.innerHTML =
-    '数据全部存在这台设备本地，不上传任何服务器。<br>' +
+    (ossReady() ? '数据存在本机，并同步到你自己的 OSS Bucket（Key 除外，永不上云）。<br>'
+                : '数据全部存在这台设备本地，不上传任何服务器。<br>') +
     '存储引擎：' + eng + '<br>' +
     '持久化：' + pm + (i.persist === 'denied' ? ' <button class="btn sm" style="margin-left:4px" onclick="reqPersist(this)">再申请一次</button>' : '') + '<br>' +
     '已用空间：' + fmtBytes(i.used) + (i.quota ? ' / 可用配额约 ' + fmtBytes(i.quota) : '') + '<br>' +
-    '卡片 ' + S.cards.length + ' 张，难度基准记录 ' + LK.reduce((a, k) => a + ((S.seen[k] || []).length), 0) + ' 句。';
+    '卡片 ' + S.cards.length + ' 张，难度基准记录 ' + LK.reduce((a, k) => a + ((S.seen[k] || []).length), 0) + ' 句' +
+    (boCount() ? '，藏语发音 ' + boCount() + ' 条' : '') + '。';
 }
 async function reqPersist(btn) { btn.innerHTML = '···'; persistState = 'unknown'; await requestPersist(); paintStorage(); }
 
@@ -1586,6 +2094,7 @@ function saveSet(quiet) {
   S.cfg.azReg = normReg($('fAzR').value) || 'westeurope';
   $('fAzR').value = S.cfg.azReg;
   S.cfg.boPron = $('fBo').value.trim();
+  if ($('fEp')) S.cfg.oss = readOss();
   saveCfg(); if (!quiet) toast('已保存');
 }
 
@@ -1631,10 +2140,10 @@ function clearSeen() {
 }
 function wipe() {
   if (!confirm('确定清空所有卡片和设置？此操作不可撤销。建议先导出一份备份文件。')) return;
-  S.cards = []; S.seen = {}; S.trash = null;
+  S.cards = []; S.seen = {}; S.bo = {}; S.trash = null;
   S.cfg = Object.assign({}, CFG_DEFAULT, { diff: {} });
-  saveCards(); saveSeen(); saveCfg();
-  try { LK.forEach(k => localStorage.removeItem('lg.seen.' + k)); localStorage.removeItem('lg.cards'); } catch (e) {}
+  saveCards(true); saveSeen(true); saveBo(true); saveCfg(true);
+  try { LK.forEach(k => localStorage.removeItem('lg.seen.' + k)); localStorage.removeItem('lg.cards'); localStorage.removeItem('lg.bo'); } catch (e) {}
   home(); toast('已清空');
 }
 /* ================= Yulengua · 句子阅读 ================= */
@@ -1664,7 +2173,12 @@ function sentHtml() {
   const k = R.lang, s = cur().sent;
   const toks = s.tokens.length ? s.tokens : s.text.split(/\s+/);
   const j = (k === 'ja' || k === 'bo') ? '' : ' ';
-  const words = toks.map((t, i) => '<span class="w" data-i="' + i + '">' + esc(t) + '</span>').join(j);
+  /* 藏语：录过音的词加一个小圆点，一眼看得出哪些已经读过 */
+  const words = toks.map((t, i) => {
+    const rec = k === 'bo' && boGet(t);
+    const cls = 'w' + (rec && rec.h ? ' has' : (rec && rec.p ? ' pron' : ''));
+    return '<span class="' + cls + '" data-i="' + i + '">' + esc(t) + '</span>';
+  }).join(j);
   let h = '<div class="sent ' + scriptCls(k) + '">' + words + '</div>';
   if (k === 'kk' && s.alt) h += '<div class="sent ar" style="margin-top:14px">' + esc(s.alt) + '</div>';
   if ((k === 'bo' || k === 'kk' || k === 'ru') && s.translit) h += '<div class="translit">' + esc(s.translit) + '</div>';
@@ -1831,6 +2345,7 @@ let WSHEET = null;
 function showWord(k, word, gloss, context) {
   if (!word) return;
   WSHEET = { k: k, word: word, context: context || word };
+  BO.edit = false; BO.busy = '';
   const ck = k + '|' + word + '|' + WSHEET.context;
   if (wordCache.has(ck)) { sheet(wordHtml(wordCache.get(ck))); return; }
   sheet(
@@ -1840,6 +2355,7 @@ function showWord(k, word, gloss, context) {
     (k === 'ru' ? '<div class="translit" style="margin-top:6px">' + esc(ruLat(word)) + '</div>' : '') +
     '<div class="gl">' + (gloss ? esc(gloss) : '<span class="hint">这个词没有随句简译，点下方展开详解</span>') + '</div>' +
     (LANGS[k] && LANGS[k].tts ? '<div class="row" style="margin-top:14px">' + speakBtn(k, word) + '</div>' : '') +
+    (k === 'bo' ? boPanel(word) : '') +
     '<div class="spacer"></div>' +
     '<button class="btn pri wide" onclick="expandWord(this)">展开详解</button>' +
     '<p class="note" style="text-align:center">展开会调用 AI，生成词性、变位、例句与详细解释</p>'
@@ -1934,6 +2450,7 @@ function wordHtml(j) {
   }
   if (j.note) h += '<div class="expl">' + esc(j.note) + '</div>';
   if (k === 'kk') h += kkTable(j.word || '');
+  if (k === 'bo') h += boPanel(j.word || (WSHEET && WSHEET.word) || '');
   if (Array.isArray(j._qa) && j._qa.length) {
     h += '<div class="qa">' + j._qa.map(x =>
       '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
@@ -2084,6 +2601,234 @@ function saveDetail() {
   const dropped = trimCards();
   saveCards(); back();
   toast('已存入卡片库（共 ' + S.cards.length + ' 张）' + (dropped ? ' · 已回收 ' + dropped + ' 张旧的已添加卡片' : ''));
+}
+/* ================= Yulengua · 藏语发音（手改注音 + 自己录音）=================
+   只在藏语（bo）出现。注音和录音都按「归一化词形」存储，所以同一个词
+   在不同句子里出现时是同一条记录，录过一次以后到处都能回放。 */
+
+const BO = { edit: false, rec: false, busy: '', t0: 0, timer: null, mr: null, stream: null, word: '' };
+
+function boDur(ms) {
+  const s = Math.max(0, Math.round(ms / 1000));
+  return Math.floor(s / 60) + ':' + (s % 60 < 10 ? '0' : '') + (s % 60);
+}
+
+/* 词卡里的藏语面板。word 是句中形式，内部统一归一化。 */
+function boPanel(word) {
+  return '<div id="bopanel">' + boPanelHtml(word) + '</div>';
+}
+
+function boPanelHtml(word) {
+  const k = boKey(word);
+  const e = boGet(k);
+  const hasAudio = !!(e && e.h);
+  let h = '<div class="bopn"><div class="hd">我的注音与录音<span>' + esc(k) + '</span></div>';
+
+  if (BO.edit) {
+    h += '<textarea class="fld" id="bopin" rows="2" style="min-height:52px;font-size:15px" ' +
+      'placeholder="按你自己的注音体系写，例如 yod（约）">' + esc((e && e.p) || '') + '</textarea>' +
+      '<div class="row" style="margin-top:9px">' +
+      '<button class="btn sm pri" onclick="boSavePron(' + jsq(k) + ')">保存注音</button>' +
+      '<button class="btn sm" onclick="BO.edit=false;boRefresh(' + jsq(k) + ')">取消</button></div>';
+  } else {
+    h += '<div class="pv">' + (e && e.p
+      ? '<b>' + esc(e.p) + '</b>'
+      : '<i>还没有手写注音，用的是 AI 给的那一行</i>') +
+      '<button class="btn sm" onclick="BO.edit=true;boRefresh(' + jsq(k) + ')">' +
+      (e && e.p ? '改注音' : '写注音') + '</button></div>';
+  }
+
+  h += '<div class="row" style="margin-top:12px">';
+  if (BO.rec) {
+    h += '<button class="btn sm rec" onclick="boRecStop()">&#9632; 停止 <span id="boclk">0:00</span></button>';
+  } else {
+    h += '<button class="btn sm" onclick="boRecStart(' + jsq(k) + ')">&#9679; ' + (hasAudio ? '重录' : '录我的发音') + '</button>';
+  }
+  if (hasAudio) {
+    h += '<button class="btn sm" onclick="boPlay(' + jsq(k) + ',this)">&#9654; 播放</button>' +
+      '<button class="btn sm" onclick="boDelete(' + jsq(k) + ')">删除录音</button>';
+  }
+  h += '</div>';
+
+  if (BO.busy) h += '<div class="hint" style="margin-top:9px">' + esc(BO.busy) + '</div>';
+  else if (hasAudio) h += '<div class="hint" style="margin-top:9px">已录 ' + (e.d ? boDur(e.d) + ' · ' : '') +
+    (ossReady() ? (e.up === false ? '待上传，联网后自动补传' : '已存云端') : '仅存本机（云端未启用）') + '</div>';
+  else h += '<div class="hint" style="margin-top:9px">录一遍自己的发音，以后这个词出现在任何句子里都能点开重听。</div>';
+
+  return h + '</div>';
+}
+
+function boRefresh(word) {
+  const el = $('bopanel');
+  if (el) el.innerHTML = boPanelHtml(word);
+  if (BO.edit && $('bopin')) $('bopin').focus();
+}
+
+function boSavePron(word) {
+  const ta = $('bopin');
+  if (!ta) return;
+  const v = ta.value.trim();
+  const k = boKey(word);
+  if (!v && !boGet(k)) { BO.edit = false; boRefresh(k); return; }
+  boSet(k, { p: v });
+  BO.edit = false;
+  boRefresh(k);
+  toast(v ? '注音已保存，以后 AI 会照这个写' : '已清空这个词的手写注音');
+  if (typeof paintRead === 'function' && R.lang === 'bo') paintRead();
+}
+
+/* ---------- 录音 ---------- */
+function boMime() {
+  if (typeof MediaRecorder === 'undefined') return null;
+  /* iOS 只给 audio/mp4（AAC），其余浏览器优先 opus */
+  const list = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus'];
+  for (const m of list) { try { if (MediaRecorder.isTypeSupported(m)) return m; } catch (e) {} }
+  return '';
+}
+
+async function boRecStart(word) {
+  if (BO.rec) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+    toast('这个浏览器不支持录音。iOS 请用 Safari，并确保是 https 打开的');
+    return;
+  }
+  BO.word = boKey(word); BO.busy = '正在请求麦克风权限…'; boRefresh(BO.word);
+  try {
+    BO.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) {
+    BO.busy = '';
+    boRefresh(BO.word);
+    toast(/NotAllowed|Permission/i.test(String(e.name || e.message))
+      ? '麦克风权限被拒绝。到 iOS 设置 → Safari → 麦克风 里允许'
+      : '打不开麦克风 · ' + e.message);
+    return;
+  }
+  const mime = boMime();
+  try {
+    BO.mr = mime ? new MediaRecorder(BO.stream, { mimeType: mime }) : new MediaRecorder(BO.stream);
+  } catch (e) { BO.mr = new MediaRecorder(BO.stream); }
+  const chunks = [];
+  BO.mr.ondataavailable = ev => { if (ev.data && ev.data.size) chunks.push(ev.data); };
+  BO.mr.onstop = () => {
+    const dur = Date.now() - BO.t0;
+    const blob = new Blob(chunks, { type: BO.mr.mimeType || mime || 'audio/mp4' });
+    boCleanupRec();
+    if (!blob.size) { BO.busy = ''; boRefresh(BO.word); toast('没有录到声音'); return; }
+    boStore(BO.word, blob, dur);
+  };
+  BO.rec = true; BO.t0 = Date.now(); BO.busy = '';
+  BO.mr.start();
+  boRefresh(BO.word);
+  BO.timer = setInterval(() => {
+    const c = $('boclk');
+    if (c) c.textContent = boDur(Date.now() - BO.t0);
+    if (Date.now() - BO.t0 > 30000) boRecStop();       // 30 秒硬上限，防止误触录一小时
+  }, 250);
+}
+
+function boRecStop() {
+  if (!BO.rec || !BO.mr) return;
+  try { BO.mr.stop(); } catch (e) { boCleanupRec(); boRefresh(BO.word); }
+}
+
+function boCleanupRec() {
+  BO.rec = false;
+  clearInterval(BO.timer); BO.timer = null;
+  if (BO.stream) { try { BO.stream.getTracks().forEach(t => t.stop()); } catch (e) {} }
+  BO.stream = null; BO.mr = null;
+}
+
+async function boStore(word, blob, dur) {
+  const k = boKey(word);
+  BO.busy = '正在保存（' + fmtBytes(blob.size) + '）…'; boRefresh(k);
+  try {
+    const h = await hashKey(k);
+    const x = extOf(blob.type);
+    const old = boGet(k);
+    await auCacheSet(h, blob);                    // 先落本机，保证马上能回放
+    let up = false;
+    if (ossReady()) {
+      try { await ossPutBlob('audio/' + h + '.' + x, blob, blob.type); up = true; }
+      catch (e) { toast('云端上传失败，已先存本机 · ' + ossHint(e)); }
+    }
+    /* 换了容器格式时，把云端的旧对象删掉，免得留垃圾 */
+    if (old && old.h === h && old.x && old.x !== x && ossReady()) ossDel('audio/' + h + '.' + old.x).catch(() => {});
+    auUrls.delete(h);
+    boSet(k, { h: h, x: x, d: dur, up: up });
+    BO.busy = '';
+    boRefresh(k);
+    toast(up ? '已录好并同步到云端' : '已录好，存在本机');
+    if (typeof paintRead === 'function' && R.lang === 'bo') paintRead();
+  } catch (e) {
+    BO.busy = ''; boRefresh(k);
+    toast('保存失败 · ' + e.message);
+  }
+}
+
+async function boPlay(word, btn) {
+  const e = boGet(word);
+  if (!e || !e.h) return;
+  primeAudio();                                   // iOS 必须在手势里同步执行
+  const old = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = '···'; btn.disabled = true; }
+  try {
+    const url = await audioUrl(e);
+    playUrl(url);
+  } catch (err) {
+    toast('播放失败 · ' + ossHint(err));
+  } finally { if (btn) { btn.innerHTML = old; btn.disabled = false; } }
+}
+
+function boDelete(word) {
+  const k = boKey(word);
+  if (!confirm('删除「' + k + '」的录音？手写注音会保留。')) return;
+  const e = boGet(k);
+  if (e && e.h) { auCacheDel(e.h); auUrls.delete(e.h); if (ossReady()) ossDel(audioKey(e)).catch(() => {}); }
+  boSet(k, { h: '', x: '', d: 0, up: false });
+  boRefresh(k);
+  toast('已删除录音');
+  if (typeof paintRead === 'function' && R.lang === 'bo') paintRead();
+}
+
+/* ---------- 「我的藏语发音」管理页 ---------- */
+VIEWS.borec = function () {
+  const list = boList();
+  let body = '<p class="note" style="margin-top:0">这里是你在句子阅读里手改过注音、或自己录过音的藏语词。' +
+    (ossReady() ? '录音存在云端（audio/ 目录），本机只留一份缓存。' : '云端还没启用，录音只存在这台设备上。') + '</p>';
+
+  if (!list.length) {
+    body += '<div class="empty"><span class="big">&#9834;</span>还没有记录。<br>去「句子阅读 · 标准安多藏语」点开任意一个词试试。</div>';
+    shell('我的藏语发音', body);
+    return;
+  }
+
+  body += '<div class="sec">共 ' + list.length + ' 个词</div><div class="lib">' +
+    list.map(e => '<div class="lc"><div class="top"><div class="fr">' +
+      '<span class="tb" style="font-size:22px">' + esc(e.w) + '</span>' +
+      (e.p ? '<div class="translit" style="margin-top:4px">' + esc(e.p) + '</div>' : '') +
+      '<div class="mt">' + (e.h ? '有录音' + (e.d ? ' · ' + boDur(e.d) : '') : '仅注音') +
+      ' · ' + new Date(e.ts || 0).toLocaleDateString('zh-CN') + '</div></div></div>' +
+      '<div class="acts" style="padding-left:0">' +
+      (e.h ? '<button class="btn sm" onclick="boPlay(' + jsq(e.w) + ',this)">&#9654; 播放</button>' : '') +
+      '<button class="btn sm" onclick="boEditFrom(' + jsq(e.w) + ')">改注音</button>' +
+      '<button class="btn sm" onclick="boForget(' + jsq(e.w) + ')">删除</button>' +
+      '</div></div>').join('') + '</div>';
+
+  shell('我的藏语发音', body);
+};
+
+/* 从管理页直接打开这个词的编辑面板 */
+function boEditFrom(word) {
+  BO.edit = true;
+  sheet('<div class="wh"><span class="ww tb">' + esc(word) + '</span></div>' + boPanel(word));
+  setTimeout(() => { if ($('bopin')) $('bopin').focus(); }, 60);
+}
+function boForget(word) {
+  const k = boKey(word);
+  if (!confirm('把「' + k + '」整条删掉？注音和录音都会消失。')) return;
+  boDrop(k);
+  render();
+  toast('已删除');
 }
 /* ================= Yulengua · 场景对话 ================= */
 
@@ -2549,6 +3294,14 @@ app().innerHTML = '<div class="screen on"><div class="body">' +
 loadAll().catch(() => {}).then(() => {
   S.stack = [{ view: 'home' }];
   render();
+  if (ossReady()) {
+    CLOUD.last = S.cfg.lastCloud || 0;
+    cloudSync(false).then(ok => { if (ok) render(); });
+  }
+});
+/* 切回前台时补一次同步，换设备读同一份数据时不至于看到旧内容 */
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && ossReady() && Date.now() - (CLOUD.last || 0) > 120000) cloudSync(false);
 });
 </script>
 </body>
