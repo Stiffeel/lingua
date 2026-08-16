@@ -582,6 +582,75 @@ function kkLetterRows(word) {
   return rows;
 }
 
+/* ================= 俄语：西里尔 → 拉丁注音 =================
+   显示出来的西里尔一律不带重音符号；重音只体现在拉丁注音上。
+   模型负责告诉我们重音在哪（在西里尔里加 U+0301），字母转换和
+   锐音符的落位都由这里的算法完成。 */
+const RU_C2L = {
+  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z',
+  'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+  'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
+  'ъ': '', 'ы': 'y', 'ь': '’', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+};
+const RU_ACUTE = { a: 'á', e: 'é', i: 'í', o: 'ó', u: 'ú', y: 'ý' };
+const COMB_ACUTE = '́';
+
+function ruMarkAcute(lat) {
+  for (let i = lat.length - 1; i >= 0; i--) {
+    const c = lat.charAt(i).toLowerCase();
+    if (RU_ACUTE[c]) {
+      const up = lat.charAt(i) !== c;
+      return lat.slice(0, i) + (up ? RU_ACUTE[c].toUpperCase() : RU_ACUTE[c]) + lat.slice(i + 1);
+    }
+  }
+  return lat;
+}
+function ruLatWord(w) {
+  const cs = Array.from(w);
+  let out = '';
+  for (let i = 0; i < cs.length; i++) {
+    const ch = cs[i];
+    if (ch === COMB_ACUTE) continue;
+    const low = ch.toLowerCase();
+    let lat = RU_C2L[low];
+    if (lat === undefined) { out += ch; continue; }
+    if (lat && ch !== low) lat = lat.charAt(0).toUpperCase() + lat.slice(1);
+    if (lat && (cs[i + 1] === COMB_ACUTE || low === 'ё')) lat = ruMarkAcute(lat);
+    out += lat;
+  }
+  return out;
+}
+const RU_WORDRUN = /[Ѐ-ԯ́]+/g;
+const ruLat = t => String(t == null ? '' : t).replace(RU_WORDRUN, ruLatWord);
+const ruPlain = t => String(t == null ? '' : t).replace(/́/g, '');
+
+/* 详解后处理：去掉西里尔上的重音符号，并在后面补一份拉丁注音 */
+const RU_RUN = /[Ѐ-ԯ́]+(?:[-’'][Ѐ-ԯ́]+)*(?: [Ѐ-ԯ́]+(?:[-’'][Ѐ-ԯ́]+)*)*/g;
+function ruDualInline(t) {
+  return t.replace(RU_RUN, (run, off, whole) => {
+    const after = whole.slice(off + run.length);
+    if (/^\s*（\s*[A-Za-zÀ-ɏ]/.test(after)) return run;
+    return ruPlain(run) + '（' + ruLat(run) + '）';
+  });
+}
+function ruDualHead(head) {
+  const lines = head.split('\n');
+  for (let n = lines.length - 1; n >= 0; n--) {
+    if (/[Ѐ-ԯ]/.test(lines[n])) {
+      lines[n] = ruPlain(lines[n]);
+      lines.splice(n + 1, 0, ruLat(lines[n]));
+      break;
+    }
+  }
+  return lines.join('\n');
+}
+function ruDual(text) {
+  const src = String(text == null ? '' : text);
+  const i = src.search(/^---[ \t]*$/m);
+  if (i < 0) return ruDualInline(src);
+  return ruDualHead(src.slice(0, i)) + ruDualInline(src.slice(i));
+}
+
 /* ---------------- dom helpers ---------------- */
 const $ = id => document.getElementById(id);
 const app = () => $('app');
@@ -882,8 +951,12 @@ const NL_GENDER_RULE =
 
 const ES_GENDER_RULE = '【西班牙语词性标注规则】名词必须标出 el / la 及性数，不需要高亮。';
 
-const RU_RULE = '【俄语标注规则】所有俄语词都要标重音（在重读元音后加 \u0301，如 студе\u0301нт）。' +
-  '名词标性（м.р. / ж.р. / ср.р.）与关键格变化；动词必须标体（несов. / сов.）并给出对应的另一个体、人称变位与过去时四形。';
+const RU_RULE = '【俄语书写规则 —— 硬性要求】\n' +
+  '1. 你写出的俄语【西里尔原文一律不加重音符号】（不要 \u0301），保持干净的普通拼写。\n' +
+  '2. 重音信息只通过指定字段传达：需要标重音的地方（translit、forms、详解正文里的词形），' +
+  '请写成【带重音符号的西里尔】，应用会自动把重音搬到拉丁注音上，并把展示出来的西里尔还原成不带重音的形式。\n' +
+  '3. 不要自己写拉丁转写——拉丁注音由应用按固定规则生成，你写了会冲突。\n' +
+  '4. 名词标性（м.р. / ж.р. / ср.р.）与关键格变化；动词必须标体（несов. / сов.）并给出对应的另一个体、人称变位与过去时四形。';
 
 /* 哈萨克语一律只写西里尔字母：新疆哈萨克文（托特文）由应用按正字法算法生成，
    模型自己拼阿拉伯字母几乎必错，所以彻底禁止。 */
@@ -923,8 +996,10 @@ function sentencePrompt(k, avoid) {
   if (k === 'kk') extra = '\n' + KK_CYR_ONLY + '\n"tokens" 为西里尔词切分。"alt" 和 "translit" 一律留空字符串。';
   if (k === 'bo') extra = '\n"text" 用藏文字母书写；"translit" 给出这句话的安多口语注音。' + boPronRule() +
     '\n"tokens" 为按词切分，每个 token 末尾保留音节点 ་（句末保留 །）。';
-  if (k === 'ru') extra = '\n"translit" 给出【全句标注重音符号】的写法（在重读元音后加 U+0301，如 студе\u0301нт；单音节词不标）。' +
-    '\n"tokens" 按词切分（标点可并入相邻词），用空格连接后须还原原句。';
+  if (k === 'ru') extra = '\n' + RU_RULE +
+    '\n"text" 必须是不带任何重音符号的普通俄语原句。' +
+    '\n"translit" 请填【同一句话、但标注了重音符号的西里尔写法】（在重读元音后加 U+0301，单音节词不标）——应用会据此生成拉丁注音。' +
+    '\n"tokens" 按词切分（标点可并入相邻词，不带重音符号），用空格连接后须还原 "text"。';
   if (k === 'ja') extra = '\n"translit" 给出全句假名读音 + 罗马字。"tokens" 按词（含助词单独成词）切分，拼接后须等于 "text"。';
   if (k === 'nl' || k === 'es') extra = '\n"tokens" 按词切分（标点可并入相邻词或单独成 token），用空格连接后须还原原句。';
   return [
@@ -958,7 +1033,9 @@ function wordPrompt(k, word, sentence) {
   if (k === 'kk') g = KK_CYR_ONLY + '\n"alt" 和 "translit" 一律留空字符串（应用会自己算）。' +
     '\n若为动词，forms 给出词根与常见时态人称变化；若为名词，forms 给出常见格变化或领属形式。';
   if (k === 'ru') g = RU_RULE +
-    '\n"gender" 填 "м.р." / "ж.р." / "ср.р."（非名词留空）。"translit" 填该词标重音的写法。' +
+    '\n"word" / "lemma" / "example.text" 一律写不带重音符号的形式。' +
+    '\n"gender" 填 "м.р." / "ж.р." / "ср.р."（非名词留空）。' +
+    '\n"translit" 填该词【带重音符号的西里尔】写法。forms 里的每个词形也都带重音符号。' +
     '\n若为名词，forms 至少给出：单数主格/属格/宾格/与格/前置格，以及复数主格；' +
     '若为动词，forms 必须给出：体与对应的另一个体、现在时（或简单将来时）全人称变位、过去时四形；' +
     '若为形容词，forms 给出阳/阴/中/复数主格。';
@@ -1004,7 +1081,7 @@ const DETAIL_SPEC = `【输出格式规范（必须严格遵守）】
 5. 分语言的硬性要求：
    荷兰语：名词必须标 de-woord / het-woord 与复数。【只有 het-woord 要加高亮】（如 [T#!!fedcb6#het-woord]），de-woord 直接写出、不加任何高亮。动词必须给出现在时人称变位、过去时、过去分词，并说明可分/不可分前缀与完成时助动词。
    西班牙语：名词必须标 el/la 与性数（不加高亮）；动词必须给出不定式与相关时态的人称变位表。
-   俄语：所有俄语词都要标重音（студе\u0301нт）。名词标性与关键格变化；动词标体（несов./сов.）、人称变位与过去时。
+   俄语：正文里出现的俄语词形请写成【带重音符号的西里尔】（如 студе\u0301нт），应用会自动去掉重音并在后面补上拉丁注音。名词标性与关键格变化；动词标体（несов./сов.）、人称变位与过去时。
    日语：动词标词类与ます形/て形/た形；助词单独解释。
    哈萨克语：给出词根与附加成分拆解。只写西里尔字母，不要写阿拉伯字母或拉丁转写。
    藏语（安多）：给出安多口语注音，并说明助词/助动词的作用。
@@ -1093,7 +1170,7 @@ function lookupPrompt(q) {
         '用户可能输入：目标语言的词（可能拼写有误、变位形式、或只是词的一部分）、中文、英文、罗马字/拉丁注音、假名、西里尔或阿拉伯字母哈萨克文、藏文。\n' +
         '请返回 1–5 个最可能的匹配（跨语言混合，按可能性排序）。若输入是中文/英文，则给出各语言中对应的词。\n\n' +
         KK_CYR_ONLY + '（用户即使用阿拉伯字母哈萨克文来查询，你也要在 word 里回西里尔形式。）\n\n' +
-        '输出 JSON：{"items":[{"lang":"nl|bo|kk|ru|es|ja","word":"该语言的词（原形，哈萨克语用西里尔）","alt":"一律留空","translit":"藏/日给注音，俄语给标重音的写法，否则空","pos":"词性（中文）","gender":"荷兰语 de/het，西班牙语 el/la，俄语 м.р./ж.р./ср.р.，否则空","zh":"中文释义","en":"英文释义（荷/西/俄必填，其余可空）","forms":["最多3条：动词给原形与关键变位、名词给复数或格变化"],"example":{"text":"一个简短例句","zh":"中文翻译"}}]}\n' +
+        '输出 JSON：{"items":[{"lang":"nl|bo|kk|ru|es|ja","word":"该语言的词（原形；哈萨克语用西里尔；俄语不带重音符号）","alt":"一律留空","translit":"藏/日给注音；俄语给【带重音符号的西里尔】写法（应用会转成拉丁注音）；否则空","pos":"词性（中文）","gender":"荷兰语 de/het，西班牙语 el/la，俄语 м.р./ж.р./ср.р.，否则空","zh":"中文释义","en":"英文释义（荷/西/俄必填，其余可空）","forms":["最多3条：动词给原形与关键变位、名词给复数或格变化"],"example":{"text":"一个简短例句","zh":"中文翻译"}}]}\n' +
         '保持轻量：释义简短，例句一句，forms 最多 3 条。'
     }
   ];
@@ -1191,26 +1268,6 @@ function wordAskPrompt(j, context, qa, q) {
   (qa || []).forEach(x => { msgs.push({ role: 'user', content: x.q }); msgs.push({ role: 'assistant', content: x.a }); });
   msgs.push({ role: 'user', content: q });
   return msgs;
-}
-
-/* ---------------- 对话卡片：答案线之后的讲解 ---------------- */
-function dlgCardPrompt(k, scene, transcript) {
-  const L = LANGS[k];
-  return [
-    { role: 'system', content: '你是一位精通' + L.zh + '的语言学教师，母语中文。只输出正文，不要 JSON、不要任何前后缀说明。' },
-    {
-      role: 'user', content:
-        '下面是一段' + L.zh + '（' + L.dialogue + '水平）情景对话练习的完整记录。\n\n场景：' + scene + '\n\n' + transcript +
-        '\n\n请写出这张对话卡片【答案线之后】的内容，按以下顺序：\n' +
-        '1. 「完整对话」：把整段对话重抄一遍，每一句下面紧跟一行中文翻译。我方的句子一律用【修正后的正确版本】。\n' +
-        '2. 「我的错误」：逐条列出我原句里错的地方——写出原句、正确说法、以及为什么。如果某句本来就对，就写它为什么地道。没有错误就写「本轮没有语法错误」。\n' +
-        '3. 「要点」：从这段对话里提炼 3–6 个值得记住的语法点或固定表达，每条一行，附简短例子。\n\n' +
-        (k === 'nl' ? NL_GENDER_RULE + '\n' : '') + (k === 'es' ? ES_GENDER_RULE + '\n' : '') +
-        '可用 [T#!d16056#文字] 字体高亮 与 [T#!!fff895#文字] 背景高亮，全篇 2–5 处。\n' +
-        '绝对不要输出 [Audio#...] 标记，也不要再写 [F##...] 填空标记（那部分应用已经生成好了）。\n' +
-        '不要 markdown 标题、粗体、代码块。用纯文本、缩进和空行组织层次。全部解释用中文。'
-    }
-  ];
 }
 /* ================= Yulengua · home / langs / settings ================= */
 
@@ -1491,7 +1548,8 @@ function sentHtml() {
 function paintRead() {
   const k = R.lang, L = LANGS[k], c = cur();
   let body = '';
-  if (R.err) body += '<div class="err">' + esc(R.err) + '</div>';
+  if (R.err) body += '<div class="err">' + esc(R.err) +
+    '<div class="row" style="margin-top:10px"><button class="btn sm" onclick="regenSent()">&#8635; 重试</button></div></div>';
 
   if (!c) {
     body += R.busy
@@ -1514,6 +1572,7 @@ function paintRead() {
   body += '<div class="row" style="margin-top:18px">' +
     '<button class="btn sm' + (c.show ? ' on' : '') + '" onclick="toggleTrans()">' + (c.show ? '隐藏译文' : '显示译文') + '</button>' +
     speakBtn(k, s.text) +
+    '<button class="btn sm" onclick="regenSent()" title="换一句">&#8635; 重新生成</button>' +
     '<span class="hint" style="margin-left:auto">' + (R.idx + 1) + ' / ' + R.hist.length + '</span>' +
     '</div>';
   body += '<p class="hint" style="margin-top:14px">点击任意单词查看释义</p></div>';
@@ -1545,28 +1604,49 @@ function paintRead() {
 
 function toggleTrans() { const c = cur(); if (c) { c.show = !c.show; paintRead(); } }
 
+function buildSent(j, k) {
+  const tokens = Array.isArray(j.tokens) ? j.tokens.filter(t => String(t).trim()) : [];
+  const gloss = Array.isArray(j.gloss) ? j.gloss.map(x => String(x || '')) : [];
+  let txt = (j.text || '').trim();
+  let trl = (j.translit || '').trim();
+  if (k === 'ru') { trl = ruLat(trl || txt); txt = ruPlain(txt); }
+  return {
+    text: txt,
+    alt: k === 'kk' ? kkArab(txt) : (j.alt || '').trim(),
+    translit: k === 'kk' ? kkLat(txt) : trl,
+    zh: (j.zh || '').trim(), en: (j.en || '').trim(), tokens: tokens, gloss: gloss
+  };
+}
+
 async function nextSent() {
   if (needKey() || R.busy) return;
   if (R.idx < R.hist.length - 1) { R.idx++; R.err = ''; paintRead(); return; }
   R.busy = true; R.err = ''; paintRead();
   try {
-    const j = await aiJson(sentencePrompt(R.lang, getSeen(R.lang)));
-    const tokens = Array.isArray(j.tokens) ? j.tokens.filter(t => String(t).trim()) : [];
-    const gloss = Array.isArray(j.gloss) ? j.gloss.map(x => String(x || '')) : [];
-    const txt = (j.text || '').trim();
-    R.hist.push({
-      sent: {
-        text: txt,
-        alt: R.lang === 'kk' ? kkArab(txt) : (j.alt || '').trim(),
-        translit: R.lang === 'kk' ? kkLat(txt) : (j.translit || '').trim(),
-        zh: (j.zh || '').trim(), en: (j.en || '').trim(), tokens: tokens, gloss: gloss
-      },
-      qa: [], show: false
-    });
+    const sent = buildSent(await aiJson(sentencePrompt(R.lang, getSeen(R.lang))), R.lang);
+    if (!sent.text) throw new Error('模型返回了空句子');
+    R.hist.push({ sent: sent, qa: [], show: false });
     if (R.hist.length > 60) R.hist.shift();
     R.idx = R.hist.length - 1;
-    pushSeen(R.lang, cur().sent.text);
+    pushSeen(R.lang, sent.text);
   } catch (e) { R.err = '生成失败 · ' + e.message; }
+  R.busy = false; paintRead();
+}
+
+/* 重新生成当前这一句：就地替换，不新增历史，也不把废句留在难度基准里 */
+async function regenSent() {
+  if (needKey() || R.busy) return;
+  const c = cur();
+  if (!c) { nextSent(); return; }
+  const oldText = c.sent.text;
+  R.busy = true; R.err = ''; paintRead();
+  try {
+    const sent = buildSent(await aiJson(sentencePrompt(R.lang, getSeen(R.lang))), R.lang);
+    if (!sent.text) throw new Error('模型返回了空句子');
+    S.seen[R.lang] = getSeen(R.lang).filter(t => t !== oldText);
+    R.hist[R.idx] = { sent: sent, qa: [], show: false };
+    pushSeen(R.lang, sent.text);
+  } catch (e) { R.err = '重新生成失败 · ' + e.message; }
   R.busy = false; paintRead();
 }
 
@@ -1631,6 +1711,7 @@ function showWord(k, word, gloss, context) {
     '<div class="wh"><span class="ww ' + scriptCls(k) + '">' + esc(word) + '</span></div>' +
     (k === 'kk' ? '<div class="ar" style="font-size:22px;margin-top:8px">' + esc(kkArab(word)) + '</div>' +
       '<div class="translit" style="margin-top:4px">' + esc(kkLat(word)) + '</div>' : '') +
+    (k === 'ru' ? '<div class="translit" style="margin-top:6px">' + esc(ruLat(word)) + '</div>' : '') +
     '<div class="gl">' + (gloss ? esc(gloss) : '<span class="hint">这个词没有随句简译，点下方展开详解</span>') + '</div>' +
     (LANGS[k] && LANGS[k].tts ? '<div class="row" style="margin-top:14px">' + speakBtn(k, word) + '</div>' : '') +
     '<div class="spacer"></div>' +
@@ -1653,6 +1734,7 @@ async function expandWord(btn) {
   btn.innerHTML = LOADER + ' 正在解析'; btn.disabled = true;
   try {
     const j = await aiJson(wordPrompt(w.k, w.word, w.context));
+    if (!j || (!String(j.zh || '').trim() && !String(j.note || '').trim())) throw new Error('模型返回了空解析');
     j._lang = w.k;
     wordCache.set(ck, j);
     sheet(wordHtml(j));
@@ -1692,6 +1774,14 @@ function wordHtml(j) {
     j.alt = kkArab(j.word || '');
     j.translit = kkLat(j.word || '');
   }
+  if (k === 'ru') {
+    j.translit = ruLat(j.translit || j.word || '');
+    j.word = ruPlain(j.word || '');
+    j.lemma = ruPlain(j.lemma || '');
+    if (j.example && j.example.text) j.example.text = ruPlain(j.example.text);
+    if (Array.isArray(j.forms)) j.forms = j.forms.map(f =>
+      ({ k: f.k, v: ruDualInline(String(f.v == null ? '' : f.v)) }));
+  }
   const het = k === 'nl' && /het/i.test(j.gender || '');
   let h = '<div class="wh">' +
     '<span class="ww ' + scriptCls(k) + '">' + esc(j.word || '') + '</span>' +
@@ -1709,6 +1799,7 @@ function wordHtml(j) {
       speakBtn(k, j.example.text, false) +
       (k === 'kk' ? '<div class="ar" style="font-size:19px;margin-top:4px">' + esc(kkArab(j.example.text)) + '</div>' +
         '<div class="translit" style="margin-top:2px">' + esc(kkLat(j.example.text)) + '</div>' : '') +
+      (k === 'ru' ? '<div class="translit" style="margin-top:4px">' + esc(ruLat(j.example.text)) + '</div>' : '') +
       '<s>' + esc(j.example.zh || '') + '</s></div>';
   }
   if (Array.isArray(j.forms) && j.forms.length) {
@@ -1777,6 +1868,7 @@ async function makeDetail(btn) {
   try {
     let txt = await ai(detailPrompt(R.lang, c.sent, c.qa), false);
     if (R.lang === 'kk') txt = kkDual(txt);
+    if (R.lang === 'ru') txt = ruDual(txt);
     DE.mode = 'raw';
     go('dedit', { lang: R.lang, front: c.sent.text, text: txt.trim() });
   } catch (e) {
@@ -1847,10 +1939,10 @@ function saveDetail() {
 }
 /* ================= Yulengua · 场景对话 ================= */
 
-const D = { lang: null, started: false, scene: '', role: '', msgs: [], busy: false, err: '' };
+const D = { lang: null, started: false, topic: '', scene: '', role: '', msgs: [], busy: false, err: '' };
 
 VIEWS.dlg = function (k) {
-  if (D.lang !== k) { D.lang = k; D.started = false; D.scene = ''; D.msgs = []; D.err = ''; }
+  if (D.lang !== k) { D.lang = k; D.started = false; D.topic = ''; D.scene = ''; D.msgs = []; D.err = ''; }
   paintDlg();
 };
 
@@ -1885,7 +1977,7 @@ function paintDlg() {
   }
 
   let body = '<div class="tbar">' + autoSpeakBtn() +
-    '<button class="btn sm" onclick="makeDlgCard(this)">生成卡片</button>' +
+    '<button class="btn sm" onclick="makeDlgCard()">生成卡片</button>' +
     '<button class="btn sm" onclick="resetDlg()">换一个场景</button></div>' +
     '<div class="scene"><b>场景</b>' + esc(D.scene) + (D.role ? '（对方：' + esc(D.role) + '）' : '') +
     '<div class="hint" style="margin-top:9px">点对方的话或批改句里的任意单词可查看释义' +
@@ -1903,11 +1995,13 @@ function paintDlg() {
     }
     const veiled = m.who === 'sys' && m.reveal === false;
     body += '<div class="msg ' + (m.who === 'me' ? 'me' : 'sys') + '">';
+    const isLast = i === D.msgs.length - 1;
     if (veiled) {
       body += '<div class="bub veil">&#9834; 已朗读，先听一遍</div>' +
         '<div class="ctl">' +
         (L.tts ? '<button data-s="' + i + '">&#9654; 重听</button>' : '') +
         '<button data-rv="' + i + '">显示文本</button>' +
+        (isLast ? '<button data-rg="1">&#8635; 重新生成</button>' : '') +
         '</div>';
     } else {
       body += '<div class="bub ' + scriptCls(k) + '">' +
@@ -1918,6 +2012,7 @@ function paintDlg() {
           '<div class="ctl">' +
           '<button data-t="' + i + '">' + (m.show ? '隐藏翻译' : '显示翻译') + '</button>' +
           (L.tts ? '<button data-s="' + i + '">&#9654; 发音</button>' : '') +
+          (isLast ? '<button data-rg="1">&#8635; 重新生成</button>' : '') +
           '</div>';
       }
     }
@@ -1925,7 +2020,8 @@ function paintDlg() {
   });
 
   if (D.busy) body += '<div style="margin:8px 0 18px">' + LOADER + '</div>';
-  if (D.err) body += '<div class="err">' + esc(D.err) + '</div>';
+  if (D.err) body += '<div class="err">' + esc(D.err) +
+    '<div class="row" style="margin-top:10px"><button class="btn sm" onclick="retryDlg()">&#8635; 重新生成</button></div></div>';
 
   const bar = '<div class="askbar">' +
     '<textarea id="dlgin" rows="1" placeholder="用' + L.zh + '回复…" oninput="autosize(this)"></textarea>' +
@@ -1942,6 +2038,7 @@ function paintDlg() {
   document.querySelectorAll('[data-rv]').forEach(b => {
     b.onclick = () => { D.msgs[+b.dataset.rv].reveal = true; paintDlg(); };
   });
+  document.querySelectorAll('[data-rg]').forEach(b => { b.onclick = () => retryDlg(); });
   document.querySelectorAll('[data-fx]').forEach(b => {
     b.onclick = () => say(k, D.msgs[+b.dataset.fx].fix.corrected, b);
   });
@@ -1957,26 +2054,53 @@ function paintDlg() {
 
 function resetDlg() { D.started = false; D.msgs = []; D.err = ''; paintDlg(); }
 
+function mkSys(j, fb) {
+  const m = {
+    who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
+    reveal: !S.cfg.autoSpeak,
+    tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : []
+  };
+  if (fb) m.fix = {
+    verdict: fb.verdict === 'ok' ? 'ok' : 'fix',
+    corrected: (fb.corrected || '').trim(),
+    note: fb.note || '',
+    ctokens: Array.isArray(fb.ctokens) ? fb.ctokens : [],
+    cgloss: Array.isArray(fb.cgloss) ? fb.cgloss : []
+  };
+  return m;
+}
+
 async function startDlg() {
   if (needKey()) return;
   const t = $('topic').value.trim();
   if (!t) { toast('先写一句提示'); return; }
   const b = $('startBtn'); b.innerHTML = LOADER + ' 正在搭建场景'; b.disabled = true;
-  D.err = '';
+  D.topic = t; D.err = '';
   try {
     const j = await aiJson(dlgOpenPrompt(D.lang, t));
+    if (!(j.line || '').trim()) throw new Error('模型返回了空回复');
     D.scene = j.scene || t; D.role = j.role || '';
-    D.msgs = [{
-      who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
-      reveal: !S.cfg.autoSpeak,
-      tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : []
-    }];
+    D.msgs = [mkSys(j)];
     D.started = true;
     paintDlg();
     if (S.cfg.autoSpeak) say(D.lang, D.msgs[0].line);
     return;
   } catch (e) { D.err = '启动失败 · ' + e.message; }
   paintDlg();
+}
+
+/* 跑一轮：批改上一句 + 接一句。空回复视为失败，可以重来 */
+async function runTurn(userLine) {
+  try {
+    const hist = D.msgs.slice(0, -1).map(m => ({ who: m.who, line: m.line }));
+    const j = await aiJson(dlgTurnPrompt(D.lang, D.scene, hist, userLine));
+    if (!(j.line || '').trim()) throw new Error('模型返回了空回复');
+    D.msgs.push(mkSys(j, j.feedback || {}));
+    D.busy = false; paintDlg();
+    if (S.cfg.autoSpeak) say(D.lang, D.msgs[D.msgs.length - 1].line);
+    return;
+  } catch (e) { D.err = '这一轮没成功 · ' + e.message; }
+  D.busy = false; paintDlg();
 }
 
 async function sendDlg() {
@@ -1986,27 +2110,33 @@ async function sendDlg() {
   ta.value = ''; autosize(ta); ta.blur();
   D.msgs.push({ who: 'me', line: t });
   D.busy = true; D.err = ''; paintDlg();
-  try {
-    const hist = D.msgs.slice(0, -1).map(m => ({ who: m.who, line: m.line }));
-    const j = await aiJson(dlgTurnPrompt(D.lang, D.scene, hist, t));
-    const fb = j.feedback || {};
-    D.msgs.push({
-      who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
-      reveal: !S.cfg.autoSpeak,
-      tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : [],
-      fix: {
-        verdict: fb.verdict === 'ok' ? 'ok' : 'fix',
-        corrected: (fb.corrected || '').trim(),
-        note: fb.note || '',
-        ctokens: Array.isArray(fb.ctokens) ? fb.ctokens : [],
-        cgloss: Array.isArray(fb.cgloss) ? fb.cgloss : []
-      }
-    });
+  await runTurn(t);
+}
+
+/* 重新生成：既用于「这条回复我不满意/是空的」，也用于失败后重试 */
+async function retryDlg() {
+  if (needKey() || D.busy || !D.msgs.length) return;
+  let last = D.msgs.length - 1;
+
+  if (D.msgs[last].who === 'sys' && last === 0) {      // 重新生成开场白
+    D.busy = true; D.err = ''; paintDlg();
+    try {
+      const j = await aiJson(dlgOpenPrompt(D.lang, D.topic || D.scene));
+      if (!(j.line || '').trim()) throw new Error('模型返回了空回复');
+      D.scene = j.scene || D.scene; D.role = j.role || D.role;
+      D.msgs = [mkSys(j)];
+      D.busy = false; paintDlg();
+      if (S.cfg.autoSpeak) say(D.lang, D.msgs[0].line);
+      return;
+    } catch (e) { D.err = '重新生成失败 · ' + e.message; }
     D.busy = false; paintDlg();
-    if (S.cfg.autoSpeak) say(D.lang, D.msgs[D.msgs.length - 1].line);
     return;
-  } catch (e) { D.err = '出错 · ' + e.message; }
-  D.busy = false; paintDlg();
+  }
+
+  if (D.msgs[last].who === 'sys') { D.msgs.pop(); last--; }
+  if (!D.msgs[last] || D.msgs[last].who !== 'me') { paintDlg(); return; }
+  D.busy = true; D.err = ''; paintDlg();
+  await runTurn(D.msgs[last].line);
 }
 
 /* ---------- 生成对话卡片 ---------- */
@@ -2024,38 +2154,15 @@ function dlgFront() {
   });
   return lines.join('\n');
 }
-function dlgTranscript() {
-  const who = D.role ? D.role : '对方';
-  const out = [];
-  D.msgs.forEach((m, i) => {
-    if (m.who === 'sys') out.push(who + '：' + m.line + '\n（中文：' + (m.zh || '') + '）');
-    else {
-      const fixed = correctedFor(i);
-      out.push('我（原句）：' + m.line + (fixed !== m.line ? '\n我（修正后）：' + fixed : '\n（这句本来就正确）'));
-      const nxt = D.msgs[i + 1];
-      if (nxt && nxt.fix && nxt.fix.note) out.push('（批改说明：' + nxt.fix.note + '）');
-    }
-  });
-  return out.join('\n');
-}
-
-async function makeDlgCard(btn) {
-  if (needKey()) return;
+/* 整张卡片都在本地拼装，不调用 AI：只要对话本身 + 填空 */
+function makeDlgCard() {
   if (D.msgs.filter(m => m.who === 'me').length === 0) { toast('先回复几句再生成卡片'); return; }
-  const old = btn.innerHTML;
-  btn.innerHTML = LOADER + ' 生成中'; btn.disabled = true;
-  try {
-    const body = await ai(dlgCardPrompt(D.lang, D.scene, dlgTranscript()), false);
-    DE.mode = 'raw';
-    go('dedit', {
-      lang: D.lang,
-      front: '对话 · ' + D.scene.slice(0, 30),
-      text: dlgFront() + '\n---\n' + body.trim()
-    });
-  } catch (e) {
-    btn.innerHTML = old; btn.disabled = false;
-    toast('生成失败 · ' + e.message);
-  }
+  DE.mode = 'raw';
+  go('dedit', {
+    lang: D.lang,
+    front: '对话 · ' + D.scene.slice(0, 30),
+    text: dlgFront()
+  });
 }
 /* ================= Yulengua · 单词查询 ================= */
 
@@ -2091,6 +2198,7 @@ function paintLookup() {
         (it.example && it.example.text
           ? '<div class="ex"><span class="' + scriptCls(it.lang) + '">' + esc(it.example.text) + '</span>' +
             (it.lang === 'kk' ? '<div class="ar" style="font-size:18px;margin-top:4px">' + esc(kkArab(it.example.text)) + '</div>' : '') +
+            (it.lang === 'ru' ? '<div class="translit" style="margin-top:3px">' + esc(ruLat(it.example.text)) + '</div>' : '') +
             '<s>' + esc(it.example.zh || '') + '</s></div>' : '') +
         (Array.isArray(it.forms) && it.forms.length
           ? '<div class="forms">' + it.forms.map(f => '<div><span>' + esc(typeof f === 'string' ? f : (f.k ? f.k + '：' + f.v : f.v)) + '</span></div>').join('') + '</div>' : '') +
@@ -2139,6 +2247,11 @@ async function doLookup() {
     W.items = (j.items || []).filter(x => x && x.word && LANGS[x.lang]);
     W.items.forEach(it => {
       if (it.lang === 'kk') { it.alt = kkArab(it.word); it.translit = kkLat(it.word); }
+      if (it.lang === 'ru') {
+        it.translit = ruLat(it.translit || it.word);
+        it.word = ruPlain(it.word);
+        if (it.example && it.example.text) it.example.text = ruPlain(it.example.text);
+      }
     });
     if (!W.items.length) W.err = '没有找到匹配的词，换个写法试试。';
   } catch (e) { W.err = '查询失败 · ' + e.message; }
@@ -2166,6 +2279,7 @@ async function makeWordCard(i, btn) {
   try {
     let txt = await ai(wordCardPrompt(it, W.qa), false);
     if (it.lang === 'kk') txt = kkDual(txt);
+    if (it.lang === 'ru') txt = ruDual(txt);
     DE.mode = 'raw';
     go('dedit', { lang: it.lang, front: it.word, text: txt.trim() });
   } catch (e) {
