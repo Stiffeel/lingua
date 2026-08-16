@@ -236,6 +236,11 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .pre{white-space:pre-wrap;font-size:13px;line-height:1.7;color:var(--fg2);background:var(--soft);
   border-radius:10px;padding:13px;margin-top:11px;max-height:220px;overflow:auto;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.lint{border:1px solid var(--line2);border-radius:10px;padding:11px 13px;margin-top:11px;font-size:12.5px;line-height:1.65;color:var(--fg2)}
+.lint.bad{border-left:3px solid var(--fg)}
+.lint b{display:block;color:var(--fg);font-weight:600;margin-bottom:4px}
+.lint ul{margin:5px 0 0;padding-left:18px}
+.lint li{margin:2px 0}
 .rend{white-space:pre-wrap;font-size:14.5px;line-height:1.8;margin-top:11px;border:1px solid var(--line);
   border-radius:10px;padding:15px}
 .rend hr{border:none;border-top:1px solid var(--fg3);margin:14px 0}
@@ -651,6 +656,119 @@ function ruDual(text) {
   return ruDualHead(src.slice(0, i)) + ruDualInline(src.slice(i));
 }
 
+/* ================= 墨墨记忆卡语法检查与自动修复 =================
+   规则来自墨墨官方语法文档：
+   [T#样式#内容]  样式可组合：B 粗 / U 下划线 / I 斜 / D 删除线 / up 上标 / down 下标
+                  / !rrggbb 字色 / !!rrggbb 背景色，用逗号分隔
+   [F##内容]      文字挖空
+   [P#样式#内容]  段落， [Pic#ID/xx#] 图片， [Audio#A,ID/xx#] 音频
+   [E##LaTeX]     公式， [Card#ID/xx#文字] 卡片引用
+   ---            答案线，单卡最多 9 条
+   关键坑：标记内容里出现 ] 会提前终止标记；标记不能跨行；不支持 markdown。 */
+const MJ_TYPES = 'T|P|F|Pic|Audio|E|Choice|Card';
+const MJ_STYLE_WORD = /^(B|U|I|D|up|down)$/;
+const MJ_STYLE_COLOR = /^!!?[0-9a-fA-F]{3,8}$/;
+const MJ_STYLE_LINK = /^link\/".*"$/;
+
+function markjiLint(src) {
+  let t = String(src == null ? '' : src);
+  const fixed = [], warn = [];
+
+  /* 1. markdown 残留 —— 墨墨不认 markdown */
+  if (/^\s*```/m.test(t)) { t = t.replace(/^\s*```.*$/gm, ''); fixed.push('删掉了 ``` 代码围栏'); }
+  if (/^\s{0,3}#{1,6}\s+\S/m.test(t)) { t = t.replace(/^(\s{0,3})#{1,6}\s+/gm, '$1'); fixed.push('去掉了 markdown 标题的 #'); }
+  if (/\*\*[^*\n]+\*\*/.test(t)) { t = t.replace(/\*\*([^*\n]+)\*\*/g, '[T#B#$1]'); fixed.push('把 **加粗** 换成了 [T#B#…]'); }
+
+  /* 2. 逐个标记检查 */
+  const open = new RegExp('\\[(' + MJ_TYPES + ')#', 'g');
+  let m, out = '', last = 0;
+  while ((m = open.exec(t))) {
+    const start = m.index, type = m[1], bodyFrom = m.index + m[0].length;
+    const close = t.indexOf(']', bodyFrom);
+    const nl = t.indexOf('\n', bodyFrom);
+
+    if (close === -1 || (nl !== -1 && nl < close)) {   // 未闭合或跨行
+      const end = nl === -1 ? t.length : nl;
+      out += t.slice(last, end) + ']';
+      last = end;
+      fixed.push('补上了未闭合的 [' + type + '#…');
+      open.lastIndex = end;
+      continue;
+    }
+
+    let body = t.slice(bodyFrom, close);
+    let style = '', content = body;
+    if (type === 'T' || type === 'P' || type === 'F' || type === 'E' || type === 'Choice') {
+      const hash = body.indexOf('#');
+      if (hash === -1) {
+        warn.push('[' + type + '#' + body.slice(0, 20) + '] 缺少第二个 #，格式应为 [' + type + '#样式#内容]');
+        out += t.slice(last, close + 1); last = close + 1; continue;
+      }
+      style = body.slice(0, hash);
+      content = body.slice(hash + 1);
+    }
+
+    let newStyle = style, changed = false;
+    if (type === 'T' || type === 'P') {
+      const toks = style.split(',').filter(x => x !== '');
+      const okToks = [];
+      toks.forEach(tk => {
+        if (MJ_STYLE_WORD.test(tk) || MJ_STYLE_LINK.test(tk) || /^(H1|H2|H3|center|right|L)$/.test(tk)) { okToks.push(tk); return; }
+        if (MJ_STYLE_COLOR.test(tk)) {
+          const bang = tk.startsWith('!!') ? '!!' : '!';
+          let hex = tk.slice(bang.length);
+          if (hex.length === 3) { hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]; changed = true; }
+          if (hex.length === 8) { hex = hex.slice(0, 6); changed = true; }
+          if (hex.length !== 6) { warn.push('颜色值 ' + tk + ' 不是 6 位十六进制'); okToks.push(tk); return; }
+          okToks.push(bang + hex.toLowerCase());
+          if (hex !== hex.toLowerCase()) changed = true;
+          return;
+        }
+        warn.push('样式 “' + tk + '” 不是墨墨支持的写法（可用 B/U/I/D/up/down/!色值/!!色值）');
+        okToks.push(tk);
+      });
+      newStyle = okToks.join(',');
+      if (newStyle !== style) changed = true;
+    }
+
+    if (!content.trim() && type !== 'Pic' && type !== 'Audio') {
+      warn.push('[' + type + '#' + style + '#] 里没有内容');
+    }
+
+    out += t.slice(last, start) + '[' + type + '#' + (type === 'F' ? '#' : (style === body ? '' : newStyle + '#')) + content + ']';
+    if (changed) fixed.push('修正了颜色/样式写法');
+    last = close + 1;
+    open.lastIndex = close + 1;
+  }
+  out += t.slice(last);
+  t = out;
+
+  /* 3. 内容里裸露的 ] —— 会提前截断标记 */
+  const strays = [];
+  t.split('\n').forEach((line, i) => {
+    let depth = 0;
+    for (let c = 0; c < line.length; c++) {
+      if (line[c] === '[') depth++;
+      else if (line[c] === ']') { if (depth === 0) strays.push(i + 1); else depth--; }
+    }
+    if (depth > 0) strays.push(i + 1);
+  });
+  if (strays.length) warn.push('第 ' + Array.from(new Set(strays)).join('、') + ' 行有多余或不配对的方括号，墨墨会在这里提前截断标记');
+
+  /* 4. 答案线：墨墨单卡最多 9 条；本应用的卡片只应有 1 条 */
+  const lines = t.split('\n');
+  let seen = 0, extra = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^---[ \t]*$/.test(lines[i])) {
+      seen++;
+      if (seen > 1) { lines[i] = '———'; extra++; }
+    }
+  }
+  if (extra) { t = lines.join('\n'); fixed.push('把多出来的 ' + extra + ' 条答案线改成了普通分隔线（墨墨会把每条 --- 当成一个答案面）'); }
+
+  return { text: t, fixed: fixed, warn: warn, ok: warn.length === 0 };
+}
+
 /* ---------------- dom helpers ---------------- */
 const $ = id => document.getElementById(id);
 const app = () => $('app');
@@ -949,6 +1067,14 @@ const NL_GENDER_RULE =
   '其中【只有 het-woord 需要加高亮标记】（写作 [T#!!fedcb6#het-woord]），' +
   '因为 het 词数量少、需要重点记忆；de-woord 直接写出即可，不要加任何高亮。';
 
+const MARKJI_RULES = `【墨墨记忆卡语法 —— 违反会让卡片显示错乱，必须严格遵守】
+1. 字体高亮写作 [T#!rrggbb#文字]，背景高亮写作 [T#!!rrggbb#文字]。色值必须是【6 位小写十六进制】，不能写 3 位。
+2. 【标记的内容里绝对不能出现右方括号 ]】——墨墨会在那里提前截断整个标记。需要括号时一律用中文括号（）。同理内容里也不要出现多余的 [。
+3. 一个标记必须完整写在同一行里，不能跨行折断。
+4. 墨墨不支持 markdown：不要写 # 标题、不要写 **加粗**、不要写 \`\`\` 代码块、不要写表格。需要加粗请用 [T#B#文字]。
+5. 【整张卡片只能有一条答案线 ---】（三个减号单独成行）。正文里不要再出现 --- 或 ——— 之类的分隔线，墨墨会把每一条 --- 都当成一个新的答案面。
+6. 除了 [T#…]，不要自创其他方括号标记。`;
+
 const ES_GENDER_RULE = '【西班牙语词性标注规则】名词必须标出 el / la 及性数，不需要高亮。';
 
 const RU_RULE = '【俄语书写规则 —— 硬性要求】\n' +
@@ -1087,7 +1213,7 @@ const DETAIL_SPEC = `【输出格式规范（必须严格遵守）】
    藏语（安多）：给出安多口语注音，并说明助词/助动词的作用。
 6. 若能自然带出同类构词规律，可以补一小组同类词举例（3–8 条），这是本格式的特色。
 7. 全部解释用中文。不要写「以下是解析」之类的开场白，直接从中文翻译开始。
-8. 不要使用 markdown 的 # 标题、** 粗体、\`\`\` 代码块。用纯文本、缩进和空行组织层次。`;
+8. 不要使用任何 markdown（# 标题、** 粗体、\`\`\` 代码块、表格）。用纯文本、缩进和空行组织层次。需要加粗用 [T#B#文字]。`;
 
 const DETAIL_SAMPLE = `【范例】
 周末过后，暖气流将来自西班牙和法国。
@@ -1140,7 +1266,7 @@ function detailPrompt(k, sent, qa) {
         (k === 'bo' ? '\n\n' + boPronRule() : '') +
         (k === 'kk' ? '\n\n' + KK_CYR_ONLY : '') +
         (k === 'ru' ? '\n\n' + RU_RULE : '') +
-        '\n\n' + DETAIL_SPEC + '\n\n' + DETAIL_SAMPLE
+        '\n\n' + MARKJI_RULES + '\n\n' + DETAIL_SPEC + '\n\n' + DETAIL_SAMPLE
     }
   ];
 }
@@ -1204,7 +1330,7 @@ function wordCardPrompt(item, qa) {
         '\n\n【输出格式】\n第一行：中文释义（简短）\n空行\n第二行：' + L.zh + '单词本身\n空行\n--- 单独成行\n' +
         '之后是解析：词性、（荷/西）冠词与性、变位或变格、构词法、常见搭配、1–2 个例句（带中文翻译）、以及同类词规律举例。\n' +
         '可用 [T#!d16056#文字] 字体高亮 与 [T#!!fff895#文字] 背景高亮，全篇 1–4 处。\n' +
-        '绝对不要输出 [Audio#...] 标记。不要 markdown 标题、粗体、代码块。全部用中文解释。'
+        '绝对不要输出 [Audio#...] 标记。全部用中文解释。\n\n' + MARKJI_RULES
     }
   ];
 }
@@ -1869,6 +1995,9 @@ async function makeDetail(btn) {
     let txt = await ai(detailPrompt(R.lang, c.sent, c.qa), false);
     if (R.lang === 'kk') txt = kkDual(txt);
     if (R.lang === 'ru') txt = ruDual(txt);
+    const lint = markjiLint(txt);
+    txt = lint.text;
+    if (lint.fixed.length) toast('已自动整理墨墨语法：' + lint.fixed[0] + (lint.fixed.length > 1 ? ' 等 ' + lint.fixed.length + ' 处' : ''));
     DE.mode = 'raw';
     go('dedit', { lang: R.lang, front: c.sent.text, text: txt.trim() });
   } catch (e) {
@@ -1880,6 +2009,24 @@ async function makeDetail(btn) {
 /* ---------- 详解预览 / 编辑 ---------- */
 let DE = { mode: 'raw' };
 
+function lintBar(text, id) {
+  const r = markjiLint(text);
+  const canFix = r.text !== text;
+  if (r.ok && !canFix) return '<div class="lint"><b>&#10003; 墨墨语法检查通过</b>可以直接复制进墨墨记忆卡。</div>';
+  let h = '<div class="lint' + (r.warn.length ? ' bad' : '') + '"><b>' +
+    (r.warn.length ? '墨墨语法检查发现 ' + r.warn.length + ' 处问题' : '有可以自动整理的地方') + '</b>';
+  if (r.warn.length) h += '<ul>' + r.warn.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul>';
+  if (canFix) h += '<div class="row" style="margin-top:9px"><button class="btn sm" onclick="applyLint(\'' + id + '\')">一键整理</button></div>';
+  return h + '</div>';
+}
+function applyLint(id) {
+  const cu = S.stack[S.stack.length - 1].arg;
+  const r = markjiLint(deText(id));
+  cu.text = r.text;
+  render();
+  toast(r.fixed.length ? '已整理：' + r.fixed.join('；') : '没有可自动整理的问题');
+}
+
 function deditBody(d, id) {
   return '<div class="row" style="margin-bottom:12px">' +
     '<button class="btn sm' + (DE.mode === 'raw' ? ' on' : '') + '" onclick="DE.mode=\'raw\';render()">原文</button>' +
@@ -1888,7 +2035,8 @@ function deditBody(d, id) {
     '</div>' +
     (DE.mode === 'raw'
       ? '<textarea class="fld" id="' + id + '" style="min-height:54vh;font-size:14px;line-height:1.75;font-family:ui-monospace,Menlo,monospace">' + esc(d.text) + '</textarea>'
-      : '<div class="rend">' + renderCodes(d.text) + '</div>');
+      : '<div class="rend">' + renderCodes(d.text) + '</div>') +
+    lintBar(d.text, id);
 }
 function bindDedit(id) {
   if (DE.mode === 'raw' && $(id)) $(id).oninput = () => { S.stack[S.stack.length - 1].arg.text = $(id).value; };
@@ -2161,7 +2309,7 @@ function makeDlgCard() {
   go('dedit', {
     lang: D.lang,
     front: '对话 · ' + D.scene.slice(0, 30),
-    text: dlgFront()
+    text: markjiLint(dlgFront()).text
   });
 }
 /* ================= Yulengua · 单词查询 ================= */
@@ -2280,6 +2428,7 @@ async function makeWordCard(i, btn) {
     let txt = await ai(wordCardPrompt(it, W.qa), false);
     if (it.lang === 'kk') txt = kkDual(txt);
     if (it.lang === 'ru') txt = ruDual(txt);
+    txt = markjiLint(txt).text;
     DE.mode = 'raw';
     go('dedit', { lang: it.lang, front: it.word, text: txt.trim() });
   } catch (e) {
