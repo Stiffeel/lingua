@@ -153,6 +153,11 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .forms div:last-child{border-bottom:none}
 .forms div b{color:var(--fg3);font-weight:400;min-width:74px;flex:none;font-size:12.5px}
 .expl{font-size:14.5px;color:var(--fg2);line-height:1.78;margin-top:14px;white-space:pre-wrap}
+.wask{display:flex;gap:8px;align-items:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.wask textarea{flex:1;border:1px solid var(--line2);border-radius:20px;padding:10px 14px;font-size:16px;
+  background:var(--bg);outline:none;resize:none;max-height:120px;line-height:1.45;min-height:41px}
+.wask .go{width:41px;height:41px;border-radius:50%;background:var(--inv-bg);color:var(--inv-fg);
+  display:flex;align-items:center;justify-content:center;flex:none;font-size:16px}
 
 /* first layer gloss */
 .gl{font-size:20px;line-height:1.6;margin:16px 0 2px}
@@ -179,6 +184,7 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .bub{border:1px solid var(--line);border-radius:16px;padding:13px 16px;font-size:17px;line-height:1.6}
 .msg.me .bub{background:var(--soft);border-color:var(--soft);border-bottom-right-radius:5px}
 .msg.sys .bub{border-bottom-left-radius:5px}
+.bub.veil{border-style:dashed;color:var(--fg3);font-size:14px;font-style:italic;letter-spacing:.04em}
 .msg .tr{font-size:13.5px;color:var(--fg2);padding:9px 4px 0;line-height:1.6;display:none}
 .msg .tr.on{display:block}
 .msg .tr .e{color:var(--fg3);font-size:12.5px;margin-top:3px}
@@ -271,7 +277,8 @@ const CFG_DEFAULT = {
   diff: {},         // 每种语言的难度微调，整数，0 = 基准
   boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
   autoSpeak: false, // 场景对话自动朗读
-  cardCap: 0        // 卡片上限，0 = 不限；超出时只回收已勾选「已添加」的旧卡片
+  cardCap: 0,       // 卡片上限，0 = 不限；超出时只回收已勾选「已添加」的旧卡片
+  lastBackup: 0     // 上次导出备份的时间戳
 };
 const S = {
   cfg: Object.assign({}, CFG_DEFAULT, LS.get('lg.cfg', {})),
@@ -425,6 +432,8 @@ function exportBackup() {
   a.download = 'yulengua-backup-' + new Date().toISOString().slice(0, 10) + '.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 4000);
+  S.cfg.lastBackup = Date.now(); saveCfg();
+  if (typeof paintStorage === 'function') paintStorage();
   toast('已导出 ' + S.cards.length + ' 张卡片');
 }
 function importBackup(input) {
@@ -469,6 +478,12 @@ const LANGS = {
     corpus: '入门初级的哈萨克语短句，内容围绕日常生活、家庭、饮食、习俗与文化。句子 4–10 词，语法简单（现在时、疑问助词 ба/бе/ма/ме、领属人称、格变化等基础点）。',
     sample: 'Оның әкесі — ханзу.\nСіз шай ішесіз бе, әлде кофе ішесіз бе?'
   },
+  ru: {
+    zh: '俄语', native: 'Русский', code: 'RU', tts: 'ru-RU', gram: true, en: true, translit: true,
+    level: '入门初级', dialogue: null,
+    corpus: '入门初级的俄语短句，内容围绕日常生活、学习、家庭、城市与文化。句子 4–12 词，语法控制在：现在时与常用过去时、名词的主格/宾格/属格/前置格、形容词性数一致、常见动词变位与运动动词入门。',
+    sample: 'Меня́ зову́т А́нна. Я студе́нтка из Кита́я.\nГде здесь ближа́йшая ста́нция метро́?'
+  },
   es: {
     zh: '西班牙语', native: 'Español', code: 'ES', tts: 'es-ES', gram: true, en: true,
     level: '中级', dialogue: '初中级',
@@ -482,7 +497,7 @@ const LANGS = {
     sample: '私はヨーロッパに留学している中国人学生です。\nすみません、一番近い地下鉄の駅はどこですか？'
   }
 };
-const LK = ['nl', 'bo', 'kk', 'es', 'ja'];
+const LK = ['nl', 'bo', 'kk', 'ru', 'es', 'ja'];
 const scriptCls = k => k === 'bo' ? 'tb' : (k === 'ja' ? 'jp' : '');
 
 /* ================= 哈萨克语：西里尔 → 新疆哈萨克文（töte jazu）=================
@@ -595,10 +610,12 @@ const NAV_LIB = '<button class="ic" onclick="go(\'lib\')" aria-label="卡片库"
   '<rect x="3" y="6" width="14" height="10" rx="2"/><path d="M6 3.5h8"/></svg></button>';
 
 function sheet(html, keepScroll) {
-  $('sheet').innerHTML = XBAR + html;
-  if (!keepScroll) $('sheet').scrollTop = 0;
+  const el = $('sheet');
+  const st = keepScroll ? el.scrollTop : 0;
+  el.innerHTML = XBAR + html;
+  el.scrollTop = st;
   $('mask').classList.add('on');
-  requestAnimationFrame(() => $('sheet').classList.add('on'));
+  requestAnimationFrame(() => el.classList.add('on'));
 }
 function closeSheet() { $('sheet').classList.remove('on'); $('mask').classList.remove('on'); }
 
@@ -816,6 +833,8 @@ function renderCodes(raw) {
     (m, c, t) => '<span style="background:#' + c + ';color:#111;padding:0 3px;border-radius:2px">' + t + '</span>');
   s = s.replace(/\[T#!([0-9a-fA-F]{3,8})#([\s\S]*?)\]/g,
     (m, c, t) => '<span style="color:#' + c + ';font-weight:600">' + t + '</span>');
+  s = s.replace(/\[F##([\s\S]*?)\]/g,
+    (m, t) => '<span style="border-bottom:2px solid var(--fg2);padding:0 4px;background:rgba(128,128,128,.12)">' + t + '</span>');
   s = s.replace(/^---\s*$/gm, '<hr>');
   return s;
 }
@@ -854,7 +873,7 @@ async function aiJson(messages) {
 }
 
 /* ---------------- shared fragments ---------------- */
-const BASE = '你是一位精通荷兰语、藏语（安多方言）、哈萨克语、西班牙语、日语的语言学教师，母语中文，同时精通英语。你的解释准确、克制、不废话。所有回复严格输出 JSON，不要输出多余文字。';
+const BASE = '你是一位精通荷兰语、藏语（安多方言）、哈萨克语、俄语、西班牙语、日语的语言学教师，母语中文，同时精通英语。你的解释准确、克制、不废话。所有回复严格输出 JSON，不要输出多余文字。';
 
 const NL_GENDER_RULE =
   '【荷兰语词性标注规则】名词必须标出 de-woord 或 het-woord。' +
@@ -862,6 +881,9 @@ const NL_GENDER_RULE =
   '因为 het 词数量少、需要重点记忆；de-woord 直接写出即可，不要加任何高亮。';
 
 const ES_GENDER_RULE = '【西班牙语词性标注规则】名词必须标出 el / la 及性数，不需要高亮。';
+
+const RU_RULE = '【俄语标注规则】所有俄语词都要标重音（在重读元音后加 \u0301，如 студе\u0301нт）。' +
+  '名词标性（м.р. / ж.р. / ср.р.）与关键格变化；动词必须标体（несов. / сов.）并给出对应的另一个体、人称变位与过去时四形。';
 
 /* 哈萨克语一律只写西里尔字母：新疆哈萨克文（托特文）由应用按正字法算法生成，
    模型自己拼阿拉伯字母几乎必错，所以彻底禁止。 */
@@ -901,6 +923,8 @@ function sentencePrompt(k, avoid) {
   if (k === 'kk') extra = '\n' + KK_CYR_ONLY + '\n"tokens" 为西里尔词切分。"alt" 和 "translit" 一律留空字符串。';
   if (k === 'bo') extra = '\n"text" 用藏文字母书写；"translit" 给出这句话的安多口语注音。' + boPronRule() +
     '\n"tokens" 为按词切分，每个 token 末尾保留音节点 ་（句末保留 །）。';
+  if (k === 'ru') extra = '\n"translit" 给出【全句标注重音符号】的写法（在重读元音后加 U+0301，如 студе\u0301нт；单音节词不标）。' +
+    '\n"tokens" 按词切分（标点可并入相邻词），用空格连接后须还原原句。';
   if (k === 'ja') extra = '\n"translit" 给出全句假名读音 + 罗马字。"tokens" 按词（含助词单独成词）切分，拼接后须等于 "text"。';
   if (k === 'nl' || k === 'es') extra = '\n"tokens" 按词切分（标点可并入相邻词或单独成 token），用空格连接后须还原原句。';
   return [
@@ -933,6 +957,11 @@ function wordPrompt(k, word, sentence) {
     '\n若为名词，"gender" 填 "el" 或 "la"，forms 给出单复数；若为动词，forms 必须给出：不定式、现在时全人称（yo/tú/él/nosotros/vosotros/ellos）、简单过去时、未完成过去时、以及（如常用）虚拟式现在时和过去分词。';
   if (k === 'kk') g = KK_CYR_ONLY + '\n"alt" 和 "translit" 一律留空字符串（应用会自己算）。' +
     '\n若为动词，forms 给出词根与常见时态人称变化；若为名词，forms 给出常见格变化或领属形式。';
+  if (k === 'ru') g = RU_RULE +
+    '\n"gender" 填 "м.р." / "ж.р." / "ср.р."（非名词留空）。"translit" 填该词标重音的写法。' +
+    '\n若为名词，forms 至少给出：单数主格/属格/宾格/与格/前置格，以及复数主格；' +
+    '若为动词，forms 必须给出：体与对应的另一个体、现在时（或简单将来时）全人称变位、过去时四形；' +
+    '若为形容词，forms 给出阳/阴/中/复数主格。';
   if (k === 'bo') g = '"translit" 给出该词的安多口语注音。' + boPronRule() +
     '\nforms 说明该词的语法功能（如助动词、格助词、动词的时态形式等）。';
   if (k === 'ja') g = '"translit" 给出假名读音 + 罗马字。若为动词，forms 给出词类（一段/五段/サ变）、ます形、て形、た形、否定形；若为形容词，给出い/な类别与变形。';
@@ -975,6 +1004,7 @@ const DETAIL_SPEC = `【输出格式规范（必须严格遵守）】
 5. 分语言的硬性要求：
    荷兰语：名词必须标 de-woord / het-woord 与复数。【只有 het-woord 要加高亮】（如 [T#!!fedcb6#het-woord]），de-woord 直接写出、不加任何高亮。动词必须给出现在时人称变位、过去时、过去分词，并说明可分/不可分前缀与完成时助动词。
    西班牙语：名词必须标 el/la 与性数（不加高亮）；动词必须给出不定式与相关时态的人称变位表。
+   俄语：所有俄语词都要标重音（студе\u0301нт）。名词标性与关键格变化；动词标体（несов./сов.）、人称变位与过去时。
    日语：动词标词类与ます形/て形/た形；助词单独解释。
    哈萨克语：给出词根与附加成分拆解。只写西里尔字母，不要写阿拉伯字母或拉丁转写。
    藏语（安多）：给出安多口语注音，并说明助词/助动词的作用。
@@ -1032,6 +1062,7 @@ function detailPrompt(k, sent, qa) {
         '\n参考翻译：' + sent.zh + ctx +
         (k === 'bo' ? '\n\n' + boPronRule() : '') +
         (k === 'kk' ? '\n\n' + KK_CYR_ONLY : '') +
+        (k === 'ru' ? '\n\n' + RU_RULE : '') +
         '\n\n' + DETAIL_SPEC + '\n\n' + DETAIL_SAMPLE
     }
   ];
@@ -1043,7 +1074,7 @@ function askPrompt(k, sent, qa, q) {
   const msgs = [{
     role: 'system', content: '你是一位精通' + L.zh + '的语言学教师，母语中文。学生正在阅读一个' + L.zh +
       '句子并向你提问。用中文简洁准确地回答，重点讲清语法与用法，必要时举例。不要客套，不要用 markdown 标题和粗体，直接讲解。控制在 400 字以内。' +
-      (k === 'nl' ? '\n' + NL_GENDER_RULE : '') +
+      (k === 'nl' ? '\n' + NL_GENDER_RULE : '') + (k === 'ru' ? '\n' + RU_RULE : '') +
       '\n\n当前句子：' + sent.text + (sent.translit ? '\n注音：' + sent.translit : '') + '\n翻译：' + sent.zh
   }];
   (qa || []).forEach(x => { msgs.push({ role: 'user', content: x.q }); msgs.push({ role: 'assistant', content: x.a }); });
@@ -1058,11 +1089,11 @@ function lookupPrompt(q) {
     {
       role: 'user', content:
         '用户在一个多语言词典里模糊查询：「' + q + '」\n' +
-        '候选语言只有这五种：荷兰语(nl)、安多藏语(bo)、哈萨克语(kk)、西班牙语(es)、日语(ja)。\n' +
+        '候选语言只有这六种：荷兰语(nl)、安多藏语(bo)、哈萨克语(kk)、俄语(ru)、西班牙语(es)、日语(ja)。\n' +
         '用户可能输入：目标语言的词（可能拼写有误、变位形式、或只是词的一部分）、中文、英文、罗马字/拉丁注音、假名、西里尔或阿拉伯字母哈萨克文、藏文。\n' +
         '请返回 1–5 个最可能的匹配（跨语言混合，按可能性排序）。若输入是中文/英文，则给出各语言中对应的词。\n\n' +
         KK_CYR_ONLY + '（用户即使用阿拉伯字母哈萨克文来查询，你也要在 word 里回西里尔形式。）\n\n' +
-        '输出 JSON：{"items":[{"lang":"nl|bo|kk|es|ja","word":"该语言的词（原形，哈萨克语用西里尔）","alt":"一律留空","translit":"藏/日给注音，否则空","pos":"词性（中文）","gender":"荷兰语 de/het，西班牙语 el/la，否则空","zh":"中文释义","en":"英文释义（荷/西必填，其余可空）","forms":["最多3条：动词给原形与关键变位、名词给复数或格变化"],"example":{"text":"一个简短例句","zh":"中文翻译"}}]}\n' +
+        '输出 JSON：{"items":[{"lang":"nl|bo|kk|ru|es|ja","word":"该语言的词（原形，哈萨克语用西里尔）","alt":"一律留空","translit":"藏/日给注音，俄语给标重音的写法，否则空","pos":"词性（中文）","gender":"荷兰语 de/het，西班牙语 el/la，俄语 м.р./ж.р./ср.р.，否则空","zh":"中文释义","en":"英文释义（荷/西/俄必填，其余可空）","forms":["最多3条：动词给原形与关键变位、名词给复数或格变化"],"example":{"text":"一个简短例句","zh":"中文翻译"}}]}\n' +
         '保持轻量：释义简短，例句一句，forms 最多 3 条。'
     }
   ];
@@ -1072,7 +1103,7 @@ function lookupAskPrompt(item, qa, q) {
   const msgs = [{
     role: 'system', content: '你是一位精通' + LANGS[item.lang].zh + '的语言学教师，母语中文。学生正在查词典。' +
       '用中文简洁准确地回答，控制在 400 字以内，不要 markdown 标题和粗体。' +
-      (item.lang === 'nl' ? '\n' + NL_GENDER_RULE : '') +
+      (item.lang === 'nl' ? '\n' + NL_GENDER_RULE : '') + (item.lang === 'ru' ? '\n' + RU_RULE : '') +
       '\n\n当前词条：' + item.word + '（' + item.pos + '）＝ ' + item.zh
   }];
   (qa || []).forEach(x => { msgs.push({ role: 'user', content: x.q }); msgs.push({ role: 'assistant', content: x.a }); });
@@ -1092,6 +1123,7 @@ function wordCardPrompt(item, qa) {
         (item.lang === 'es' ? '\n\n' + ES_GENDER_RULE : '') +
         (item.lang === 'bo' ? '\n\n' + boPronRule() : '') +
         (item.lang === 'kk' ? '\n\n' + KK_CYR_ONLY : '') +
+        (item.lang === 'ru' ? '\n\n' + RU_RULE : '') +
         '\n\n【输出格式】\n第一行：中文释义（简短）\n空行\n第二行：' + L.zh + '单词本身\n空行\n--- 单独成行\n' +
         '之后是解析：词性、（荷/西）冠词与性、变位或变格、构词法、常见搭配、1–2 个例句（带中文翻译）、以及同类词规律举例。\n' +
         '可用 [T#!d16056#文字] 字体高亮 与 [T#!!fff895#文字] 背景高亮，全篇 1–4 处。\n' +
@@ -1142,6 +1174,44 @@ function dlgTurnPrompt(k, scene, history, userLine) {
   msgs.push({ role: 'user', content: userLine });
   return msgs;
 }
+
+/* ---------------- 词卡内追问 ---------------- */
+function wordAskPrompt(j, context, qa, q) {
+  const k = j._lang, L = LANGS[k];
+  const msgs = [{
+    role: 'system', content: '你是一位精通' + L.zh + '的语言学教师，母语中文。学生刚看完一个词的详解，正在就这个词继续提问。' +
+      '用中文简洁准确地回答，控制在 350 字以内，不要 markdown 标题和粗体，直接讲解。' +
+      (k === 'nl' ? '\n' + NL_GENDER_RULE : '') + (k === 'ru' ? '\n' + RU_RULE : '') +
+      (k === 'kk' ? '\n' + KK_CYR_ONLY : '') + (k === 'bo' ? '\n' + boPronRule() : '') +
+      '\n\n当前词：' + (j.word || '') + (j.lemma && j.lemma !== j.word ? '（原形 ' + j.lemma + '）' : '') +
+      '\n词性：' + (j.pos || '') + (j.gender ? ' / ' + j.gender : '') +
+      '\n释义：' + (j.zh || '') +
+      '\n它出现的上下文：' + context
+  }];
+  (qa || []).forEach(x => { msgs.push({ role: 'user', content: x.q }); msgs.push({ role: 'assistant', content: x.a }); });
+  msgs.push({ role: 'user', content: q });
+  return msgs;
+}
+
+/* ---------------- 对话卡片：答案线之后的讲解 ---------------- */
+function dlgCardPrompt(k, scene, transcript) {
+  const L = LANGS[k];
+  return [
+    { role: 'system', content: '你是一位精通' + L.zh + '的语言学教师，母语中文。只输出正文，不要 JSON、不要任何前后缀说明。' },
+    {
+      role: 'user', content:
+        '下面是一段' + L.zh + '（' + L.dialogue + '水平）情景对话练习的完整记录。\n\n场景：' + scene + '\n\n' + transcript +
+        '\n\n请写出这张对话卡片【答案线之后】的内容，按以下顺序：\n' +
+        '1. 「完整对话」：把整段对话重抄一遍，每一句下面紧跟一行中文翻译。我方的句子一律用【修正后的正确版本】。\n' +
+        '2. 「我的错误」：逐条列出我原句里错的地方——写出原句、正确说法、以及为什么。如果某句本来就对，就写它为什么地道。没有错误就写「本轮没有语法错误」。\n' +
+        '3. 「要点」：从这段对话里提炼 3–6 个值得记住的语法点或固定表达，每条一行，附简短例子。\n\n' +
+        (k === 'nl' ? NL_GENDER_RULE + '\n' : '') + (k === 'es' ? ES_GENDER_RULE + '\n' : '') +
+        '可用 [T#!d16056#文字] 字体高亮 与 [T#!!fff895#文字] 背景高亮，全篇 2–5 处。\n' +
+        '绝对不要输出 [Audio#...] 标记，也不要再写 [F##...] 填空标记（那部分应用已经生成好了）。\n' +
+        '不要 markdown 标题、粗体、代码块。用纯文本、缩进和空行组织层次。全部解释用中文。'
+    }
+  ];
+}
 /* ================= Yulengua · home / langs / settings ================= */
 
 VIEWS.home = function () {
@@ -1153,7 +1223,7 @@ VIEWS.home = function () {
     ['04', '卡片批量生成', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : '']
   ];
   app().innerHTML = '<div class="screen on"><div class="body">' +
-    '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>五语学习</p></div>' +
+    '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>六语学习</p></div>' +
     '<div class="menu">' +
     mods.map(m => '<button class="item" onclick="' + m[3] + '">' +
       '<span class="n">' + m[0] + '</span><span class="t"><b>' + m[1] + m[4] + '</b><s>' + m[2] + '</s></span>' +
@@ -1182,7 +1252,7 @@ VIEWS.langs = function (mod) {
       '<span class="chev">' + (off ? '' : '&#8250;') + '</span></button>';
   }).join('');
   shell(title, '<div class="sec">选择语言</div><div class="menu" style="border-top:1px solid var(--line)">' + rows + '</div>' +
-    (isDlg ? '<p class="note" style="margin-top:20px">场景对话目前开放荷兰语、西班牙语、日语。藏语与哈萨克语入口已预留。</p>' : ''));
+    (isDlg ? '<p class="note" style="margin-top:20px">场景对话目前开放荷兰语、西班牙语、日语。藏语、哈萨克语、俄语入口已预留。</p>' : ''));
 };
 
 /* ---------------- 难度 ---------------- */
@@ -1281,7 +1351,8 @@ VIEWS.set = function () {
     '<button class="btn sm" onclick="$(\'impf\').click()">从备份恢复</button>' +
     '<input type="file" id="impf" accept="application/json,.json" style="display:none" onchange="importBackup(this)">' +
     '</div>' +
-    '<p class="note">备份文件包含全部卡片、设置、注音模板和难度记录。换手机、清过浏览器数据之后可以直接恢复。</p>' +
+    '<div id="bkinfo" class="note"></div>' +
+    '<p class="note">备份文件包含全部卡片、设置、注音模板和难度记录。<b>删掉主屏幕图标会连同数据一起被 iOS 清除</b>，这是系统行为、网页无法阻止——重装前务必先导出一次。</p>' +
 
     '<label class="lb">其他</label>' +
     '<div class="row"><button class="btn sm" onclick="exportAll()">复制全部详解</button>' +
@@ -1299,6 +1370,17 @@ async function paintStorage() {
   const i = await storageInfo();
   const eng = i.store === 'idb' ? 'IndexedDB' : 'localStorage（约 5 MB 上限）';
   const pm = { granted: '已开启，系统不会自动回收', denied: '未获批准，长期不打开可能被系统回收', unsupported: '本浏览器不支持', unknown: '检测中' }[i.persist];
+  const bk = $('bkinfo');
+  if (bk) {
+    const t = S.cfg.lastBackup | 0;
+    const days = t ? Math.floor((Date.now() - t) / 86400000) : -1;
+    bk.innerHTML = !S.cards.length
+      ? '卡片库是空的，暂时不需要备份。'
+      : (t
+        ? '上次备份：' + new Date(t).toLocaleDateString('zh-CN') + '（' + (days <= 0 ? '今天' : days + ' 天前') + '，当时 ' + S.cards.length + ' 张）' +
+          (days >= 14 ? '<br><b>建议现在再导出一次。</b>' : '')
+        : '<b>还从未备份过。现在导出一次，重装后就不会丢。</b>');
+  }
   el.innerHTML =
     '数据全部存在这台设备本地，不上传任何服务器。<br>' +
     '存储引擎：' + eng + '<br>' +
@@ -1402,7 +1484,7 @@ function sentHtml() {
   const words = toks.map((t, i) => '<span class="w" data-i="' + i + '">' + esc(t) + '</span>').join(j);
   let h = '<div class="sent ' + scriptCls(k) + '">' + words + '</div>';
   if (k === 'kk' && s.alt) h += '<div class="sent ar" style="margin-top:14px">' + esc(s.alt) + '</div>';
-  if ((k === 'bo' || k === 'kk') && s.translit) h += '<div class="translit">' + esc(s.translit) + '</div>';
+  if ((k === 'bo' || k === 'kk' || k === 'ru') && s.translit) h += '<div class="translit">' + esc(s.translit) + '</div>';
   return h;
 }
 
@@ -1635,7 +1717,38 @@ function wordHtml(j) {
   }
   if (j.note) h += '<div class="expl">' + esc(j.note) + '</div>';
   if (k === 'kk') h += kkTable(j.word || '');
+  if (Array.isArray(j._qa) && j._qa.length) {
+    h += '<div class="qa">' + j._qa.map(x =>
+      '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
+  }
+  h += '<div class="wask">' +
+    '<textarea id="wsin" rows="1" placeholder="就这个词继续追问…" oninput="autosize(this)"></textarea>' +
+    '<button class="go" onclick="askWordSheet()">&#8593;</button></div>';
   return h;
+}
+
+/* 词卡内追问：问答跟着这个词一起缓存，重新打开还在 */
+async function askWordSheet() {
+  if (needKey() || !WSHEET) return;
+  const ta = $('wsin'); const q = ta.value.trim();
+  if (!q) return;
+  const ck = WSHEET.k + '|' + WSHEET.word + '|' + WSHEET.context;
+  const j = wordCache.get(ck);
+  if (!j) { toast('请先展开详解'); return; }
+  ta.value = ''; ta.blur();
+  j._qa = j._qa || [];
+  j._qa.push({ q: q, a: '…' });
+  sheet(wordHtml(j), true);
+  $('sheet').scrollTop = $('sheet').scrollHeight;
+  try {
+    const a = await ai(wordAskPrompt(j, WSHEET.context, j._qa.slice(0, -1), q), false);
+    j._qa[j._qa.length - 1].a = a;
+  } catch (e) {
+    j._qa.pop();
+    toast('追问失败 · ' + e.message);
+  }
+  sheet(wordHtml(j), true);
+  $('sheet').scrollTop = $('sheet').scrollHeight;
 }
 
 /* ---------- ask ---------- */
@@ -1772,9 +1885,11 @@ function paintDlg() {
   }
 
   let body = '<div class="tbar">' + autoSpeakBtn() +
+    '<button class="btn sm" onclick="makeDlgCard(this)">生成卡片</button>' +
     '<button class="btn sm" onclick="resetDlg()">换一个场景</button></div>' +
     '<div class="scene"><b>场景</b>' + esc(D.scene) + (D.role ? '（对方：' + esc(D.role) + '）' : '') +
-    '<div class="hint" style="margin-top:9px">点对方的话或批改句里的任意单词可查看释义</div></div>';
+    '<div class="hint" style="margin-top:9px">点对方的话或批改句里的任意单词可查看释义' +
+    (S.cfg.autoSpeak ? '。自动朗读已开启，对方的话会先只发音，点「显示文本」才出字' : '') + '</div></div>';
 
   D.msgs.forEach((m, i) => {
     if (m.fix) {
@@ -1786,16 +1901,25 @@ function paintDlg() {
           : '') +
         '<div class="nt">' + esc(m.fix.note || '') + '</div></div>';
     }
-    body += '<div class="msg ' + (m.who === 'me' ? 'me' : 'sys') + '">' +
-      '<div class="bub ' + scriptCls(k) + '">' +
-      (m.who === 'sys' ? tapWords(k, m.line, m.tokens, m.gloss, 's' + i) : esc(m.line)) + '</div>';
-    if (m.who === 'sys') {
-      body += '<div class="tr' + (m.show ? ' on' : '') + '">' + esc(m.zh || '') +
-        (L.en && m.en ? '<div class="e">' + esc(m.en) + '</div>' : '') + '</div>' +
+    const veiled = m.who === 'sys' && m.reveal === false;
+    body += '<div class="msg ' + (m.who === 'me' ? 'me' : 'sys') + '">';
+    if (veiled) {
+      body += '<div class="bub veil">&#9834; 已朗读，先听一遍</div>' +
         '<div class="ctl">' +
-        '<button data-t="' + i + '">' + (m.show ? '隐藏翻译' : '显示翻译') + '</button>' +
-        (L.tts ? '<button data-s="' + i + '">&#9654; 发音</button>' : '') +
+        (L.tts ? '<button data-s="' + i + '">&#9654; 重听</button>' : '') +
+        '<button data-rv="' + i + '">显示文本</button>' +
         '</div>';
+    } else {
+      body += '<div class="bub ' + scriptCls(k) + '">' +
+        (m.who === 'sys' ? tapWords(k, m.line, m.tokens, m.gloss, 's' + i) : esc(m.line)) + '</div>';
+      if (m.who === 'sys') {
+        body += '<div class="tr' + (m.show ? ' on' : '') + '">' + esc(m.zh || '') +
+          (L.en && m.en ? '<div class="e">' + esc(m.en) + '</div>' : '') + '</div>' +
+          '<div class="ctl">' +
+          '<button data-t="' + i + '">' + (m.show ? '隐藏翻译' : '显示翻译') + '</button>' +
+          (L.tts ? '<button data-s="' + i + '">&#9654; 发音</button>' : '') +
+          '</div>';
+      }
     }
     body += '</div>';
   });
@@ -1814,6 +1938,9 @@ function paintDlg() {
   });
   document.querySelectorAll('[data-s]').forEach(b => {
     b.onclick = () => say(k, D.msgs[+b.dataset.s].line, b);
+  });
+  document.querySelectorAll('[data-rv]').forEach(b => {
+    b.onclick = () => { D.msgs[+b.dataset.rv].reveal = true; paintDlg(); };
   });
   document.querySelectorAll('[data-fx]').forEach(b => {
     b.onclick = () => say(k, D.msgs[+b.dataset.fx].fix.corrected, b);
@@ -1841,6 +1968,7 @@ async function startDlg() {
     D.scene = j.scene || t; D.role = j.role || '';
     D.msgs = [{
       who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
+      reveal: !S.cfg.autoSpeak,
       tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : []
     }];
     D.started = true;
@@ -1864,6 +1992,7 @@ async function sendDlg() {
     const fb = j.feedback || {};
     D.msgs.push({
       who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
+      reveal: !S.cfg.autoSpeak,
       tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : [],
       fix: {
         verdict: fb.verdict === 'ok' ? 'ok' : 'fix',
@@ -1878,6 +2007,55 @@ async function sendDlg() {
     return;
   } catch (e) { D.err = '出错 · ' + e.message; }
   D.busy = false; paintDlg();
+}
+
+/* ---------- 生成对话卡片 ---------- */
+function correctedFor(i) {
+  const nxt = D.msgs[i + 1];
+  return (nxt && nxt.fix && nxt.fix.corrected) ? nxt.fix.corrected : D.msgs[i].line;
+}
+/* 卡片正面由本地拼装，保证 [F##...] 填空标记一定正确 */
+function dlgFront() {
+  const who = D.role ? D.role : '对方';
+  const lines = [D.scene, ''];
+  D.msgs.forEach((m, i) => {
+    if (m.who === 'sys') lines.push(who + '：' + m.line);
+    else lines.push('我：[F##' + correctedFor(i) + ']');
+  });
+  return lines.join('\n');
+}
+function dlgTranscript() {
+  const who = D.role ? D.role : '对方';
+  const out = [];
+  D.msgs.forEach((m, i) => {
+    if (m.who === 'sys') out.push(who + '：' + m.line + '\n（中文：' + (m.zh || '') + '）');
+    else {
+      const fixed = correctedFor(i);
+      out.push('我（原句）：' + m.line + (fixed !== m.line ? '\n我（修正后）：' + fixed : '\n（这句本来就正确）'));
+      const nxt = D.msgs[i + 1];
+      if (nxt && nxt.fix && nxt.fix.note) out.push('（批改说明：' + nxt.fix.note + '）');
+    }
+  });
+  return out.join('\n');
+}
+
+async function makeDlgCard(btn) {
+  if (needKey()) return;
+  if (D.msgs.filter(m => m.who === 'me').length === 0) { toast('先回复几句再生成卡片'); return; }
+  const old = btn.innerHTML;
+  btn.innerHTML = LOADER + ' 生成中'; btn.disabled = true;
+  try {
+    const body = await ai(dlgCardPrompt(D.lang, D.scene, dlgTranscript()), false);
+    DE.mode = 'raw';
+    go('dedit', {
+      lang: D.lang,
+      front: '对话 · ' + D.scene.slice(0, 30),
+      text: dlgFront() + '\n---\n' + body.trim()
+    });
+  } catch (e) {
+    btn.innerHTML = old; btn.disabled = false;
+    toast('生成失败 · ' + e.message);
+  }
 }
 /* ================= Yulengua · 单词查询 ================= */
 
@@ -2103,7 +2281,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet()
 window.addEventListener('error', e => { try { toast('脚本错误：' + e.message); } catch (x) {} });
 
 app().innerHTML = '<div class="screen on"><div class="body">' +
-  '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>五语学习</p></div></div></div>';
+  '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>六语学习</p></div></div></div>';
 
 loadAll().catch(() => {}).then(() => {
   S.stack = [{ view: 'home' }];
