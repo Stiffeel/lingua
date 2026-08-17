@@ -234,6 +234,8 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .stp .ct button:active{background:var(--soft)}
 .stp .ct button:first-child{border-radius:9px 0 0 9px}
 .stp .ct button:last-child{border-radius:0 9px 9px 0;border-left:none}
+.msel{flex:none;max-width:46%;border:1px solid var(--line2);border-radius:9px;padding:7px 9px;
+  background:var(--bg);color:var(--fg);font-size:13px;outline:none}
 .stp .ct .v{min-width:52px;text-align:center;font-size:12px;color:var(--fg2);
   border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
   display:flex;align-items:center;justify-content:center;letter-spacing:.02em}
@@ -295,6 +297,7 @@ const LS = {
 
 const CFG_DEFAULT = {
   key: '', model: 'gpt-4.1', azKey: '', azReg: 'westeurope',
+  modelBy: {},      // 按语言覆盖模型，留空则跟随全局；用来只给藏语这类语言上强模型
   diff: {},         // 每种语言的难度微调，整数，0 = 基准
   boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
   autoSpeak: false, // 场景对话自动朗读
@@ -314,6 +317,7 @@ const S = {
   store: 'ls'       // 'idb' | 'ls'
 };
 if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
+if (!S.cfg.modelBy || typeof S.cfg.modelBy !== 'object') S.cfg.modelBy = {};
 
 /* ---------------- 本地存储：IndexedDB 为主，localStorage 兜底 ----------------
    iPhone 上两者都存在设备本地、不上云。选 IndexedDB 是因为 localStorage 在
@@ -414,6 +418,7 @@ async function loadAll() {
       if (bo && typeof bo === 'object') S.bo = bo;
       if (cfg) S.cfg = Object.assign({}, CFG_DEFAULT, cfg);
       if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
+      if (!S.cfg.modelBy || typeof S.cfg.modelBy !== 'object') S.cfg.modelBy = {};
 
       if (Array.isArray(cards)) S.cards = cards;
       else {                                    // 首次运行：从 localStorage 迁移
@@ -1520,8 +1525,30 @@ function needKey() {
   return false;
 }
 
-async function ai(messages, wantJson) {
-  const body = { model: (S.cfg.model || 'gpt-4.1').trim(), messages: messages };
+/* ---------------- 模型选择 ----------------
+   全局一个模型，另外可以按语言单独指定。这样藏语、哈萨克语这类语料稀少、
+   弱模型容易出错的语言可以单独上强模型，其余语言继续走便宜的那个。 */
+const MODELS = ['gpt-4.1', 'gpt-4.1-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-5', 'gpt-5-mini'];
+const globalModel = () => (S.cfg.model || 'gpt-4.1').trim();
+function modelFor(k) {
+  const m = k && S.cfg.modelBy && S.cfg.modelBy[k];
+  return (m && String(m).trim()) || globalModel();
+}
+
+/* 本地判断一段文字是哪种语言 —— 只看字符集，不花钱、不等待。
+   用途是在发请求【之前】就知道该用哪个模型。拉丁字母分不出荷/西，
+   返回空字符串走全局模型即可。 */
+function guessLang(t) {
+  const s = String(t || '');
+  if (/[ༀ-࿿]/.test(s)) return 'bo';                       // 藏文
+  if (/[؀-ۿٴ]/.test(s)) return 'kk';                 // 阿拉伯字母 = 新疆哈萨克文
+  if (/[぀-ヿ]/.test(s)) return 'ja';                       // 假名
+  if (/[Ѐ-ӿ]/.test(s)) return /[әғқңөұүһі]/i.test(s) ? 'kk' : 'ru';
+  return '';
+}
+
+async function ai(messages, wantJson, lang) {
+  const body = { model: modelFor(lang), messages: messages };
   if (wantJson) body.response_format = { type: 'json_object' };
   const call = b => fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -1539,8 +1566,8 @@ async function ai(messages, wantJson) {
   return ((j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '').trim();
 }
 
-async function aiJson(messages) {
-  const raw = await ai(messages, true);
+async function aiJson(messages, lang) {
+  const raw = await ai(messages, true, lang);
   let t = raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
   const a = t.indexOf('{'), b = t.lastIndexOf('}');
   if (a > 0 || b < t.length - 1) t = t.slice(a === -1 ? 0 : a, b === -1 ? t.length : b + 1);
@@ -1814,6 +1841,30 @@ function lookupPrompt(q) {
   ];
 }
 
+/* ---------------- 整句翻译（单词查询模块里的第二种用法） ---------------- */
+function transPrompt(text) {
+  return [
+    { role: 'system', content: BASE },
+    {
+      role: 'user', content:
+        '用户粘贴了一段文字，请判断它属于哪种语言，然后翻译并做逐词切分。\n' +
+        '候选语言只有这六种：荷兰语(nl)、安多藏语(bo)、哈萨克语(kk)、俄语(ru)、西班牙语(es)、日语(ja)。' +
+        '如果都不是（比如用户贴的是中文或英文），"lang" 填空字符串，其余字段尽力填。\n\n' +
+        '原文：\n' + text +
+        '\n\n输出 JSON：\n' +
+        '{"lang":"nl|bo|kk|ru|es|ja|","text":"整理后的原句（修掉明显的排版换行，保留原意与拼写）","alt":"","translit":"","zh":"中文翻译","en":"英文翻译（荷/西/俄填，其余留空）","tokens":["逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"],"note":"这句话里值得一提的语法点，中文，200 字以内"}\n' +
+        '"gloss" 数组长度必须与 "tokens" 完全一致，每项 2–8 个字（助词/介词写语法作用）。\n' +
+        '"tokens" 用空格连接后须还原 "text"（日语和藏语直接拼接即可）。\n\n' +
+        '【按判定出的语言另外遵守】\n' +
+        '· 哈萨克语：' + KK_CYR_ONLY + ' "alt" 与 "translit" 留空，应用会自己算。\n' +
+        '· 俄语：' + RU_RULE + ' "text" 与 "tokens" 不带重音符号；"translit" 填【带重音符号的西里尔】整句。\n' +
+        '· 藏语：' + boPronRule() + ' "translit" 填整句安多口语注音；"tokens" 每个词末尾保留音节点 ་（句末保留 །）。\n' +
+        '· 日语：\"translit\" 给出全句假名读音 + 罗马字。\n' +
+        '· 荷兰语 / 西班牙语：\"translit\" 留空。'
+    }
+  ];
+}
+
 function lookupAskPrompt(item, qa, q) {
   const msgs = [{
     role: 'system', content: '你是一位精通' + LANGS[item.lang].zh + '的语言学教师，母语中文。学生正在查词典。' +
@@ -1943,7 +1994,8 @@ VIEWS.langs = function (mod) {
       '<span class="n">' + L.code + '</span>' +
       '<span class="t"><b>' + L.zh + (off ? '<span class="badge">未开放</span>' : '') + '</b>' +
       '<s class="' + scriptCls(k) + '" style="font-size:' + (k === 'bo' ? '15px' : '12px') + '">' + L.native +
-      (off ? '' : ' · ' + lvl) + '</s></span>' +
+      (off ? '' : ' · ' + lvl) +
+      (!off && S.cfg.modelBy && S.cfg.modelBy[k] ? ' · ' + esc(S.cfg.modelBy[k]) : '') + '</s></span>' +
       '<span class="chev">' + (off ? '' : '&#8250;') + '</span></button>';
   }).join('');
   shell(title, '<div class="sec">选择语言</div><div class="menu" style="border-top:1px solid var(--line)">' + rows + '</div>' +
@@ -1994,7 +2046,24 @@ VIEWS.set = function () {
     '<label class="lb">模型</label>' +
     '<input class="fld" id="fModel" list="mlist" autocapitalize="off" spellcheck="false" placeholder="gpt-4.1" value="' + esc(c.model) + '">' +
     '<datalist id="mlist"><option value="gpt-4.1"><option value="gpt-4.1-mini"><option value="gpt-4o"><option value="gpt-4o-mini"><option value="gpt-5"><option value="gpt-5-mini"></datalist>' +
-    '<p class="note">解析质量优先建议 gpt-4.1 或 gpt-5；追求便宜可用 mini 系列。</p>' +
+    '<p class="note">解析质量优先建议 gpt-4.1 或 gpt-5；追求便宜可用 mini 系列。这是<b>默认</b>模型，可以在下面按语言单独覆盖。</p>' +
+
+    '<div class="sec" style="margin-top:36px">按语言指定模型</div>' +
+    '<p class="note" style="margin-top:0;margin-bottom:6px">藏语、哈萨克语这类训练语料稀少的语言，弱模型经常出错；而荷兰语、西班牙语用便宜的模型就够。' +
+    '在这里只给需要的语言换成更强的模型，其余语言继续走上面的默认模型——总花销不会因此翻倍。</p>' +
+    '<div style="border-top:1px solid var(--line);margin-top:14px">' +
+    LK.map(k => {
+      const cur = (S.cfg.modelBy && S.cfg.modelBy[k]) || '';
+      const opts = MODELS.slice();
+      if (cur && opts.indexOf(cur) === -1) opts.push(cur);
+      return '<div class="stp"><div class="nm"><b>' + LANGS[k].zh + '</b><s>' +
+        (cur ? '已指定 ' + esc(cur) : '跟随默认 · ' + esc(c.model || 'gpt-4.1')) + '</s></div>' +
+        '<select class="msel" onchange="setModelFor(\'' + k + '\',this.value)">' +
+        '<option value=""' + (cur ? '' : ' selected') + '>跟随默认</option>' +
+        opts.map(m => '<option value="' + esc(m) + '"' + (cur === m ? ' selected' : '') + '>' + esc(m) + '</option>').join('') +
+        '<option value="__custom">自定义…</option></select></div>';
+    }).join('') +
+    '</div>' +
 
     '<div class="sec" style="margin-top:36px">句子难度</div>' +
     '<p class="note" style="margin-top:0;margin-bottom:6px">每按一次是很小的一步。生成新句子时，AI 会拿你最近读过的 40 句作为难度基准线，再按这里的档位微调，不会跨级跳跃。</p>' +
@@ -2137,6 +2206,19 @@ async function cloudNow(btn) {
   const ok = await cloudSync(true);
   btn.innerHTML = old; btn.disabled = false;
   toast(ok ? '已同步' : '同步失败，看下面的说明');
+}
+
+function setModelFor(k, v) {
+  if (v === '__custom') {
+    const t = prompt('给' + LANGS[k].zh + '指定模型名（留空则跟随默认）：', (S.cfg.modelBy && S.cfg.modelBy[k]) || '');
+    if (t === null) { render(); return; }
+    v = t.trim();
+  }
+  if (!S.cfg.modelBy || typeof S.cfg.modelBy !== 'object') S.cfg.modelBy = {};
+  if (v) S.cfg.modelBy[k] = v; else delete S.cfg.modelBy[k];
+  saveCfg();
+  render();
+  toast(v ? LANGS[k].zh + ' 改用 ' + v : LANGS[k].zh + ' 恢复跟随默认模型');
 }
 
 const CAPS = [0, 200, 500, 1000];
@@ -2311,8 +2393,10 @@ function paintRead() {
   }
   if (R.busy) body += '<div style="margin-top:18px">' + LOADER + '</div>';
 
+  const nwq = wordQaFor(k, s.text).length;
   body += '<div class="spacer"></div><div class="spacer"></div>' +
     '<button class="btn pri wide" onclick="makeDetail(this)">保存到卡片库</button>' +
+    (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '') +
     '<div class="spacer"></div>' +
     '<div class="split">' +
     '<button class="btn" onclick="prevSent()"' + (R.idx <= 0 ? ' disabled' : '') + '>&#8249; 上一句</button>' +
@@ -2351,7 +2435,7 @@ async function nextSent() {
   if (R.idx < R.hist.length - 1) { R.idx++; R.err = ''; paintRead(); return; }
   R.busy = true; R.err = ''; paintRead();
   try {
-    const sent = buildSent(await aiJson(sentencePrompt(R.lang, getSeen(R.lang))), R.lang);
+    const sent = buildSent(await aiJson(sentencePrompt(R.lang, getSeen(R.lang)), R.lang), R.lang);
     if (!sent.text) throw new Error('模型返回了空句子');
     R.hist.push({ sent: sent, qa: [], show: false });
     if (R.hist.length > 60) R.hist.shift();
@@ -2369,7 +2453,7 @@ async function regenSent() {
   const oldText = c.sent.text;
   R.busy = true; R.err = ''; paintRead();
   try {
-    const sent = buildSent(await aiJson(sentencePrompt(R.lang, getSeen(R.lang))), R.lang);
+    const sent = buildSent(await aiJson(sentencePrompt(R.lang, getSeen(R.lang)), R.lang), R.lang);
     if (!sent.text) throw new Error('模型返回了空句子');
     S.seen[R.lang] = getSeen(R.lang).filter(t => t !== oldText);
     R.hist[R.idx] = { sent: sent, qa: [], show: false };
@@ -2463,9 +2547,9 @@ async function expandWord(btn) {
   const ck = w.k + '|' + w.word + '|' + w.context;
   btn.innerHTML = LOADER + ' 正在解析'; btn.disabled = true;
   try {
-    const j = await aiJson(wordPrompt(w.k, w.word, w.context));
+    const j = await aiJson(wordPrompt(w.k, w.word, w.context), w.k);
     if (!j || (!String(j.zh || '').trim() && !String(j.note || '').trim())) throw new Error('模型返回了空解析');
-    j._lang = w.k;
+    j._lang = w.k; j._ctx = w.context; j._w = w.word;
     wordCache.set(ck, j);
     sheet(wordHtml(j));
   } catch (e) {
@@ -2563,7 +2647,7 @@ async function askWordSheet() {
   sheet(wordHtml(j), true);
   $('sheet').scrollTop = $('sheet').scrollHeight;
   try {
-    const a = await ai(wordAskPrompt(j, WSHEET.context, j._qa.slice(0, -1), q), false);
+    const a = await ai(wordAskPrompt(j, WSHEET.context, j._qa.slice(0, -1), q), false, j._lang);
     j._qa[j._qa.length - 1].a = a;
   } catch (e) {
     j._qa.pop();
@@ -2571,6 +2655,16 @@ async function askWordSheet() {
   }
   sheet(wordHtml(j), true);
   $('sheet').scrollTop = $('sheet').scrollHeight;
+  refreshUnderSheet();
+}
+
+/* 词卡开着的时候底下那一页也要重画一次，否则「会带上 N 条追问」的计数不更新。
+   sheet 是独立于 #app 的层，重画不会把它关掉。 */
+function refreshUnderSheet() {
+  const v = S.stack[S.stack.length - 1];
+  if (!v) return;
+  if (v.view === 'read' && cur()) paintRead();
+  else if (v.view === 'lookup') paintLookup();
 }
 
 /* ---------- ask ---------- */
@@ -2584,7 +2678,7 @@ async function askSent() {
   c.qa.push({ q: q, a: '…' });
   paintRead();
   try {
-    const a = await ai(askPrompt(R.lang, c.sent, c.qa.slice(0, -1), q), false);
+    const a = await ai(askPrompt(R.lang, c.sent, c.qa.slice(0, -1), q), false, R.lang);
     c.qa[c.qa.length - 1].a = a;
   } catch (e) { c.qa.pop(); R.err = '追问失败 · ' + e.message; }
   R.busy = false; paintRead();
@@ -2592,23 +2686,42 @@ async function askSent() {
 }
 
 /* ---------- 生成详解 -> 预览页 ---------- */
-async function makeDetail(btn) {
+/* 你在词卡里就某个词追问过的东西，属于这句话的一部分，生成整句卡片时
+   必须一并带上——否则问明白的那些点不会出现在卡片里，等于白问。 */
+function wordQaFor(k, sentText) {
+  const out = [];
+  wordCache.forEach(j => {
+    if (!j || j._lang !== k || j._ctx !== sentText) return;
+    (j._qa || []).forEach(x => {
+      if (!x || !x.q || !x.a || x.a === '…') return;
+      out.push({ q: '（关于句中的「' + (j._w || j.word || '') + '」）' + x.q, a: x.a });
+    });
+  });
+  return out;
+}
+
+async function detailFor(k, sent, qa, btn) {
   if (needKey()) return;
-  const c = cur(); if (!c) return;
   const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在生成详解'; btn.disabled = true;
   try {
-    let txt = await ai(detailPrompt(R.lang, c.sent, c.qa), false);
-    if (R.lang === 'kk') txt = kkDual(txt);
-    if (R.lang === 'ru') txt = ruDual(txt);
+    const allQa = (qa || []).concat(wordQaFor(k, sent.text));
+    let txt = await ai(detailPrompt(k, sent, allQa), false, k);
+    if (k === 'kk') txt = kkDual(txt);
+    if (k === 'ru') txt = ruDual(txt);
     const lint = markjiLint(txt);
     txt = lint.text;
     if (lint.fixed.length) toast('已自动整理墨墨语法：' + lint.fixed[0] + (lint.fixed.length > 1 ? ' 等 ' + lint.fixed.length + ' 处' : ''));
     DE.mode = 'raw';
-    go('dedit', { lang: R.lang, front: c.sent.text, text: txt.trim() });
+    go('dedit', { lang: k, front: sent.text, text: txt.trim() });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
   }
+}
+
+function makeDetail(btn) {
+  const c = cur(); if (!c) return;
+  detailFor(R.lang, c.sent, c.qa, btn);
 }
 
 /* ---------- 详解预览 / 编辑 ---------- */
@@ -3058,7 +3171,7 @@ async function startDlg() {
   const b = $('startBtn'); b.innerHTML = LOADER + ' 正在搭建场景'; b.disabled = true;
   D.topic = t; D.err = '';
   try {
-    const j = await aiJson(dlgOpenPrompt(D.lang, t));
+    const j = await aiJson(dlgOpenPrompt(D.lang, t), D.lang);
     if (!(j.line || '').trim()) throw new Error('模型返回了空回复');
     D.scene = j.scene || t; D.role = j.role || '';
     D.msgs = [mkSys(j)];
@@ -3074,7 +3187,7 @@ async function startDlg() {
 async function runTurn(userLine) {
   try {
     const hist = D.msgs.slice(0, -1).map(m => ({ who: m.who, line: m.line }));
-    const j = await aiJson(dlgTurnPrompt(D.lang, D.scene, hist, userLine));
+    const j = await aiJson(dlgTurnPrompt(D.lang, D.scene, hist, userLine), D.lang);
     if (!(j.line || '').trim()) throw new Error('模型返回了空回复');
     D.msgs.push(mkSys(j, j.feedback || {}));
     D.busy = false; paintDlg();
@@ -3102,7 +3215,7 @@ async function retryDlg() {
   if (D.msgs[last].who === 'sys' && last === 0) {      // 重新生成开场白
     D.busy = true; D.err = ''; paintDlg();
     try {
-      const j = await aiJson(dlgOpenPrompt(D.lang, D.topic || D.scene));
+      const j = await aiJson(dlgOpenPrompt(D.lang, D.topic || D.scene), D.lang);
       if (!(j.line || '').trim()) throw new Error('模型返回了空回复');
       D.scene = j.scene || D.scene; D.role = j.role || D.role;
       D.msgs = [mkSys(j)];
@@ -3145,63 +3258,77 @@ function makeDlgCard() {
     text: markjiLint(dlgFront()).text
   });
 }
-/* ================= Yulengua · 单词查询 ================= */
+/* ================= Yulengua · 单词查询 / 整句翻译 ================= */
 
-const W = { q: '', items: [], sel: 0, qa: [], busy: false, err: '' };
+const W = { q: '', items: [], sel: 0, qa: [], busy: false, err: '', mode: 'word', sent: null, sqa: [] };
 
 VIEWS.lookup = function () { paintLookup(); };
 
 function paintLookup() {
   let body = '<input class="fld" id="wq" autocapitalize="off" spellcheck="false" ' +
-    'placeholder="输入任意语言的词、中文、注音…" value="' + esc(W.q) + '" ' +
+    'placeholder="查一个词，或粘贴一整句话…" value="' + esc(W.q) + '" ' +
     'onkeydown="if(event.key===\'Enter\'){event.preventDefault();doLookup()}">' +
     '<div class="spacer"></div>' +
-    '<button class="btn pri wide" onclick="doLookup()">查询</button>';
+    '<div class="split">' +
+    '<button class="btn pri" onclick="doLookup()">查词</button>' +
+    '<button class="btn" onclick="doTranslate()">翻译整句</button>' +
+    '</div>' +
+    '<p class="note">「查词」返回跨六种语言的候选词条；「翻译整句」先判断语言再整句翻译，可以点词、可以追问，也能存成卡片。</p>';
 
   if (W.err) body += '<div class="err">' + esc(W.err) + '</div>';
-  if (W.busy) body += '<div style="margin-top:22px">' + LOADER + ' 正在查询</div>';
+  if (W.busy) body += '<div style="margin-top:22px">' + LOADER + ' 正在' + (W.mode === 'sent' ? '翻译' : '查询') + '</div>';
 
-  if (W.items.length) {
-    body += '<div class="sec">结果 · 共 ' + W.items.length + ' 条</div>';
-    W.items.forEach((it, i) => {
-      const L = LANGS[it.lang] || LANGS.nl;
-      body += '<div class="card" style="margin-bottom:14px;' + (i === W.sel ? 'border-color:var(--fg2)' : '') + '" data-pick="' + i + '">' +
-        '<div class="wh">' +
-        '<span class="ww ' + scriptCls(it.lang) + '" style="font-size:23px">' + esc(it.word || '') + '</span>' +
-        (it.gender ? '<span class="tag' + (it.lang === 'nl' && /het/i.test(it.gender) ? ' k' : '') + '">' + esc(it.gender) + '</span>' : '') +
-        (it.pos ? '<span class="tag">' + esc(it.pos) + '</span>' : '') +
-        '<span class="lm">' + esc(L.zh) + '</span>' +
-        '</div>' +
-        (it.alt ? '<div class="ar" style="font-size:19px;margin-top:6px">' + esc(it.alt) + '</div>' : '') +
-        (it.translit ? '<div class="translit" style="margin-top:5px">' + esc(it.translit) + '</div>' : '') +
-        '<div class="def" style="font-size:15.5px">' + esc(it.zh || '') +
-        (it.en ? '<div class="hint" style="margin-top:4px;font-size:13px">' + esc(it.en) + '</div>' : '') + '</div>' +
-        (it.example && it.example.text
-          ? '<div class="ex"><span class="' + scriptCls(it.lang) + '">' + esc(it.example.text) + '</span>' +
-            (it.lang === 'kk' ? '<div class="ar" style="font-size:18px;margin-top:4px">' + esc(kkArab(it.example.text)) + '</div>' : '') +
-            (it.lang === 'ru' ? '<div class="translit" style="margin-top:3px">' + esc(ruLat(it.example.text)) + '</div>' : '') +
-            '<s>' + esc(it.example.zh || '') + '</s></div>' : '') +
-        (Array.isArray(it.forms) && it.forms.length
-          ? '<div class="forms">' + it.forms.map(f => '<div><span>' + esc(typeof f === 'string' ? f : (f.k ? f.k + '：' + f.v : f.v)) + '</span></div>').join('') + '</div>' : '') +
-        '<div class="row" style="margin-top:16px">' +
-        (L.tts ? '<button class="btn sm" data-spk="' + i + '">&#9654; 发音</button>' : '') +
-        '<button class="btn sm" data-card="' + i + '">生成卡片</button>' +
-        (i === W.sel ? '<span class="hint" style="margin-left:auto">追问对象</span>' : '') +
-        '</div></div>';
-    });
-  }
+  body += (W.mode === 'sent') ? transHtml() : itemsHtml();
 
-  if (W.qa.length) {
+  if (W.mode === 'word' && W.qa.length) {
     body += '<div class="qa">' + W.qa.map(x =>
       '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
   }
 
-  const bar = W.items.length ? '<div class="askbar">' +
-    '<textarea id="wask" rows="1" placeholder="对结果继续追问…" oninput="autosize(this)"></textarea>' +
-    '<button class="go" onclick="askWord()">&#8593;</button></div>' : '';
+  const canAsk = W.mode === 'sent' ? !!W.sent : !!W.items.length;
+  const bar = canAsk ? '<div class="askbar">' +
+    '<textarea id="wask" rows="1" placeholder="' + (W.mode === 'sent' ? '就这句话继续追问…' : '对结果继续追问…') + '" oninput="autosize(this)"></textarea>' +
+    '<button class="go" onclick="' + (W.mode === 'sent' ? 'askTrans()' : 'askWord()') + '">&#8593;</button></div>' : '';
 
-  shell('单词查询', body, { bar: bar, right: NAV_LIB });
+  shell(W.mode === 'sent' ? '整句翻译' : '单词查询', body, { bar: bar, right: NAV_LIB });
 
+  if (W.mode === 'sent') bindTrans(); else bindItems();
+}
+
+/* ---------------- 查词 ---------------- */
+function itemsHtml() {
+  if (!W.items.length) return '';
+  let body = '<div class="sec">结果 · 共 ' + W.items.length + ' 条</div>';
+  W.items.forEach((it, i) => {
+    const L = LANGS[it.lang] || LANGS.nl;
+    body += '<div class="card" style="margin-bottom:14px;' + (i === W.sel ? 'border-color:var(--fg2)' : '') + '" data-pick="' + i + '">' +
+      '<div class="wh">' +
+      '<span class="ww ' + scriptCls(it.lang) + '" style="font-size:23px">' + esc(it.word || '') + '</span>' +
+      (it.gender ? '<span class="tag' + (it.lang === 'nl' && /het/i.test(it.gender) ? ' k' : '') + '">' + esc(it.gender) + '</span>' : '') +
+      (it.pos ? '<span class="tag">' + esc(it.pos) + '</span>' : '') +
+      '<span class="lm">' + esc(L.zh) + '</span>' +
+      '</div>' +
+      (it.alt ? '<div class="ar" style="font-size:19px;margin-top:6px">' + esc(it.alt) + '</div>' : '') +
+      (it.translit ? '<div class="translit" style="margin-top:5px">' + esc(it.translit) + '</div>' : '') +
+      '<div class="def" style="font-size:15.5px">' + esc(it.zh || '') +
+      (it.en ? '<div class="hint" style="margin-top:4px;font-size:13px">' + esc(it.en) + '</div>' : '') + '</div>' +
+      (it.example && it.example.text
+        ? '<div class="ex"><span class="' + scriptCls(it.lang) + '">' + esc(it.example.text) + '</span>' +
+          (it.lang === 'kk' ? '<div class="ar" style="font-size:18px;margin-top:4px">' + esc(kkArab(it.example.text)) + '</div>' : '') +
+          (it.lang === 'ru' ? '<div class="translit" style="margin-top:3px">' + esc(ruLat(it.example.text)) + '</div>' : '') +
+          '<s>' + esc(it.example.zh || '') + '</s></div>' : '') +
+      (Array.isArray(it.forms) && it.forms.length
+        ? '<div class="forms">' + it.forms.map(f => '<div><span>' + esc(typeof f === 'string' ? f : (f.k ? f.k + '：' + f.v : f.v)) + '</span></div>').join('') + '</div>' : '') +
+      '<div class="row" style="margin-top:16px">' +
+      (L.tts ? '<button class="btn sm" data-spk="' + i + '">&#9654; 发音</button>' : '') +
+      '<button class="btn sm" data-card="' + i + '">生成卡片</button>' +
+      (i === W.sel ? '<span class="hint" style="margin-left:auto">追问对象</span>' : '') +
+      '</div></div>';
+  });
+  return body;
+}
+
+function bindItems() {
   document.querySelectorAll('[data-pick]').forEach(c => {
     c.addEventListener('click', e => {
       if (e.target.closest('button')) return;
@@ -3221,10 +3348,10 @@ async function doLookup() {
   const q = $('wq').value.trim();
   if (!q) return;
   $('wq').blur();
-  W.q = q; W.busy = true; W.err = ''; W.items = []; W.qa = []; W.sel = 0;
+  W.q = q; W.mode = 'word'; W.busy = true; W.err = ''; W.items = []; W.qa = []; W.sel = 0; W.sent = null;
   paintLookup();
   try {
-    const j = await aiJson(lookupPrompt(q));
+    const j = await aiJson(lookupPrompt(q), guessLang(q));
     W.items = (j.items || []).filter(x => x && x.word && LANGS[x.lang]);
     W.items.forEach(it => {
       if (it.lang === 'kk') { it.alt = kkArab(it.word); it.translit = kkLat(it.word); }
@@ -3246,7 +3373,7 @@ async function askWord() {
   ta.value = ''; autosize(ta); ta.blur();
   W.busy = true; W.qa.push({ q: q, a: '…' }); paintLookup();
   try {
-    const a = await ai(lookupAskPrompt(W.items[W.sel], W.qa.slice(0, -1), q), false);
+    const a = await ai(lookupAskPrompt(W.items[W.sel], W.qa.slice(0, -1), q), false, W.items[W.sel].lang);
     W.qa[W.qa.length - 1].a = a;
   } catch (e) { W.qa.pop(); W.err = '追问失败 · ' + e.message; }
   W.busy = false; paintLookup();
@@ -3258,7 +3385,7 @@ async function makeWordCard(i, btn) {
   const it = W.items[i];
   const old = btn.innerHTML; btn.innerHTML = '生成中…'; btn.disabled = true;
   try {
-    let txt = await ai(wordCardPrompt(it, W.qa), false);
+    let txt = await ai(wordCardPrompt(it, W.qa), false, it.lang);
     if (it.lang === 'kk') txt = kkDual(txt);
     if (it.lang === 'ru') txt = ruDual(txt);
     txt = markjiLint(txt).text;
@@ -3268,6 +3395,94 @@ async function makeWordCard(i, btn) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
   }
+}
+
+/* ---------------- 整句翻译 ----------------
+   语言由 AI 判定，但模型的选择在发请求之前就用字符集本地猜好了，
+   所以贴一句藏语进来，用的就是你给藏语指定的那个模型。 */
+function transHtml() {
+  const t = W.sent;
+  if (!t) return '';
+  const k = t.lang, L = LANGS[k] || null;
+  const s = t.sent;
+
+  let body = '<div class="card">' +
+    '<div class="sent ' + scriptCls(k) + '">' + tapWords(k, s.text, s.tokens, s.gloss, 'tr') + '</div>' +
+    (k === 'kk' && s.alt ? '<div class="sent ar" style="margin-top:14px">' + esc(s.alt) + '</div>' : '') +
+    ((k === 'bo' || k === 'kk' || k === 'ru') && s.translit ? '<div class="translit">' + esc(s.translit) + '</div>' : '') +
+    '<div class="trans">' + esc(s.zh) +
+    (s.en ? '<div class="en">' + esc(s.en) + '</div>' : '') +
+    (k === 'ja' && s.translit ? '<div class="en">' + esc(s.translit) + '</div>' : '') +
+    '</div>' +
+    '<div class="row" style="margin-top:18px">' +
+    '<span class="tag">' + esc(L ? L.zh : '未识别语言') + '</span>' +
+    (L && L.tts ? speakBtn(k, s.text) : '') +
+    '<button class="btn sm" onclick="doTranslate(1)">&#8635; 重新翻译</button>' +
+    '</div>' +
+    (L ? '<p class="hint" style="margin-top:14px">点击任意单词查看释义' + (k === 'bo' ? '、改注音、录发音' : '') + '</p>' : '') +
+    '</div>';
+
+  if (t.note) body += '<div class="expl" style="margin-top:14px">' + esc(t.note) + '</div>';
+
+  if (W.sqa.length) {
+    body += '<div class="qa">' + W.sqa.map(x =>
+      '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
+  }
+
+  if (L) {
+    const nwq = wordQaFor(k, s.text).length;
+    body += '<div class="spacer"></div><div class="spacer"></div>' +
+      '<button class="btn pri wide" onclick="transCard(this)">保存到卡片库</button>' +
+      (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '');
+  } else {
+    body += '<p class="note">这段文字不属于本应用支持的六种语言，只做了翻译，不能生成卡片。</p>';
+  }
+  return body;
+}
+
+function bindTrans() {
+  const t = W.sent;
+  if (!t || !LANGS[t.lang]) return;
+  bindTapWords(t.lang, () => ({ text: t.sent.text, tokens: t.sent.tokens, gloss: t.sent.gloss }));
+}
+
+async function doTranslate(again) {
+  if (needKey()) return;
+  const q = (again && W.q) || ($('wq') ? $('wq').value.trim() : W.q);
+  if (!q) { toast('先粘贴一段文字'); return; }
+  if ($('wq')) $('wq').blur();
+  W.q = q; W.mode = 'sent'; W.busy = true; W.err = ''; W.items = []; W.qa = [];
+  if (!again) { W.sent = null; W.sqa = []; }
+  paintLookup();
+  try {
+    const j = await aiJson(transPrompt(q), guessLang(q));
+    const k = LANGS[j.lang] ? j.lang : '';
+    const sent = buildSent(j, k);
+    if (!sent.text) throw new Error('模型返回了空结果');
+    W.sent = { lang: k, sent: sent, note: (j.note || '').trim() };
+  } catch (e) { W.err = '翻译失败 · ' + e.message; }
+  W.busy = false; paintLookup();
+}
+
+async function askTrans() {
+  if (needKey() || W.busy || !W.sent) return;
+  const ta = $('wask'); const q = ta.value.trim();
+  if (!q) return;
+  ta.value = ''; autosize(ta); ta.blur();
+  W.busy = true; W.sqa.push({ q: q, a: '…' }); paintLookup();
+  try {
+    const k = W.sent.lang;
+    const a = await ai(askPrompt(k || 'nl', W.sent.sent, W.sqa.slice(0, -1), q), false, k);
+    W.sqa[W.sqa.length - 1].a = a;
+  } catch (e) { W.sqa.pop(); W.err = '追问失败 · ' + e.message; }
+  W.busy = false; paintLookup();
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+/* 走的是和句子阅读完全相同的详解流程，词卡里的追问也会被一并带上 */
+function transCard(btn) {
+  if (!W.sent || !LANGS[W.sent.lang]) { toast('这段文字未能识别出支持的语言'); return; }
+  detailFor(W.sent.lang, W.sent.sent, W.sqa, btn);
 }
 /* ================= Yulengua · 卡片库 ================= */
 
