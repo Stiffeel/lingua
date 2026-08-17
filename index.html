@@ -1177,7 +1177,7 @@ function ossErrFrom(status, xml) {
 }
 
 /* method: GET/PUT/DELETE/HEAD；body 可为 Blob/字符串/null */
-async function ossReq(method, key, body, contentType) {
+async function ossReq(method, key, body, contentType, opt) {
   const o = ossCfg();
   if (!o.bucket) throw new Error('未填写 Bucket 名称');
   if (!o.ak || !o.sk) throw new Error('未填写 AccessKey');
@@ -1186,8 +1186,13 @@ async function ossReq(method, key, body, contentType) {
   const sign = { 'x-oss-content-sha256': 'UNSIGNED-PAYLOAD', 'x-oss-date': stamp };
   if (contentType) sign['content-type'] = contentType;
 
-  const auth = await ossAuth(method, o.bucket, key, null, sign, ossRegion(), o.ak.trim(), o.sk.trim(), stamp);
-  const headers = Object.assign({}, sign, { authorization: auth });
+  /* opt.ak / opt.sk / opt.noAuth 只给诊断用，正常调用一律走配置里的凭证 */
+  const headers = Object.assign({}, sign);
+  if (!(opt && opt.noAuth)) {
+    const ak = ((opt && opt.ak) || o.ak).trim();
+    const sk = ((opt && opt.sk) || o.sk).trim();
+    headers.authorization = await ossAuth(method, o.bucket, key, null, sign, ossRegion(), ak, sk, stamp);
+  }
 
   let r;
   try {
@@ -1224,12 +1229,62 @@ async function ossProbe() {
   } catch (e) { return 'net'; }
 }
 
+/* AccessDenied 有两种完全不同的成因，返回的文案却一样：
+   (a) OSS 压根没认你的签名，把你当匿名访客，撞在私有 Bucket 的 ACL 上；
+   (b) OSS 认出了你是谁，但这个 RAM 子用户没被授权。
+   靠故意发几个「错得有特征」的请求就能分开：如果 OSS 能分别回出
+   InvalidAccessKeyId 和 SignatureDoesNotMatch，说明它确实在读 Authorization
+   头、你的 AccessKey 也是真实存在的，那问题就只可能是授权没配上。 */
+async function ossAuthDiag(key) {
+  const o = ossCfg();
+  const probe = async opt => {
+    try {
+      await ossReq('PUT', key, new Blob(['probe'], { type: 'text/plain' }), 'text/plain', opt);
+      ossDel(key).catch(() => {});
+      return 'OK';
+    } catch (e) { return (e && e.code) || 'ERR'; }
+  };
+  return {
+    badId: await probe({ ak: 'LTAInotarealaccesskey', sk: o.sk }),
+    badSecret: await probe({ ak: o.ak, sk: (o.sk || '') + 'x' }),
+    anon: await probe({ noAuth: true })
+  };
+}
+
+function ossAuthDiagHtml(d) {
+  const reads = d.badId === 'InvalidAccessKeyId' || d.badSecret === 'SignatureDoesNotMatch';
+  const raw = '<div class="note" style="margin-top:10px">探针结果：伪造 ID → ' + esc(d.badId) +
+    '；错误密钥 → ' + esc(d.badSecret) + '；完全不带签名 → ' + esc(d.anon) + '</div>';
+
+  if (d.anon === 'OK') {
+    return '<div class="err" style="margin:10px 0 0"><b>诊断结果：这个 Bucket 是公共读写的！</b>' +
+      '<div class="note" style="margin-top:8px">不带任何签名都能写进去，说明读写权限没设成「私有」。' +
+      '请立刻到 Bucket → 权限管理 → 读写权限，改成<b>私有</b>。</div>' + raw + '</div>';
+  }
+
+  if (reads) {
+    return '<div class="err" style="margin:10px 0 0"><b>诊断结果：AccessKey 是真实有效的，OSS 也确实读到了你的签名。' +
+      '问题出在 RAM 授权 —— 这个子用户没有被授予操作这个 Bucket 的权限。</b>' +
+      '<div class="note" style="margin-top:8px">到 <b>ram.console.aliyun.com</b> → 身份管理 → 用户 → 点开你建的那个子用户 → <b>权限管理</b> 标签页，按顺序核对：' +
+      '<br><br>1. 这一页<b>是不是空的</b>？最常见的情况就是策略建好了、但那一步「添加权限」没做完（或者被那个黄色告警吓退了）。' +
+      '<br>2. 如果有策略，点开看它的 Resource 写的 bucket 名，和这里填的 <b>' + esc(ossCfg().bucket) + '</b> 是否<b>逐字一致</b>（大小写、有没有多余的前缀目录）。' +
+      '<br>3. 授权范围要选<b>账号级别</b>，不是某个资源组。选了资源组的话策略是挂上了，但对 OSS 不生效。' +
+      '<br>4. 确认这对 AccessKey 属于<b>这个子用户</b>本人 —— 如果你先后建过好几个用户或者重新生成过 Key，很容易拿错。' +
+      '<br><br>还有一种情况：Bucket 里配了「Bucket Policy」或防盗链，把请求挡在 RAM 之外。到 Bucket → 权限管理 里看一眼有没有多余的规则。</div>' + raw + '</div>';
+  }
+
+  return '<div class="err" style="margin:10px 0 0"><b>诊断结果：OSS 似乎没有在处理你的 Authorization 头，' +
+    '把这次请求当成了匿名访问，撞在私有 Bucket 的 ACL 上。</b>' +
+    '<div class="note" style="margin-top:8px">这种情况少见。请检查：跨域设置里的<b>允许 Headers 必须是 *</b>（不能只列几个）；' +
+    '以及 Endpoint 有没有被写成带 bucket 前缀的形式（这里只该填 <b>oss-地域.aliyuncs.com</b>，不要带 ' + esc(ossCfg().bucket) + '. 前缀）。</div>' + raw + '</div>';
+}
+
 function ossHint(e) {
   const c = (e && e.code) || '';
   if (c === 'CORS_OR_NETWORK')
     return '浏览器把请求拦下了：可能是跨域规则（CORS），也可能是网络不通。点下面的「诊断」看是哪一种。';
   if (c === 'NO_CRYPTO') return '当前页面不是 https，浏览器禁用了加密接口，无法签名。请用 https 打开。';
-  if (c === 'AccessDenied') return 'RAM 子用户没有权限，或 Bucket 名字写错了。检查权限策略里的 bucket 名与这里填的是否完全一致。';
+  if (c === 'AccessDenied') return '被 OSS 拒绝了。这条错误本身分不清是「签名没被认」还是「授权没配上」，下面自动判断。';
   if (c === 'SignatureDoesNotMatch') return '签名不匹配：AccessKey Secret 多半复制时带了空格或缺字符。也可能是手机时间不准（签名有效期 15 分钟）。';
   if (c === 'InvalidAccessKeyId') return 'AccessKey ID 不存在或子用户已被停用。';
   if (c === 'NoSuchBucket') return '这个 Bucket 不存在，或 Endpoint 的地域和 Bucket 所在地域对不上。';
@@ -1427,6 +1482,10 @@ async function ossTest(btn) {
       '<br>Bucket ' + esc(ossCfg().bucket) + ' · 地域 ' + esc(ossRegion()) + '</div>';
   } catch (e) {
     let extra = '';
+    if (e && (e.code === 'AccessDenied' || e.status === 403)) {
+      m.innerHTML = '<div class="note">' + LOADER + ' 正在判断是签名问题还是授权问题…</div>';
+      extra = ossAuthDiagHtml(await ossAuthDiag(key));
+    }
     if (e && e.code === 'CORS_OR_NETWORK') {
       const kind = await ossProbe();
       extra = kind === 'cors'
