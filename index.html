@@ -1213,10 +1213,21 @@ async function ossGetText(key) { return (await ossReq('GET', key)).text(); }
 async function ossGetBlob(key) { return (await ossReq('GET', key)).blob(); }
 const ossDel = key => ossReq('DELETE', key);
 
+/* fetch 失败时浏览器不会告诉脚本「是跨域还是网络」，所以自己探一下：
+   no-cors 请求不受 CORS 规则约束，只要 DNS 和网络通就能 resolve（哪怕返回 403）。
+   它成功而正常请求失败 => 一定是 CORS 规则的问题。 */
+async function ossProbe() {
+  const { host } = ossHostname();
+  try {
+    await fetch('https://' + host + '/?probe=1', { method: 'GET', mode: 'no-cors', cache: 'no-store' });
+    return 'cors';
+  } catch (e) { return 'net'; }
+}
+
 function ossHint(e) {
   const c = (e && e.code) || '';
   if (c === 'CORS_OR_NETWORK')
-    return '浏览器把请求拦下了。九成是 Bucket 的跨域规则（CORS）没配好：来源必须写成 https://你的用户名.github.io，不带路径、不带末尾斜杠，Methods 要勾满 GET/PUT/POST/DELETE/HEAD。';
+    return '浏览器把请求拦下了：可能是跨域规则（CORS），也可能是网络不通。点下面的「诊断」看是哪一种。';
   if (c === 'NO_CRYPTO') return '当前页面不是 https，浏览器禁用了加密接口，无法签名。请用 https 打开。';
   if (c === 'AccessDenied') return 'RAM 子用户没有权限，或 Bucket 名字写错了。检查权限策略里的 bucket 名与这里填的是否完全一致。';
   if (c === 'SignatureDoesNotMatch') return '签名不匹配：AccessKey Secret 多半复制时带了空格或缺字符。也可能是手机时间不准（签名有效期 15 分钟）。';
@@ -1415,10 +1426,28 @@ async function ossTest(btn) {
     m.innerHTML = '<div class="err"><b>云端连接成功</b><br>' + esc(steps.join(' → ')) +
       '<br>Bucket ' + esc(ossCfg().bucket) + ' · 地域 ' + esc(ossRegion()) + '</div>';
   } catch (e) {
+    let extra = '';
+    if (e && e.code === 'CORS_OR_NETWORK') {
+      const kind = await ossProbe();
+      extra = kind === 'cors'
+        ? '<div class="err" style="margin:10px 0 0"><b>诊断结果：网络是通的，被拦住的是跨域规则（CORS）。</b>' +
+          '<br>请到 Bucket → 数据安全 → 跨域设置，逐字核对下面三项：' +
+          '<div class="note" style="margin-top:8px">' +
+          '1. <b>来源 Source</b> 必须精确等于这一行（点右边可复制）：' +
+          '<div class="row" style="margin:6px 0"><code style="font-size:13px;word-break:break-all">' + esc(location.origin) + '</code>' +
+          '<button class="btn sm" onclick="copyText(' + jsq(location.origin) + ')">复制</button></div>' +
+          '2. <b>允许 Headers</b> 必须填 <b>*</b>（一个星号）。<b>留空是不行的</b>——留空等于一个自定义请求头都不许带，而签名就在 Authorization 头里，浏览器在预检那一步就会被拒。' +
+          '<br>3. <b>允许 Methods</b> 要勾满 GET / PUT / POST / DELETE / HEAD。少勾 PUT 就写不进去。' +
+          '<br><br>另外确认这条规则是加在 <b>' + esc(ossCfg().bucket) + '</b> 这个 Bucket 上的，规则保存后生效通常在一分钟内。</div></div>'
+        : '<div class="err" style="margin:10px 0 0"><b>诊断结果：连 ' + esc(ossHostname().host) + ' 都连不上，这不是 CORS 的问题。</b>' +
+          '<div class="note" style="margin-top:8px">多半是 Endpoint 写错了（地域拼错会解析到一个不存在的域名），或者当前网络屏蔽了阿里云。换个网络再试一次。</div></div>';
+    }
     m.innerHTML = '<div class="err"><b>失败于：' + esc(steps.length ? steps.join(' → ') + ' → 下一步' : '第一步写入') + '</b>' +
       '<br>' + esc(ossHint(e)) +
       '<div class="note" style="margin-top:8px">原始错误码：' + esc((e && e.code) || '无') +
-      '<br>' + esc(String((e && e.message) || '').slice(0, 200)) + '</div></div>';
+      '<br>' + esc(String((e && e.message) || '').slice(0, 200)) +
+      '<br>本页来源 Origin：' + esc(location.origin) +
+      '<br>请求目标：' + esc(ossHostname().host) + '</div></div>' + extra;
   } finally { btn.innerHTML = old; btn.disabled = false; }
 }
 
