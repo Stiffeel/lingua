@@ -159,7 +159,6 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .wh .ww{font-size:27px;font-weight:600}
 .wh .lm{font-size:13px;color:var(--fg3)}
 .tag{font-size:11px;border:1px solid var(--line2);border-radius:4px;padding:1px 7px;color:var(--fg2);letter-spacing:.04em}
-.tag.k{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
 .def{font-size:16px;margin-top:12px;line-height:1.7}
 .ex{background:var(--soft);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:14.5px;line-height:1.65}
 .ex s{display:block;text-decoration:none;color:var(--fg2);font-size:13.5px;margin-top:4px}
@@ -560,7 +559,7 @@ const LANGS = {
   es: {
     zh: '西班牙语', native: 'Español', code: 'ES', tts: 'es-ES', gram: true, en: true,
     level: '中级', dialogue: '初中级',
-    corpus: '真实感的中级西班牙语内容：新闻报道、记叙文、个人叙述、观点评论均可。随机使用陈述句、疑问句和复合句。风格贴近 El País、BBC Mundo，或个人随笔。句子 12–40 词，可含虚拟式、复合时态、连接词等中级语法点。',
+    corpus: '真实感的中级西班牙语内容：新闻报道、记叙文、个人叙述、观点评论均可。风格贴近 El País、BBC Mundo，或个人随笔。句子 12–40 词，可含虚拟式、复合时态、连接词等中级语法点。',
     sample: 'Últimamente estoy aprendiendo tibetano. Aunque mis estudios me generan bastante presión, quiero seguir haciendo cosas que me interesan para darle más sentido a mi vida.'
   },
   ja: {
@@ -852,6 +851,19 @@ function markjiLint(src) {
 const $ = id => document.getElementById(id);
 const app = () => $('app');
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+/* 墨墨的标记只该出现在卡片正文里。模型偶尔会把 [T#!!fedcb6#het-woord] 这种
+   写进 JSON 字段，那些字段是直接显示在界面上的，标记既不会被渲染、又很难看。
+   这里做一层兜底剥离：只留内容，丢掉标记外壳。 */
+function unmark(s) {
+  let t = String(s == null ? '' : s);
+  for (let i = 0; i < 3 && /\[(T|P|F|E|Choice)#/.test(t); i++) {
+    t = t.replace(/\[(?:T|P|F|E|Choice)#[^#\]]*#([^\]]*)\]/g, '$1');
+  }
+  return t.replace(/\[(?:Pic|Audio|Card)#[^\]]*\]/g, '').trim();
+}
+/* 显示用：先剥标记再转义 */
+const escp = s => esc(unmark(s));
 const LOADER = '<span class="load"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
 /* safe JS string literal for embedding inside a double-quoted HTML attribute */
 function jsq(s) { return esc(JSON.stringify(String(s == null ? '' : s))); }
@@ -1602,7 +1614,10 @@ async function aiJson(messages, lang) {
 }
 
 /* ---------------- shared fragments ---------------- */
-const BASE = '你是一位精通荷兰语、藏语（安多方言）、哈萨克语、俄语、西班牙语、日语的语言学教师，母语中文，同时精通英语。你的解释准确、克制、不废话。所有回复严格输出 JSON，不要输出多余文字。';
+const BASE = '你是一位精通荷兰语、藏语（安多方言）、哈萨克语、俄语、西班牙语、日语的语言学教师，母语中文，同时精通英语。你的解释准确、克制、不废话。所有回复严格输出 JSON，不要输出多余文字。' +
+  '\n【JSON 字段是纯文本】这些字段会被应用直接显示在界面上，不经过任何标记渲染。' +
+  '所以字段值里【绝对不要】出现 [T#…#…]、[F##…]、[Audio#…] 之类的墨墨记忆卡标记，也不要写 markdown。' +
+  '需要强调时就用文字说明，不要用标记。那套标记只在生成卡片正文时才用。';
 
 const NL_GENDER_RULE =
   '【荷兰语词性标注规则】名词必须标出 de-woord 或 het-woord。' +
@@ -1718,8 +1733,10 @@ function sentencePrompt(k, avoid) {
 function wordPrompt(k, word, sentence) {
   const L = LANGS[k];
   let g = '', extraJson = '';
-  if (k === 'nl') g = NL_GENDER_RULE +
-    '\n若为名词，"gender" 填 "de" 或 "het"，forms 给出复数与（若有）指小形式；若为动词，forms 必须给出：现在时全人称、过去时单复数、过去分词（并注明完成时助动词 hebben/zijn）、以及是否可分动词。若为形容词，说明变格规则。';
+  /* 这里是给界面用的结构化字段，不能带高亮标记，所以不用 NL_GENDER_RULE */
+  if (k === 'nl') g = '【荷兰语词性标注】名词必须分清 de-woord 与 het-woord（het 词数量少、要重点记忆）。' +
+    '"gender" 字段只填【de】或【het】两个字母之一，不要写成 "het-woord"，更不要加任何标记。' +
+    '\n若为名词，forms 给出复数与（若有）指小形式；若为动词，forms 必须给出：现在时全人称、过去时单复数、过去分词（并注明完成时助动词 hebben/zijn）、以及是否可分动词。若为形容词，说明变格规则。';
   if (k === 'es') g = ES_GENDER_RULE +
     '\n若为名词，"gender" 填 "el" 或 "la"，forms 给出单复数；若为动词，forms 必须给出：不定式、现在时全人称（yo/tú/él/nosotros/vosotros/ellos）、简单过去时、未完成过去时、以及（如常用）虚拟式现在时和过去分词。';
   if (k === 'kk') g = KK_CYR_ONLY + '\n"alt" 和 "translit" 一律留空字符串（应用会自己算）。' +
@@ -2272,7 +2289,9 @@ async function paintStorage() {
   const pm = { granted: '已开启，系统不会自动回收', denied: '未获批准，长期不打开可能被系统回收', unsupported: '本浏览器不支持', unknown: '检测中' }[i.persist];
   const bk = $('bkinfo');
   if (bk) {
-    const t = S.cfg.lastBackup | 0;
+    /* 注意不能写成 lastBackup | 0：位运算会把时间戳截成 32 位整数，
+       1786989480000 会变成 283084864，显示成「1970/1/4，20679 天前」。 */
+    const t = Math.max(0, Number(S.cfg.lastBackup) || 0);
     const days = t ? Math.floor((Date.now() - t) / 86400000) : -1;
     bk.innerHTML = !S.cards.length
       ? '卡片库是空的，暂时不需要备份。'
@@ -2568,7 +2587,7 @@ function showWord(k, word, gloss, context) {
       '<div class="translit" style="margin-top:4px">' + esc(kkLat(word)) + '</div>' : '') +
     (k === 'ru' ? '<div class="translit" style="margin-top:6px">' + esc(ruLat(word)) + '</div>' : '') +
     handHtml(k, word, true) +
-    '<div class="gl">' + (gloss ? esc(gloss) : '<span class="hint">这个词没有随句简译，点下方展开详解</span>') + '</div>' +
+    '<div class="gl">' + (gloss ? escp(gloss) : '<span class="hint">这个词没有随句简译，点下方展开详解</span>') + '</div>' +
     (LANGS[k] && LANGS[k].tts ? '<div class="row" style="margin-top:14px">' + speakBtn(k, word) + '</div>' : '') +
     (k === 'bo' ? boPanel(word) : '') +
     '<div class="spacer"></div>' +
@@ -2639,32 +2658,33 @@ function wordHtml(j) {
     if (Array.isArray(j.forms)) j.forms = j.forms.map(f =>
       ({ k: f.k, v: ruDualInline(String(f.v == null ? '' : f.v)) }));
   }
-  const het = k === 'nl' && /het/i.test(j.gender || '');
+  /* 界面字段一律走 escp：模型偶尔会把墨墨标记写进来，这里剥掉再显示 */
   let h = '<div class="wh">' +
-    '<span class="ww ' + scriptCls(k) + '">' + esc(j.word || '') + '</span>' +
-    (j.gender ? '<span class="tag' + (het ? ' k' : '') + '">' + esc(j.gender) + '</span>' : '') +
-    (j.pos ? '<span class="tag">' + esc(j.pos) + '</span>' : '') +
-    (j.lemma && j.lemma !== j.word ? '<span class="lm">原形 ' + esc(j.lemma) + '</span>' : '') +
+    '<span class="ww ' + scriptCls(k) + '">' + escp(j.word || '') + '</span>' +
+    (j.gender ? '<span class="tag">' + escp(j.gender) + '</span>' : '') +
+    (j.pos ? '<span class="tag">' + escp(j.pos) + '</span>' : '') +
+    (j.lemma && j.lemma !== j.word ? '<span class="lm">原形 ' + escp(j.lemma) + '</span>' : '') +
     '</div>';
   if (j.alt) h += '<div class="ar" style="font-size:20px;margin-top:8px">' + esc(j.alt) + '</div>';
-  if (j.translit) h += '<div class="translit" style="margin-top:6px">' + esc(j.translit) + '</div>';
-  h += handHtml(k, j.word || '', true);
-  if (L.tts) h += '<div class="row" style="margin-top:12px">' + speakBtn(k, j.word || '') + '</div>';
-  h += '<div class="def">' + esc(j.zh || '') +
-    (j.en ? '<div class="hint" style="margin-top:5px;font-size:13.5px">' + esc(j.en) + '</div>' : '') + '</div>';
+  if (j.translit) h += '<div class="translit" style="margin-top:6px">' + escp(j.translit) + '</div>';
+  h += handHtml(k, unmark(j.word || ''), true);
+  if (L.tts) h += '<div class="row" style="margin-top:12px">' + speakBtn(k, unmark(j.word || '')) + '</div>';
+  h += '<div class="def">' + escp(j.zh || '') +
+    (j.en ? '<div class="hint" style="margin-top:5px;font-size:13.5px">' + escp(j.en) + '</div>' : '') + '</div>';
   if (j.example && j.example.text) {
-    h += '<div class="ex"><span class="' + scriptCls(k) + '">' + esc(j.example.text) + '</span> ' +
-      speakBtn(k, j.example.text, false) +
-      (k === 'kk' ? '<div class="ar" style="font-size:19px;margin-top:4px">' + esc(kkArab(j.example.text)) + '</div>' +
-        '<div class="translit" style="margin-top:2px">' + esc(kkLat(j.example.text)) + '</div>' : '') +
-      (k === 'ru' ? '<div class="translit" style="margin-top:4px">' + esc(ruLat(j.example.text)) + '</div>' : '') +
-      '<s>' + esc(j.example.zh || '') + '</s></div>';
+    const ex = unmark(j.example.text);
+    h += '<div class="ex"><span class="' + scriptCls(k) + '">' + esc(ex) + '</span> ' +
+      speakBtn(k, ex, false) +
+      (k === 'kk' ? '<div class="ar" style="font-size:19px;margin-top:4px">' + esc(kkArab(ex)) + '</div>' +
+        '<div class="translit" style="margin-top:2px">' + esc(kkLat(ex)) + '</div>' : '') +
+      (k === 'ru' ? '<div class="translit" style="margin-top:4px">' + esc(ruLat(ex)) + '</div>' : '') +
+      '<s>' + escp(j.example.zh || '') + '</s></div>';
   }
   if (Array.isArray(j.forms) && j.forms.length) {
     h += '<div class="forms">' + j.forms.map(f =>
-      '<div><b>' + esc(f.k || '') + '</b><span>' + esc(f.v || '') + '</span></div>').join('') + '</div>';
+      '<div><b>' + escp(f.k || '') + '</b><span>' + escp(f.v || '') + '</span></div>').join('') + '</div>';
   }
-  if (j.note) h += '<div class="expl">' + esc(j.note) + '</div>';
+  if (j.note) h += '<div class="expl">' + escp(j.note) + '</div>';
   if (k === 'kk') h += kkTable(j.word || '');
   if (k === 'bo') h += boPanel(j.word || (WSHEET && WSHEET.word) || '');
   if (Array.isArray(j._qa) && j._qa.length) {
@@ -3347,16 +3367,16 @@ function itemsHtml() {
     const L = LANGS[it.lang] || LANGS.nl;
     body += '<div class="card" style="margin-bottom:14px;' + (i === W.sel ? 'border-color:var(--fg2)' : '') + '" data-pick="' + i + '">' +
       '<div class="wh">' +
-      '<span class="ww ' + scriptCls(it.lang) + '" style="font-size:23px">' + esc(it.word || '') + '</span>' +
-      (it.gender ? '<span class="tag' + (it.lang === 'nl' && /het/i.test(it.gender) ? ' k' : '') + '">' + esc(it.gender) + '</span>' : '') +
-      (it.pos ? '<span class="tag">' + esc(it.pos) + '</span>' : '') +
+      '<span class="ww ' + scriptCls(it.lang) + '" style="font-size:23px">' + escp(it.word || '') + '</span>' +
+      (it.gender ? '<span class="tag">' + escp(it.gender) + '</span>' : '') +
+      (it.pos ? '<span class="tag">' + escp(it.pos) + '</span>' : '') +
       '<span class="lm">' + esc(L.zh) + '</span>' +
       '</div>' +
       (it.alt ? '<div class="ar" style="font-size:19px;margin-top:6px">' + esc(it.alt) + '</div>' : '') +
-      (it.translit ? '<div class="translit" style="margin-top:5px">' + esc(it.translit) + '</div>' : '') +
-      handHtml(it.lang, it.word || '', true) +
-      '<div class="def" style="font-size:15.5px">' + esc(it.zh || '') +
-      (it.en ? '<div class="hint" style="margin-top:4px;font-size:13px">' + esc(it.en) + '</div>' : '') + '</div>' +
+      (it.translit ? '<div class="translit" style="margin-top:5px">' + escp(it.translit) + '</div>' : '') +
+      handHtml(it.lang, unmark(it.word || ''), true) +
+      '<div class="def" style="font-size:15.5px">' + escp(it.zh || '') +
+      (it.en ? '<div class="hint" style="margin-top:4px;font-size:13px">' + escp(it.en) + '</div>' : '') + '</div>' +
       (it.example && it.example.text
         ? '<div class="ex"><span class="' + scriptCls(it.lang) + '">' + esc(it.example.text) + '</span>' +
           (it.lang === 'kk' ? '<div class="ar" style="font-size:18px;margin-top:4px">' + esc(kkArab(it.example.text)) + '</div>' : '') +
