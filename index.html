@@ -864,6 +864,92 @@ function unmark(s) {
 }
 /* 显示用：先剥标记再转义 */
 const escp = s => esc(unmark(s));
+
+/* ================= 分词修复 =================
+   句子里的 tokens 是模型给的，实测经常出错：
+   · 把两个词并进同一项 —— 点开只查得到前面那个词
+   · 整句只返回一个 token —— 根本点不开单个词
+   原句 text 本身是可信的，所以这里不信任模型的切分，改成本地确定性校准：
+   · 有空格的语言（荷/西/俄/哈）——空格一定是词边界，模型跨过空格的 token 一律拆开
+   · 日语 / 藏语没有空格——先按本地规则算出「单元」（藏文按音节点、日语按字种），
+     一个 token 覆盖的单元数超过上限就判定为合并错误，按单元拆开
+   拆开时把原来的词义给最长的那一段，其余留空——留空的词点开仍然可以展开详解，
+   总好过点不动。 */
+const TOK_PUNCT = /^[\s.,!?;:«»""''()\[\]—–·¿¡、。，！？；：「」『』…-]+|[\s.,!?;:«»""''()\[\]—–·、。，！？；：「」『』…-]+$/g;
+const cleanTok = s => String(s || '').replace(TOK_PUNCT, '') || String(s || '');
+
+/* 一个词最多允许包含几个本地单元（只对无空格的日语/藏语生效） */
+const TOK_MAX_UNITS = 4;
+
+/* 本地确定性切分：结果一定覆盖整句，一定不跨空格 */
+function segUnits(k, text) {
+  const t = String(text == null ? '' : text);
+  if (!t.trim()) return [];
+  /* 藏文：音节点 ་ 与句点 ། 是确定无疑的边界，分隔符留在词尾 */
+  if (k === 'bo') return t.match(/[^\s་།༎༏༐༑]*[་།༎༏༐༑]+|[^\s་།༎༏༐༑]+/g) || [t.trim()];
+  /* 日语：没有可靠的本地分词，只按字种切换切（汉字/平假/片假/拉丁/数字），仅作兜底 */
+  if (k === 'ja') return t.match(/[一-鿿々〆ヵヶ]+|[ぁ-ゟ]+|[ァ-ヺー]+|[A-Za-zＡ-Ｚａ-ｚ]+|[0-9０-９]+|[^\s]/g) || [t.trim()];
+  return t.split(/\s+/).filter(Boolean);
+}
+
+/* 退回本地切分时，尽量把模型给的词义按词面认领回来 */
+function alignGloss(units, ai, gl) {
+  const m = new Map();
+  ai.forEach((w, i) => {
+    const g = gl[i] || '';
+    if (!g) return;
+    if (!m.has(w)) m.set(w, g);
+    const c = cleanTok(w);
+    if (c && !m.has(c)) m.set(c, g);
+  });
+  return units.map(u => m.get(u) || m.get(cleanTok(u)) || '');
+}
+
+/* 判断一个 token 是不是把好几个词并成了一个；是就返回拆开后的若干段 */
+function subSplit(k, piece) {
+  if (k !== 'ja' && k !== 'bo') {
+    const parts = piece.split(/\s+/).filter(Boolean);
+    return parts.length > 1 ? parts : [piece];
+  }
+  const u = segUnits(k, piece);
+  return u.length > TOK_MAX_UNITS ? u : [piece];
+}
+
+function fixToks(k, text, tokens, gloss) {
+  const t = String(text == null ? '' : text);
+  if (!t.trim()) return { tokens: [], gloss: [] };
+  const units = segUnits(k, t);
+  const gl = Array.isArray(gloss) ? gloss.map(x => String(x == null ? '' : x)) : [];
+  const ai = (Array.isArray(tokens) ? tokens : [])
+    .map(x => String(x == null ? '' : x).trim()).filter(Boolean);
+
+  /* 没给 tokens，或整句被当成一个 token —— 直接用本地切分 */
+  if (!ai.length) return { tokens: units, gloss: units.map(() => '') };
+  if (ai.length === 1 && units.length > 1) return { tokens: units, gloss: alignGloss(units, ai, gl) };
+
+  /* 1) 把模型的 token 依次在原句里定位；只要有一个对不上（漏字、改字、顺序错），
+        整句退回本地切分，只把词义按词面认领回来。 */
+  const spans = [];
+  let p = 0;
+  for (let i = 0; i < ai.length; i++) {
+    const at = t.indexOf(ai[i], p);
+    if (at < 0 || t.slice(p, at).trim()) return { tokens: units, gloss: alignGloss(units, ai, gl) };
+    spans.push({ w: ai[i], g: gl[i] || '' });
+    p = at + ai[i].length;
+  }
+  if (t.slice(p).trim()) return { tokens: units, gloss: alignGloss(units, ai, gl) };
+
+  /* 2) 逐个检查有没有把多个词并成一项，有就拆开 */
+  const out = [], og = [];
+  spans.forEach(sp => {
+    const sub = subSplit(k, sp.w);
+    if (sub.length < 2) { out.push(sp.w); og.push(sp.g); return; }
+    let best = 0;
+    sub.forEach((w, i) => { if (cleanTok(w).length > cleanTok(sub[best]).length) best = i; });
+    sub.forEach((w, i) => { out.push(w); og.push(i === best ? sp.g : ''); });
+  });
+  return { tokens: out, gloss: og };
+}
 const LOADER = '<span class="load"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
 /* safe JS string literal for embedding inside a double-quoted HTML attribute */
 function jsq(s) { return esc(JSON.stringify(String(s == null ? '' : s))); }
@@ -1634,6 +1720,12 @@ const MARKJI_RULES = `【墨墨记忆卡语法 —— 违反会让卡片显示�
 
 const ES_GENDER_RULE = '【西班牙语词性标注规则】名词必须标出 el / la 及性数，不需要高亮。';
 
+/* 分词是应用里最容易被模型做坏的一环：合并两个词会导致点开只查得到前一个，
+   整句一个 token 则根本点不开。应用侧另有确定性校准兜底，这里先把话说死。 */
+const TOK_STRICT = '\n【tokens 硬性要求】每一项必须【只包含一个词】：' +
+  '绝对不能把两个词写进同一项（"de kat" 必须拆成 "de" 和 "kat"），' +
+  '也绝对不能把整句或半句当成一个 token。原句有几个词，tokens 就有几项，宁可切细也不要合并。\n';
+
 const RU_RULE = '【俄语书写规则 —— 硬性要求】\n' +
   '1. 你写出的俄语【西里尔原文一律不加重音符号】（不要 \u0301），保持干净的普通拼写。\n' +
   '2. 重音信息只通过指定字段传达：需要标重音的地方（translit、forms、详解正文里的词形），' +
@@ -1721,6 +1813,7 @@ function sentencePrompt(k, avoid) {
         '\n\n输出 JSON：\n' +
         '{"text":"目标语言原句","alt":"","translit":"","zh":"中文翻译","en":"","tokens":["逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"]}' +
         '\n"gloss" 数组长度必须与 "tokens" 完全一致，每项只写 2–8 个字的核心词义（动词写词典义即可，助词/介词写其语法作用，如「（宾格助词）」）。' +
+        TOK_STRICT +
         extra +
         (L.en ? '\n"en" 填英文翻译。' : '\n"en" 留空字符串。') +
         (k === 'kk' ? '' : '\n"alt" 留空字符串。') +
@@ -1898,13 +1991,47 @@ function transPrompt(text) {
         '\n\n输出 JSON：\n' +
         '{"lang":"nl|bo|kk|ru|es|ja|","text":"整理后的原句（修掉明显的排版换行，保留原意与拼写）","alt":"","translit":"","zh":"中文翻译","en":"英文翻译（荷/西/俄填，其余留空）","tokens":["逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"],"note":"这句话里值得一提的语法点，中文，200 字以内"}\n' +
         '"gloss" 数组长度必须与 "tokens" 完全一致，每项 2–8 个字（助词/介词写语法作用）。\n' +
-        '"tokens" 用空格连接后须还原 "text"（日语和藏语直接拼接即可）。\n\n' +
+        '"tokens" 用空格连接后须还原 "text"（日语和藏语直接拼接即可）。' + TOK_STRICT + '\n' +
         '【按判定出的语言另外遵守】\n' +
         '· 哈萨克语：' + KK_CYR_ONLY + ' "alt" 与 "translit" 留空，应用会自己算。\n' +
         '· 俄语：' + RU_RULE + ' "text" 与 "tokens" 不带重音符号；"translit" 填【带重音符号的西里尔】整句。\n' +
         '· 藏语：' + boPronRule() + ' "translit" 填整句安多口语注音；"tokens" 每个词末尾保留音节点 ་（句末保留 །）。\n' +
         '· 日语：\"translit\" 给出全句假名读音 + 罗马字。\n' +
         '· 荷兰语 / 西班牙语：\"translit\" 留空。'
+    }
+  ];
+}
+
+/* ---------------- 反向翻译：中文 / 英文 → 六种语言 ----------------
+   ks 是这一批要翻译成的语言。之所以要分批：不同语言可能被指定了不同的模型，
+   同一个模型的语言合并成一次请求，既保证藏语走强模型，又不会让请求数翻六倍。 */
+function revPrompt(q, ks) {
+  const list = ks.map(k => k + '(' + LANGS[k].zh + ')').join('、');
+  const per = {
+    kk: KK_CYR_ONLY + ' "alt" 与 "translit" 一律留空，应用会自己算。',
+    ru: RU_RULE + ' "text" 与 "tokens" 不带重音符号；"translit" 填【带重音符号的西里尔】。',
+    bo: boPronRule() + ' "translit" 填安多口语注音；"tokens" 每项末尾保留音节点 ་（句末保留 །）。',
+    ja: '"translit" 给出假名读音 + 罗马字。',
+    nl: '名词请在 "gender" 里填 de 或 het（只填这两个字母之一，不要加任何标记）。"translit" 留空。',
+    es: '名词请在 "gender" 里填 el 或 la。"translit" 留空。'
+  };
+  return [
+    { role: 'system', content: BASE },
+    {
+      role: 'user', content:
+        '用户输入了一段【中文或英文】，请把它翻译成下面这些语言：' + list + '。每种语言各给一条，一条都不能少，顺序照给定顺序。\n\n' +
+        '原文：\n' + q + '\n\n' +
+        '先判断原文是一个【词 / 短语】还是一个【句子】，填进 "kind"（"word" 或 "sent"）。\n' +
+        '· kind=word 时：给这个词在该语言里最贴切的对应词（用词典原形），并填 pos / gender / lemma。\n' +
+        '· kind=sent 时：给一句自然地道的整句翻译，pos / gender / lemma 留空。\n\n' +
+        '输出 JSON：\n' +
+        '{"kind":"word|sent","zh":"原文的中文意思（原文是英文就译成中文，本来是中文就原样抄回）",' +
+        '"items":[{"lang":"' + ks.join('|') + '","text":"译文","alt":"","translit":"","pos":"词性（中文，kind=sent 时留空）",' +
+        '"gender":"冠词/性，无则留空","lemma":"词典原形，kind=sent 时留空",' +
+        '"note":"这条译法值得一提的地方：语域、和其他常见译法的区别、需要注意的搭配。中文，60 字以内",' +
+        '"tokens":["译文的逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"]}]}\n' +
+        '"gloss" 数组长度必须与 "tokens" 完全一致，每项 2–8 个字。' + TOK_STRICT + '\n' +
+        '【分语言硬性要求】\n' + ks.map(k => '· ' + LANGS[k].zh + '：' + per[k]).join('\n')
     }
   ];
 }
@@ -1960,8 +2087,8 @@ function dlgOpenPrompt(k, topic) {
 
 function TOKEN_RULE(k) {
   const base = '"gloss" 数组长度必须与 "tokens" 完全一致，每项只写 2–8 个字的核心词义（助词/介词写其语法作用，如「（宾格助词）」）。';
-  if (k === 'ja') return '"tokens" 按词切分（助词单独成词），拼接后须等于原句。' + base;
-  return '"tokens" 按词切分（标点可并入相邻词），用空格连接后须还原原句。' + base;
+  if (k === 'ja') return '"tokens" 按词切分（助词单独成词），拼接后须等于原句。' + TOK_STRICT + base;
+  return '"tokens" 按词切分（标点可并入相邻词），用空格连接后须还原原句。' + TOK_STRICT + base;
 }
 
 function dlgTurnPrompt(k, scene, history, userLine) {
@@ -2401,7 +2528,7 @@ function speakBtn(k, text, label) {
 
 function sentHtml() {
   const k = R.lang, s = cur().sent;
-  const toks = s.tokens.length ? s.tokens : s.text.split(/\s+/);
+  const toks = s.tokens.length ? s.tokens : segUnits(k, s.text);
   const j = (k === 'ja' || k === 'bo') ? '' : ' ';
   /* 藏语：录过音的词加一个小圆点，一眼看得出哪些已经读过 */
   const words = toks.map((t, i) => {
@@ -2478,16 +2605,21 @@ function paintRead() {
 function toggleTrans() { const c = cur(); if (c) { c.show = !c.show; paintRead(); } }
 
 function buildSent(j, k) {
-  const tokens = Array.isArray(j.tokens) ? j.tokens.filter(t => String(t).trim()) : [];
-  const gloss = Array.isArray(j.gloss) ? j.gloss.map(x => String(x || '')) : [];
   let txt = (j.text || '').trim();
   let trl = (j.translit || '').trim();
-  if (k === 'ru') { trl = ruLat(trl || txt); txt = ruPlain(txt); }
+  let toks = Array.isArray(j.tokens) ? j.tokens : [];
+  if (k === 'ru') {
+    trl = ruLat(trl || txt);
+    txt = ruPlain(txt);
+    toks = toks.map(x => ruPlain(String(x == null ? '' : x)));   // 否则带重音符号的 token 在原句里定位不到
+  }
+  /* 模型的切分不可信，这里按原句本地校准一遍 */
+  const fx = fixToks(k, txt, toks, j.gloss);
   return {
     text: txt,
     alt: k === 'kk' ? kkArab(txt) : (j.alt || '').trim(),
     translit: k === 'kk' ? kkLat(txt) : trl,
-    zh: (j.zh || '').trim(), en: (j.en || '').trim(), tokens: tokens, gloss: gloss
+    zh: (j.zh || '').trim(), en: (j.en || '').trim(), tokens: fx.tokens, gloss: fx.gloss
   };
 }
 
@@ -2565,10 +2697,9 @@ const wordCache = new Map();
 
 function tokAt(i) {
   const s = cur().sent;
-  const toks = s.tokens.length ? s.tokens : s.text.split(/\s+/);
+  const toks = s.tokens.length ? s.tokens : segUnits(R.lang, s.text);
   const raw = String(toks[i] || '');
-  const clean = raw.replace(/^[\s.,!?;:«»""''()\[\]—–·-]+|[\s.,!?;:«»""''()\[\]—–·-]+$/g, '') || raw;
-  return { raw: raw, word: clean, gloss: (s.gloss && s.gloss[i]) || '' };
+  return { raw: raw, word: cleanTok(raw), gloss: (s.gloss && s.gloss[i]) || '' };
 }
 
 /* 通用词卡：句子阅读和场景对话共用。
@@ -2622,24 +2753,25 @@ async function expandWord(btn) {
   }
 }
 
-/* 把一句话渲染成可点击的词；tokens/gloss 缺失时按空格切分兜底 */
-const cleanTok = s => String(s || '').replace(/^[\s.,!?;:«»""''()\[\]—–·-]+|[\s.,!?;:«»""''()\[\]—–·-]+$/g, '') || String(s || '');
+/* 把一句话渲染成可点击的词；tokens 缺失时用本地切分兜底 */
 function tapWords(k, text, tokens, gloss, group) {
-  const toks = (Array.isArray(tokens) && tokens.length) ? tokens : String(text || '').split(/\s+/);
+  const toks = (Array.isArray(tokens) && tokens.length) ? tokens : segUnits(k, text);
   const j = (k === 'ja' || k === 'bo') ? '' : ' ';
   return toks.map((t, i) =>
     '<span class="w" data-tw="' + group + '" data-ti="' + i + '">' + esc(t) + '</span>').join(j);
 }
+/* getSource 返回的对象里可以带 lang，用来覆盖默认语言（反向翻译一页六种语言） */
 function bindTapWords(k, getSource) {
   document.querySelectorAll('[data-tw]').forEach(el => {
     el.onclick = () => {
       const src = getSource(el.dataset.tw);
       if (!src) return;
+      const lk = src.lang || k;
       const i = +el.dataset.ti;
-      const toks = (Array.isArray(src.tokens) && src.tokens.length) ? src.tokens : String(src.text || '').split(/\s+/);
+      const toks = (Array.isArray(src.tokens) && src.tokens.length) ? src.tokens : segUnits(lk, src.text);
       document.querySelectorAll('[data-tw].on').forEach(n => n.classList.remove('on'));
       el.classList.add('on');
-      showWord(k, cleanTok(toks[i]), (src.gloss && src.gloss[i]) || '', src.text);
+      showWord(lk, cleanTok(toks[i]), (src.gloss && src.gloss[i]) || '', src.text);
     };
   });
 }
@@ -3213,18 +3345,24 @@ function paintDlg() {
 function resetDlg() { D.started = false; D.msgs = []; D.err = ''; paintDlg(); }
 
 function mkSys(j, fb) {
+  /* 切分同样按原句本地校准，否则对话里也会出现「两个词点不开」的问题 */
+  const line = (j.line || '').trim();
+  const fx = fixToks(D.lang, line, j.tokens, j.gloss);
   const m = {
-    who: 'sys', line: (j.line || '').trim(), zh: j.zh || '', en: j.en || '', show: false,
+    who: 'sys', line: line, zh: j.zh || '', en: j.en || '', show: false,
     reveal: !S.cfg.autoSpeak,
-    tokens: Array.isArray(j.tokens) ? j.tokens : [], gloss: Array.isArray(j.gloss) ? j.gloss : []
+    tokens: fx.tokens, gloss: fx.gloss
   };
-  if (fb) m.fix = {
-    verdict: fb.verdict === 'ok' ? 'ok' : 'fix',
-    corrected: (fb.corrected || '').trim(),
-    note: fb.note || '',
-    ctokens: Array.isArray(fb.ctokens) ? fb.ctokens : [],
-    cgloss: Array.isArray(fb.cgloss) ? fb.cgloss : []
-  };
+  if (fb) {
+    const cor = (fb.corrected || '').trim();
+    const cf = fixToks(D.lang, cor, fb.ctokens, fb.cgloss);
+    m.fix = {
+      verdict: fb.verdict === 'ok' ? 'ok' : 'fix',
+      corrected: cor,
+      note: fb.note || '',
+      ctokens: cf.tokens, cgloss: cf.gloss
+    };
+  }
   return m;
 }
 
@@ -3324,39 +3462,53 @@ function makeDlgCard() {
 }
 /* ================= Yulengua · 单词查询 / 整句翻译 ================= */
 
-const W = { q: '', items: [], sel: 0, qa: [], busy: false, err: '', mode: 'word', sent: null, sqa: [] };
+const W = {
+  q: '', items: [], sel: 0, qa: [], busy: false, err: '', mode: 'word',
+  sent: null, sqa: [],
+  rev: null, rsel: 0, rqa: []          // 反向翻译：中/英 → 六种语言
+};
+
+const W_TITLE = { word: '单词查询', sent: '整句翻译', rev: '译成六语' };
 
 VIEWS.lookup = function () { paintLookup(); };
 
 function paintLookup() {
   let body = '<input class="fld" id="wq" autocapitalize="off" spellcheck="false" ' +
-    'placeholder="查一个词，或粘贴一整句话…" value="' + esc(W.q) + '" ' +
+    'placeholder="查一个词，粘贴一整句，或输入中文/英文…" value="' + esc(W.q) + '" ' +
     'onkeydown="if(event.key===\'Enter\'){event.preventDefault();doLookup()}">' +
     '<div class="spacer"></div>' +
     '<div class="split">' +
-    '<button class="btn pri" onclick="doLookup()">查词</button>' +
-    '<button class="btn" onclick="doTranslate()">翻译整句</button>' +
+    '<button class="btn' + (W.mode === 'word' ? ' pri' : '') + '" onclick="doLookup()">查词</button>' +
+    '<button class="btn' + (W.mode === 'sent' ? ' pri' : '') + '" onclick="doTranslate()">翻译整句</button>' +
+    '<button class="btn' + (W.mode === 'rev' ? ' pri' : '') + '" onclick="doReverse()">译成六语</button>' +
     '</div>' +
-    '<p class="note">「查词」返回跨六种语言的候选词条；「翻译整句」先判断语言再整句翻译，可以点词、可以追问，也能存成卡片。</p>';
+    '<p class="note">「查词」返回跨六种语言的候选词条；「翻译整句」判断语言后把外语译成中文；' +
+    '「译成六语」方向相反——输入中文或英文（词或整句都行），一次给出六种语言的说法。三者都可以点词、追问、存成卡片。</p>';
 
   if (W.err) body += '<div class="err">' + esc(W.err) + '</div>';
-  if (W.busy) body += '<div style="margin-top:22px">' + LOADER + ' 正在' + (W.mode === 'sent' ? '翻译' : '查询') + '</div>';
+  if (W.busy) body += '<div style="margin-top:22px">' + LOADER + ' 正在' +
+    (W.mode === 'sent' ? '翻译' : W.mode === 'rev' ? '译成六种语言' : '查询') + '</div>';
 
-  body += (W.mode === 'sent') ? transHtml() : itemsHtml();
+  body += W.mode === 'sent' ? transHtml() : W.mode === 'rev' ? revHtml() : itemsHtml();
 
   if (W.mode === 'word' && W.qa.length) {
     body += '<div class="qa">' + W.qa.map(x =>
       '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
   }
 
-  const canAsk = W.mode === 'sent' ? !!W.sent : !!W.items.length;
+  const canAsk = W.mode === 'sent' ? !!W.sent : W.mode === 'rev' ? !!(W.rev && W.rev.items.length) : !!W.items.length;
+  const ph = W.mode === 'sent' ? '就这句话继续追问…'
+    : W.mode === 'rev' ? '就选中的那一条继续追问…' : '对结果继续追问…';
+  const askFn = W.mode === 'sent' ? 'askTrans()' : W.mode === 'rev' ? 'askRev()' : 'askWord()';
   const bar = canAsk ? '<div class="askbar">' +
-    '<textarea id="wask" rows="1" placeholder="' + (W.mode === 'sent' ? '就这句话继续追问…' : '对结果继续追问…') + '" oninput="autosize(this)"></textarea>' +
-    '<button class="go" onclick="' + (W.mode === 'sent' ? 'askTrans()' : 'askWord()') + '">&#8593;</button></div>' : '';
+    '<textarea id="wask" rows="1" placeholder="' + ph + '" oninput="autosize(this)"></textarea>' +
+    '<button class="go" onclick="' + askFn + '">&#8593;</button></div>' : '';
 
-  shell(W.mode === 'sent' ? '整句翻译' : '单词查询', body, { bar: bar, right: NAV_LIB });
+  shell(W_TITLE[W.mode] || '单词查询', body, { bar: bar, right: NAV_LIB });
 
-  if (W.mode === 'sent') bindTrans(); else bindItems();
+  if (W.mode === 'sent') bindTrans();
+  else if (W.mode === 'rev') bindRev();
+  else bindItems();
 }
 
 /* ---------------- 查词 ---------------- */
@@ -3413,7 +3565,8 @@ async function doLookup() {
   const q = $('wq').value.trim();
   if (!q) return;
   $('wq').blur();
-  W.q = q; W.mode = 'word'; W.busy = true; W.err = ''; W.items = []; W.qa = []; W.sel = 0; W.sent = null;
+  W.q = q; W.mode = 'word'; W.busy = true; W.err = ''; W.items = []; W.qa = []; W.sel = 0;
+  W.sent = null; W.rev = null; W.rqa = []; W.rsel = 0;
   paintLookup();
   try {
     const j = await aiJson(lookupPrompt(q), guessLang(q));
@@ -3445,22 +3598,24 @@ async function askWord() {
   window.scrollTo(0, document.body.scrollHeight);
 }
 
-async function makeWordCard(i, btn) {
+/* 词汇卡片生成：查词结果和反向翻译结果共用 */
+async function genWordCard(item, qa, btn) {
   if (needKey()) return;
-  const it = W.items[i];
   const old = btn.innerHTML; btn.innerHTML = '生成中…'; btn.disabled = true;
   try {
-    let txt = await ai(wordCardPrompt(it, W.qa), false, it.lang);
-    if (it.lang === 'kk') txt = kkDual(txt);
-    if (it.lang === 'ru') txt = ruDual(txt);
+    let txt = await ai(wordCardPrompt(item, qa), false, item.lang);
+    if (item.lang === 'kk') txt = kkDual(txt);
+    if (item.lang === 'ru') txt = ruDual(txt);
     txt = markjiLint(txt).text;
     DE.mode = 'raw';
-    go('dedit', { lang: it.lang, front: it.word, text: txt.trim() });
+    go('dedit', { lang: item.lang, front: item.word, text: txt.trim() });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
   }
 }
+
+function makeWordCard(i, btn) { genWordCard(W.items[i], W.qa, btn); }
 
 /* ---------------- 整句翻译 ----------------
    语言由 AI 判定，但模型的选择在发请求之前就用字符集本地猜好了，
@@ -3501,7 +3656,9 @@ function transHtml() {
       '<button class="btn pri wide" onclick="transCard(this)">保存到卡片库</button>' +
       (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '');
   } else {
-    body += '<p class="note">这段文字不属于本应用支持的六种语言，只做了翻译，不能生成卡片。</p>';
+    body += '<p class="note">这段文字不属于本应用支持的六种语言，只做了翻译，不能生成卡片。' +
+      '如果你输入的是中文或英文、想看它在六种语言里怎么说，请改点上面的「译成六语」。</p>' +
+      '<button class="btn wide" onclick="doReverse()">译成六语</button>';
   }
   return body;
 }
@@ -3518,6 +3675,7 @@ async function doTranslate(again) {
   if (!q) { toast('先粘贴一段文字'); return; }
   if ($('wq')) $('wq').blur();
   W.q = q; W.mode = 'sent'; W.busy = true; W.err = ''; W.items = []; W.qa = [];
+  W.rev = null; W.rqa = []; W.rsel = 0;
   if (!again) { W.sent = null; W.sqa = []; }
   paintLookup();
   try {
@@ -3549,6 +3707,144 @@ async function askTrans() {
 function transCard(btn) {
   if (!W.sent || !LANGS[W.sent.lang]) { toast('这段文字未能识别出支持的语言'); return; }
   detailFor(W.sent.lang, W.sent.sent, W.sqa, btn);
+}
+
+/* ---------------- 反向翻译：中文 / 英文 → 六种语言 ----------------
+   请求按【模型】分组：被指定了强模型的语言（通常是藏语）单独走一次请求，
+   其余共用默认模型的语言合并成一次。这样藏语不会掉回弱模型，
+   也不会因为一次查询就发六个请求。 */
+function revGroups() {
+  const g = new Map();
+  LK.forEach(k => {
+    const m = modelFor(k);
+    if (!g.has(m)) g.set(m, []);
+    g.get(m).push(k);
+  });
+  return Array.from(g.values());
+}
+
+function revHtml() {
+  const r = W.rev;
+  if (!r || !r.items.length) return '';
+  let body = '<div class="sec">' + esc(r.zh || W.q) + ' · ' + (r.kind === 'word' ? '词' : '整句') +
+    ' · ' + r.items.length + ' 种语言</div>';
+  r.items.forEach((it, i) => {
+    const k = it.lang, L = LANGS[k], s = it.sent;
+    body += '<div class="card" style="margin-bottom:14px;' + (i === W.rsel ? 'border-color:var(--fg2)' : '') + '" data-rpick="' + i + '">' +
+      '<div class="row" style="margin-bottom:12px">' +
+      '<span class="tag">' + esc(L.zh) + '</span>' +
+      (it.pos ? '<span class="tag">' + escp(it.pos) + '</span>' : '') +
+      (it.gender ? '<span class="tag">' + escp(it.gender) + '</span>' : '') +
+      (it.lemma && it.lemma !== s.text ? '<span class="lm">原形 ' + escp(it.lemma) + '</span>' : '') +
+      (i === W.rsel ? '<span class="hint" style="margin-left:auto">追问对象</span>' : '') +
+      '</div>' +
+      '<div class="sent ' + scriptCls(k) + '">' + tapWords(k, s.text, s.tokens, s.gloss, 'rv' + i) + '</div>' +
+      (k === 'kk' && s.alt ? '<div class="sent ar" style="margin-top:12px">' + esc(s.alt) + '</div>' : '') +
+      (s.translit ? '<div class="translit">' + escp(s.translit) + '</div>' : '') +
+      handHtml(k, s.text) +
+      (it.note ? '<div class="expl">' + escp(it.note) + '</div>' : '') +
+      '<div class="row" style="margin-top:16px">' +
+      (L.tts ? '<button class="btn sm" data-rspk="' + i + '">&#9654; 发音</button>' : '') +
+      '<button class="btn sm" data-rcard="' + i + '">' + (r.kind === 'word' ? '生成卡片' : '保存到卡片库') + '</button>' +
+      '</div>' +
+      '<p class="hint" style="margin-top:12px">点击任意单词查看释义' + (k === 'bo' ? '、改注音、录发音' : '') + '</p>' +
+      '</div>';
+  });
+  if (W.rqa.length) {
+    body += '<div class="qa">' + W.rqa.map(x =>
+      '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
+  }
+  return body;
+}
+
+function bindRev() {
+  const r = W.rev;
+  if (!r) return;
+  document.querySelectorAll('[data-rpick]').forEach(c => {
+    c.addEventListener('click', e => {
+      if (e.target.closest('button') || e.target.closest('.w')) return;
+      W.rsel = +c.dataset.rpick; paintLookup();
+    });
+  });
+  document.querySelectorAll('[data-rspk]').forEach(b => {
+    b.onclick = () => { const it = r.items[+b.dataset.rspk]; say(it.lang, it.sent.text, b); };
+  });
+  document.querySelectorAll('[data-rcard]').forEach(b => {
+    b.onclick = () => revCard(+b.dataset.rcard, b);
+  });
+  /* 每张卡片一种语言，所以词卡的语言从来源里取，不用外层的默认值 */
+  bindTapWords('', g => {
+    const it = r.items[+g.slice(2)];
+    if (!it) return null;
+    return { lang: it.lang, text: it.sent.text, tokens: it.sent.tokens, gloss: it.sent.gloss };
+  });
+}
+
+async function doReverse(again) {
+  if (needKey()) return;
+  const q = (again && W.q) || ($('wq') ? $('wq').value.trim() : W.q);
+  if (!q) { toast('先输入一个中文或英文的词或句子'); return; }
+  if ($('wq')) $('wq').blur();
+  W.q = q; W.mode = 'rev'; W.busy = true; W.err = '';
+  W.items = []; W.qa = []; W.sent = null; W.sqa = [];
+  W.rev = null; W.rqa = []; W.rsel = 0;
+  paintLookup();
+  try {
+    const groups = revGroups();
+    const rs = await Promise.all(groups.map(ks => aiJson(revPrompt(q, ks), ks[0])));
+    const kind = rs.map(j => j && j.kind).find(x => x === 'word' || x === 'sent') || 'sent';
+    const zh = (rs.map(j => (j && j.zh) || '').find(x => x.trim()) || q).trim();
+    const by = {};
+    rs.forEach(j => (j && Array.isArray(j.items) ? j.items : []).forEach(it => {
+      if (!it || !LANGS[it.lang] || !String(it.text || '').trim() || by[it.lang]) return;
+      const s = buildSent(it, it.lang);
+      s.zh = zh;                                   // 详解 prompt 要拿它当参考翻译
+      by[it.lang] = {
+        lang: it.lang, sent: s,
+        pos: (it.pos || '').trim(), gender: (it.gender || '').trim(),
+        lemma: (it.lemma || '').trim(), note: (it.note || '').trim()
+      };
+    }));
+    const items = LK.filter(k => by[k]).map(k => by[k]);
+    if (!items.length) throw new Error('模型没有返回任何译文');
+    W.rev = { kind: kind, zh: zh, items: items };
+    const miss = LK.filter(k => !by[k]);
+    if (miss.length) W.err = '有 ' + miss.length + ' 种语言没返回译文（' +
+      miss.map(k => LANGS[k].zh).join('、') + '），可以重新点一次「译成六语」。';
+  } catch (e) { W.err = '翻译失败 · ' + e.message; }
+  W.busy = false; paintLookup();
+}
+
+function revCard(i, btn) {
+  const r = W.rev; if (!r) return;
+  const it = r.items[i];
+  if (r.kind === 'word') {
+    genWordCard({ lang: it.lang, word: it.sent.text, zh: r.zh, pos: it.pos, gender: it.gender },
+      W.rqa.filter(x => x._i === i), btn);
+  } else {
+    detailFor(it.lang, it.sent, W.rqa.filter(x => x._i === i), btn);
+  }
+}
+
+async function askRev() {
+  if (needKey() || W.busy || !W.rev) return;
+  const ta = $('wask'); const q = ta.value.trim();
+  if (!q) return;
+  const it = W.rev.items[W.rsel];
+  if (!it) return;
+  ta.value = ''; autosize(ta); ta.blur();
+  W.busy = true;
+  W.rqa.push({ q: '（' + LANGS[it.lang].zh + '）' + q, a: '…', _i: W.rsel });
+  paintLookup();
+  try {
+    const prev = W.rqa.slice(0, -1).filter(x => x._i === W.rsel);
+    const a = W.rev.kind === 'word'
+      ? await ai(lookupAskPrompt({ lang: it.lang, word: it.sent.text, pos: it.pos, zh: W.rev.zh }, prev, q), false, it.lang)
+      : await ai(askPrompt(it.lang, it.sent, prev, q), false, it.lang);
+    W.rqa[W.rqa.length - 1].a = a;
+  } catch (e) { W.rqa.pop(); W.err = '追问失败 · ' + e.message; }
+  W.busy = false; paintLookup();
+  window.scrollTo(0, document.body.scrollHeight);
 }
 /* ================= Yulengua · 卡片库 ================= */
 
