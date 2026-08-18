@@ -312,6 +312,7 @@ const LS = {
 const CFG_DEFAULT = {
   key: '', model: 'gpt-4.1', azKey: '', azReg: 'westeurope',
   modelBy: {},      // 按语言覆盖模型，留空则跟随全局；用来只给藏语这类语言上强模型
+  corpusBy: {},     // 按语言覆盖「选材规则」提示词，留空则用内置的那一段
   diff: {},         // 每种语言的难度微调，整数，0 = 基准
   boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
   autoSpeak: false, // 场景对话自动朗读
@@ -331,8 +332,16 @@ const S = {
   stack: [],
   store: 'ls'       // 'idb' | 'ls'
 };
-if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
-if (!S.cfg.modelBy || typeof S.cfg.modelBy !== 'object') S.cfg.modelBy = {};
+/* 三个「按语言」的字典字段：既补上缺失的，也【复制一份】。
+   不复制的话，没存过设置时它们直接引用 CFG_DEFAULT 里的那个对象，
+   一改就把默认值本身污染了，清空数据时反而恢复不回去。 */
+function normCfg() {
+  ['diff', 'modelBy', 'corpusBy'].forEach(k => {
+    const v = S.cfg[k];
+    S.cfg[k] = (v && typeof v === 'object' && !Array.isArray(v)) ? Object.assign({}, v) : {};
+  });
+}
+normCfg();
 
 /* ---------------- 本地存储：IndexedDB 为主，localStorage 兜底 ----------------
    iPhone 上两者都存在设备本地、不上云。选 IndexedDB 是因为 localStorage 在
@@ -432,8 +441,7 @@ async function loadAll() {
       const bo = await idbGet('bo');
       if (bo && typeof bo === 'object') S.bo = bo;
       if (cfg) S.cfg = Object.assign({}, CFG_DEFAULT, cfg);
-      if (!S.cfg.diff || typeof S.cfg.diff !== 'object') S.cfg.diff = {};
-      if (!S.cfg.modelBy || typeof S.cfg.modelBy !== 'object') S.cfg.modelBy = {};
+      normCfg();
 
       if (Array.isArray(cards)) S.cards = cards;
       else {                                    // 首次运行：从 localStorage 迁移
@@ -517,6 +525,7 @@ function importBackup(input) {
         /* 备份里若没带密钥（老版本或手工删过），保留本机现有的，别把它清空 */
         const keep = { key: S.cfg.key, azKey: S.cfg.azKey, oss: S.cfg.oss };
         S.cfg = Object.assign({}, CFG_DEFAULT, d.cfg);
+        normCfg();
         if (!S.cfg.key) S.cfg.key = keep.key;
         if (!S.cfg.azKey) S.cfg.azKey = keep.azKey;
         if (!S.cfg.oss || !S.cfg.oss.sk) S.cfg.oss = keep.oss;
@@ -570,6 +579,15 @@ const LANGS = {
   }
 };
 const LK = ['nl', 'bo', 'kk', 'ru', 'es', 'ja'];
+
+/* 「选材规则」那段提示词决定了例句长什么样。内置的那份是默认值，
+   设置里改过之后走 corpusBy 的覆盖值；留空 = 恢复内置。 */
+function corpusFor(k) {
+  const v = S.cfg.corpusBy && S.cfg.corpusBy[k];
+  const t = String(v == null ? '' : v).trim();
+  return t || (LANGS[k] ? LANGS[k].corpus : '');
+}
+const corpusEdited = k => corpusFor(k) !== (LANGS[k] ? LANGS[k].corpus : '');
 const scriptCls = k => k === 'bo' ? 'tb' : (k === 'ja' ? 'jp' : '');
 
 /* ---------------- 西里尔手写体 ----------------
@@ -1491,7 +1509,7 @@ function cloudSnapshot() {
     cards: S.cards, seen: S.seen, bo: S.bo,
     cfg: {
       ts: S.cfg.cfgTs || 0,
-      boPron: S.cfg.boPron, diff: S.cfg.diff,
+      boPron: S.cfg.boPron, diff: S.cfg.diff, corpusBy: S.cfg.corpusBy,
       cardCap: S.cfg.cardCap, autoSpeak: S.cfg.autoSpeak
     }
   };
@@ -1532,6 +1550,7 @@ function cloudMerge(rm) {
   if (rm.cfg && (rm.cfg.ts || 0) > (S.cfg.cfgTs || 0)) {
     if (typeof rm.cfg.boPron === 'string') S.cfg.boPron = rm.cfg.boPron;
     if (rm.cfg.diff && typeof rm.cfg.diff === 'object') S.cfg.diff = rm.cfg.diff;
+    if (rm.cfg.corpusBy && typeof rm.cfg.corpusBy === 'object') S.cfg.corpusBy = rm.cfg.corpusBy;
     if (typeof rm.cfg.cardCap === 'number') S.cfg.cardCap = rm.cfg.cardCap;
     if (typeof rm.cfg.autoSpeak === 'boolean') S.cfg.autoSpeak = rm.cfg.autoSpeak;
     S.cfg.cfgTs = rm.cfg.ts;
@@ -1805,7 +1824,7 @@ function sentencePrompt(k, avoid) {
     { role: 'system', content: BASE },
     {
       role: 'user', content:
-        '为' + L.zh + '学习者生成 1 个全新的例句（基准水平：' + L.level + '）。\n\n【选材规则】\n' + L.corpus +
+        '为' + L.zh + '学习者生成 1 个全新的例句（基准水平：' + L.level + '）。\n\n【选材规则】\n' + corpusFor(k) +
         '\n\n【风格样例（只参考风格与体裁，不要照抄）】\n' + L.sample +
         '\n\n【禁止重复】以下句子已出现过，必须换全新的话题和句式：\n' +
         (avoid.length ? avoid.slice(-40).map(s => '· ' + s).join('\n') : '（无，这是第一句）') +
@@ -2235,6 +2254,11 @@ VIEWS.set = function () {
         '<option value="__custom">自定义…</option></select></div>';
     }).join('') +
     '</div>' +
+    /* 提示词编辑的入口刻意做得不显眼：平时不该动它，改坏了例句会整体走样 */
+    '<div class="row" style="margin-top:12px">' +
+    '<button class="btn sm" onclick="saveSet(true);go(\'corpus\')">编辑选材提示词' +
+    (LK.filter(corpusEdited).length ? '（已改 ' + LK.filter(corpusEdited).length + ' 种）' : '') +
+    '</button></div>' +
 
     '<div class="sec" style="margin-top:36px">句子难度</div>' +
     '<p class="note" style="margin-top:0;margin-bottom:6px">每按一次是很小的一步。生成新句子时，AI 会拿你最近读过的 40 句作为难度基准线，再按这里的档位微调，不会跨级跳跃。</p>' +
@@ -2498,10 +2522,82 @@ function clearSeen() {
 function wipe() {
   if (!confirm('确定清空所有卡片和设置？此操作不可撤销。建议先导出一份备份文件。')) return;
   S.cards = []; S.seen = {}; S.bo = {}; S.trash = null;
-  S.cfg = Object.assign({}, CFG_DEFAULT, { diff: {} });
+  S.cfg = Object.assign({}, CFG_DEFAULT);
+  normCfg();
   saveCards(true); saveSeen(true); saveBo(true); saveCfg(true);
   try { LK.forEach(k => localStorage.removeItem('lg.seen.' + k)); localStorage.removeItem('lg.cards'); localStorage.removeItem('lg.bo'); } catch (e) {}
   home(); toast('已清空');
+}
+
+/* ---------------- 选材提示词编辑 ----------------
+   六种语言各自的「选材规则」那一段，直接决定生成的例句是什么题材、多长、
+   用到哪些语法点。改这里是把自己的偏好写进 prompt，不改就用内置的那份。 */
+VIEWS.corpus = function () {
+  let body = '<p class="note" style="margin-top:0">生成例句时，这段文字会原样放进 prompt 的「选材规则」里，' +
+    '决定题材、句长和语法范围。想练疑问句、想读新闻体、想把句子改短，都是在这里改。<br>' +
+    '<b>留空 = 用内置的那份。</b>难度档位和「最近读过的 40 句」不受这里影响，仍然照常起作用。</p>';
+
+  body += LK.map(k => {
+    const edited = corpusEdited(k);
+    return '<div class="sec" style="margin-top:26px">' + esc(LANGS[k].zh) +
+      (edited ? ' · 已改' : ' · 内置') + '</div>' +
+      '<textarea class="fld" id="cps_' + k + '" rows="4" ' +
+      'style="min-height:120px;font-size:14px;line-height:1.7" ' +
+      'placeholder="留空则使用内置的那一份">' + esc(edited ? corpusFor(k) : '') + '</textarea>' +
+      '<div class="row" style="margin-top:8px">' +
+      '<button class="btn sm" onclick="corpusFill(\'' + k + '\')">填入内置原文</button>' +
+      '<button class="btn sm" onclick="corpusReset(\'' + k + '\')">恢复默认</button>' +
+      '</div>' +
+      (edited ? '' : '<p class="note" style="margin-top:8px">内置：' + esc(LANGS[k].corpus) + '</p>');
+  }).join('');
+
+  body += '<div class="spacer"></div><div class="spacer"></div>' +
+    '<button class="btn pri wide" onclick="corpusSave()">保存</button>' +
+    '<div class="spacer"></div>' +
+    '<button class="btn wide" onclick="corpusResetAll()">全部恢复默认</button>' +
+    '<p class="note">改动会跟着设置一起备份，也会同步到云端（如果开了云端同步）。</p>';
+
+  shell('选材提示词', body);
+};
+
+/* 把内置原文填进输入框，方便在它基础上改，而不是从零写 */
+function corpusFill(k) {
+  const t = $('cps_' + k);
+  if (!t) return;
+  if (t.value.trim()) { toast('已有内容，先清空再填入'); return; }
+  t.value = LANGS[k].corpus;
+}
+
+function corpusReset(k) {
+  const t = $('cps_' + k);
+  if (t) t.value = '';
+  corpusSave(true);
+  toast(LANGS[k].zh + ' 已恢复内置提示词');
+}
+
+function corpusResetAll() {
+  if (!confirm('把六种语言的选材提示词全部恢复成内置的那份？')) return;
+  S.cfg.corpusBy = {};
+  saveCfg();
+  render();
+  toast('已全部恢复默认');
+}
+
+function corpusSave(quiet) {
+  if (!S.cfg.corpusBy || typeof S.cfg.corpusBy !== 'object') S.cfg.corpusBy = {};
+  LK.forEach(k => {
+    const t = $('cps_' + k);
+    if (!t) return;
+    const v = t.value.trim();
+    /* 和内置原文一字不差就当成没改，免得以后内置那份更新了却被旧副本挡住 */
+    if (!v || v === LANGS[k].corpus) delete S.cfg.corpusBy[k];
+    else S.cfg.corpusBy[k] = v;
+  });
+  saveCfg();
+  render();
+  if (!quiet) toast(LK.filter(corpusEdited).length
+    ? '已保存 · ' + LK.filter(corpusEdited).map(k => LANGS[k].zh).join('、') + ' 用你改过的提示词'
+    : '已保存 · 六种语言都在用内置提示词');
 }
 /* ================= Yulengua · 句子阅读 ================= */
 
