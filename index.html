@@ -262,6 +262,8 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
   display:flex;align-items:center;justify-content:center;font-size:12px}
 .lc.done .cb{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
 .lc.done .fr{text-decoration:line-through;color:var(--fg3)}
+/* Daily Pulse 的勾选只表示「选中」，还没到划掉那一步，所以不加删除线 */
+.lc.sel .cb{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
 .lc .fr{flex:1;font-size:16px;line-height:1.55;font-weight:500;word-break:break-word}
 .lc .mt{font-size:11px;color:var(--fg3);margin-top:5px;letter-spacing:.06em}
 .lc .acts{display:flex;gap:8px;margin-top:12px;padding-left:33px;flex-wrap:wrap}
@@ -485,7 +487,7 @@ async function loadAll() {
   if (!S.bo || typeof S.bo !== 'object') S.bo = {};
   if (!S.del || typeof S.del !== 'object') S.del = {};
   pruneDel();
-  pulseState();
+  prunePulse();
   requestPersist();
 }
 
@@ -1589,10 +1591,15 @@ function cloudMerge(rm) {
      当前这一批只在本地还没有的时候才从远端接过来，否则会把你正在看的列表换掉。 */
   if (rm.pulse && typeof rm.pulse === 'object') {
     const p = pulseState();
+    /* 正数 = 熟知，负数 = 明确取消。按【绝对值更大者胜】合并，
+       否则取消操作永远同步不出去：本地取消掉的词会被远端那份加回来。 */
     const rk = rm.pulse.known || {};
     Object.keys(rk).forEach(k => {
       const mine = p.known[k] || (p.known[k] = {});
-      Object.keys(rk[k] || {}).forEach(w => { if (!mine[w]) { mine[w] = rk[k][w]; changed = true; } });
+      Object.keys(rk[k] || {}).forEach(w => {
+        const r = rk[k][w] || 0;
+        if (Math.abs(r) > Math.abs(mine[w] || 0)) { mine[w] = r; changed = true; }
+      });
     });
     const rg = rm.pulse.gl || {};
     Object.keys(rg).forEach(k => {
@@ -3118,7 +3125,8 @@ function refreshUnderSheet() {
   if (v.view === 'read') { if (cur()) paintRead(); }
   else if (v.view === 'lookup') paintLookup();
   else if (v.view === 'dlg') paintDlg();
-  else render();
+  else if (v.view === 'pulse') paintPulse();
+  else { const f = VIEWS[v.view]; if (f) f(v.arg); }   // 不能走 render()，那会把词卡关掉
 }
 
 /* ---------- ask ---------- */
@@ -3142,10 +3150,14 @@ async function askSent() {
 /* ---------- 生成详解 -> 预览页 ---------- */
 /* 你在词卡里就某个词追问过的东西，属于这句话的一部分，生成整句卡片时
    必须一并带上——否则问明白的那些点不会出现在卡片里，等于白问。 */
-function wordQaFor(k, sentText) {
+/* ctx 可以是一句话，也可以是一组上下文——Daily Pulse 里，你可能是在词表上
+   点开某个词问的（上下文就是那个词本身），也可能是在造出来的句子里点开问的。
+   两种都属于这句话的一部分，生成卡片时都得带上。 */
+function wordQaFor(k, ctx) {
+  const set = new Set((Array.isArray(ctx) ? ctx : [ctx]).filter(Boolean));
   const out = [];
   wordCache.forEach(j => {
-    if (!j || j._lang !== k || j._ctx !== sentText) return;
+    if (!j || j._lang !== k || !set.has(j._ctx)) return;
     (j._qa || []).forEach(x => {
       if (!x || !x.q || !x.a || x.a === '…') return;
       out.push({ q: '（关于句中的「' + (j._w || j.word || '') + '」）' + x.q, a: x.a });
@@ -3154,11 +3166,11 @@ function wordQaFor(k, sentText) {
   return out;
 }
 
-async function detailFor(k, sent, qa, btn) {
+async function detailFor(k, sent, qa, btn, extraCtx) {
   if (needKey()) return;
   const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在生成详解'; btn.disabled = true;
   try {
-    const allQa = (qa || []).concat(wordQaFor(k, sent.text));
+    const allQa = (qa || []).concat(wordQaFor(k, [sent.text].concat(extraCtx || [])));
     let txt = await ai(detailPrompt(k, sent, allQa), false, k);
     if (k === 'kk') txt = kkDual(txt);
     if (k === 'ru') txt = ruDual(txt);
@@ -4212,19 +4224,33 @@ function pulseState() {
   if (!S.pulse.sent || typeof S.pulse.sent !== 'object') S.pulse.sent = {};
   return S.pulse;
 }
+/* 「明确取消」的记录只需要活到同步完成，留 90 天足够，之后直接丢掉别占地方 */
+const PULSE_UNDO_KEEP = 90 * 86400000;
+function prunePulse() {
+  const p = pulseState(), cut = Date.now() - PULSE_UNDO_KEEP;
+  Object.keys(p.known).forEach(k => {
+    const m = p.known[k];
+    Object.keys(m).forEach(w => { if (m[w] < 0 && -m[w] < cut) delete m[w]; });
+  });
+}
+/* known[语言][词] 存的是【带符号的时间戳】：正数 = 已熟知，负数 = 在那个时刻明确取消了。
+   不能只用「有没有这个键」来表示，因为云端合并如果只做并集，取消就永远同步不出去——
+   本地取消掉的词会在下一次同步时被远端那份原样加回来，看起来就像「勾一个词，另一个自己也被勾上了」。 */
 const pKnown = k => { const p = pulseState(); return p.known[k] || (p.known[k] = {}); };
+const pIsKnown = (k, w) => (pKnown(k)[w] || 0) > 0;
+function pSetKnown(k, w, on) { pKnown(k)[w] = on ? Date.now() : -Date.now(); }
 const pCur = k => { const p = pulseState(); return Array.isArray(p.cur[k]) ? p.cur[k] : []; };
 const pGl = k => { const p = pulseState(); return p.gl[k] || (p.gl[k] = {}); };
-const pulseKnownCount = k => Object.keys(pKnown(k)).length;
+const pulseKnownCount = k => { const m = pKnown(k); return Object.keys(m).filter(w => m[w] > 0).length; };
 /* 勾选 = 标记熟知，同时也是造句的选词。两件事共用一个勾。 */
-const pulseSel = k => pCur(k).filter(w => pKnown(k)[w]);
+const pulseSel = k => pCur(k).filter(w => pIsKnown(k, w));
 const pSent = k => { const p = pulseState(); return p.sent[k] || null; };
 
 /* 抽一批。已熟知的永久排除；刚看过的这一批虽然「回到词库」，
    但只要池子还够大就避开它们，免得点了换一批还是同样几个词。 */
 function pulseDraw(k, words) {
   const known = pKnown(k), prev = new Set(pCur(k));
-  const pool = words.filter(x => !known[x.w]);
+  const pool = words.filter(x => !((known[x.w] || 0) > 0));
   let src = pool.filter(x => !prev.has(x.w));
   if (src.length < PULSE_N) src = pool;                 // 池子见底了就允许重复出现
   const a = src.slice();
@@ -4240,7 +4266,7 @@ function pulseDraw(k, words) {
 const savePulse = q => { persistKey('pulse', pulseState()); if (!q) cloudTouch(); };
 
 /* ---------------- 视图 ---------------- */
-const P = { lang: null, busy: false, gen: false, err: '', serr: '' };
+const P = { lang: null, busy: false, gen: false, ask: false, err: '', serr: '' };
 
 VIEWS.pulse = async function (k) {
   P.lang = k; P.err = '';
@@ -4256,7 +4282,7 @@ function pulseWordsNow(k) {
   const b = BANK[k];
   const map = new Map((b ? b.words : []).map(x => [x.w, x.g]));
   const gl = pGl(k);
-  return pCur(k).map(w => ({ w: w, g: map.get(w) || gl[w] || '', known: !!pKnown(k)[w] }));
+  return pCur(k).map(w => ({ w: w, g: map.get(w) || gl[w] || '', known: pIsKnown(k, w) }));
 }
 
 function paintPulse() {
@@ -4300,7 +4326,7 @@ function paintPulse() {
 
   body += '<div class="lib">';
   items.forEach((it, i) => {
-    body += '<div class="lc' + (it.known ? ' done' : '') + '">' +
+    body += '<div class="lc' + (it.known ? ' sel' : '') + '">' +
       '<div class="top">' +
       '<button class="cb" data-pk="' + i + '" title="标记熟知">' + (it.known ? '&#10003;' : '') + '</button>' +
       '<div class="fr"><span class="' + scriptCls(k) + '" data-pw="' + i + '" style="font-size:20px">' + esc(it.w) + '</span>' +
@@ -4317,12 +4343,16 @@ function paintPulse() {
   });
   body += '</div>';
 
-  shell(L.zh, body, { right: NAV_LIB });
+  const ps0 = pSent(k);
+  const bar = ps0 ? '<div class="askbar">' +
+    '<textarea id="pask" rows="1" placeholder="就这句话继续追问…" oninput="autosize(this)"></textarea>' +
+    '<button class="go" onclick="askPulse()">&#8593;</button></div>' : '';
+  shell(L.zh, body, { bar: bar, right: NAV_LIB });
 
   const at = i => pulseWordsNow(k)[i];
   document.querySelectorAll('[data-pk]').forEach(el => el.onclick = () => {
     const it = at(+el.dataset.pk);
-    if (pKnown(k)[it.w]) delete pKnown(k)[it.w]; else pKnown(k)[it.w] = Date.now();
+    pSetKnown(k, it.w, !pIsKnown(k, it.w));
     savePulse(); paintPulse();
   });
   const ps = pSent(k);
@@ -4340,7 +4370,7 @@ function paintPulse() {
 function pulseNext(btn) {
   const k = P.lang, b = BANK[k];
   if (!b || !b.words.length) return;
-  if (!b.words.some(x => !pKnown(k)[x.w])) { toast('这门语言的词库已经全部标记为熟知了'); return; }
+  if (!b.words.some(x => !pIsKnown(k, x.w))) { toast('这门语言的词库已经全部标记为熟知了'); return; }
   if (btn) { btn.disabled = true; }
   pulseState().cur[k] = pulseDraw(k, b.words);
   delete pulseState().sent[k];                  // 换了词，上一句就不该再挂在这里
@@ -4353,7 +4383,7 @@ function pulseNext(btn) {
 /* 全选 / 全不选：只动【当前这一批】，不碰历史上标记过的熟知记录 */
 function pulseAll(on) {
   const k = P.lang;
-  pCur(k).forEach(w => { if (on) pKnown(k)[w] = Date.now(); else delete pKnown(k)[w]; });
+  pCur(k).forEach(w => pSetKnown(k, w, on));
   savePulse();
   paintPulse();
 }
@@ -4421,7 +4451,9 @@ async function pulseMakeSent(btn) {
     pulseState().sent[k] = {
       text: sent.text, alt: sent.alt, translit: sent.translit,
       zh: sent.zh, en: sent.en, tokens: sent.tokens, gloss: sent.gloss,
-      note: unmark(j.note || ''), words: words, forms: v.forms, miss: v.miss, ts: Date.now()
+      note: unmark(j.note || ''), words: words, forms: v.forms, miss: v.miss,
+      qa: [],                     // 追问是针对上一句问的，换了句子就不该跟过来
+      ts: Date.now()
     };
     savePulse();
   } catch (e) { P.serr = '造句失败 · ' + e.message; }
@@ -4460,10 +4492,47 @@ function pulseSentHtml(k) {
     '<button class="btn sm" onclick="pulseMakeSent(this)">&#8635; 重新造句</button>' +
     '<button class="btn sm" onclick="pulseDropSent()">收起</button>' +
     '</div>' +
-    '<p class="hint" style="margin-top:12px">点句中任意单词查看释义</p>' +
-    '</div>' +
-    '<button class="btn pri wide" style="margin-bottom:18px" onclick="pulseSentCard(this)">把这句存到卡片库</button>';
+    '<p class="hint" style="margin-top:12px">点句中任意单词查看释义，下方输入框可以就这句话继续追问</p>' +
+    '</div>';
+
+  const qa = Array.isArray(s.qa) ? s.qa : [];
+  if (qa.length) {
+    h += '<div class="qa">' + qa.map(x =>
+      '<div class="q">' + esc(x.q) + '</div><div class="a">' + esc(x.a) + '</div>').join('') + '</div>';
+  }
+
+  /* 词卡里的追问有两种来源：在造出来的句子里点词问的，和在上面词表里点词问的。
+     两种都属于这句话，生成卡片时都会带上。 */
+  const nwq = wordQaFor(k, [s.text].concat(s.words || [])).length;
+  h += '<button class="btn pri wide" style="margin-top:16px" onclick="pulseSentCard(this)">把这句存到卡片库</button>' +
+    ((qa.length || nwq)
+      ? '<p class="note" style="text-align:center;margin-bottom:18px">会一并带上' +
+        (qa.length ? '这句话的 ' + qa.length + ' 条追问' : '') +
+        (qa.length && nwq ? '，以及' : '') +
+        (nwq ? '词卡里追问的 ' + nwq + ' 条内容' : '') + '</p>'
+      : '<div style="margin-bottom:18px"></div>');
   return h;
+}
+
+/* 就造出来的这句话继续追问 */
+async function askPulse() {
+  const k = P.lang, s = pSent(k);
+  if (needKey() || !s || P.gen || P.ask) return;
+  const ta = $('pask'); if (!ta) return;
+  const q = ta.value.trim();
+  if (!q) return;
+  ta.value = ''; autosize(ta); ta.blur();
+  if (!Array.isArray(s.qa)) s.qa = [];
+  s.qa.push({ q: q, a: '…' });
+  P.ask = true; P.serr = '';
+  savePulse(); paintPulse();
+  try {
+    const a = await ai(askPrompt(k, s, s.qa.slice(0, -1), q), false, k);
+    s.qa[s.qa.length - 1].a = a;
+  } catch (e) { s.qa.pop(); P.serr = '追问失败 · ' + e.message; }
+  P.ask = false;
+  savePulse(); paintPulse();
+  window.scrollTo(0, document.body.scrollHeight);
 }
 
 function pulseDropSent() {
@@ -4476,7 +4545,9 @@ function pulseDropSent() {
 function pulseSentCard(btn) {
   const k = P.lang, s = pSent(k);
   if (!s) return;
-  detailFor(k, { text: s.text, alt: s.alt, translit: s.translit, zh: s.zh, en: s.en }, [], btn);
+  detailFor(k, { text: s.text, alt: s.alt, translit: s.translit, zh: s.zh, en: s.en },
+    Array.isArray(s.qa) ? s.qa.filter(x => x && x.a && x.a !== '…') : [],
+    btn, s.words || []);
 }
 /* ================= Yulengua · 卡片库 ================= */
 
