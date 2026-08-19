@@ -1,31 +1,3735 @@
 # Yulengua 词库 · 西班牙语
-# 样例文件，请整个替换成你自己的词库。格式说明见同目录 README.md
+# 来源：Instituto Cervantes · Plan Curricular · Nociones específicas A1-A2 + B1-B2
 词,释义
-multa,罚款
-estación,车站；季节
-acontecimiento,事件
-desarrollo,发展
-aumentar,增加
-disminuir,减少
-alcanzar,达到；够得着
-lograr,取得；设法做到
-sin embargo,然而
-a pesar de,尽管
-por lo tanto,因此
-plazo,期限
-apoyo,支持
-propuesta,提议
-medida,措施
-riesgo,风险
-ventaja,优势
-desventaja,劣势
-antecedentes,背景；前科
-imprescindible,不可或缺的
-cotidiano,日常的
-sencillo,简单的；朴素的
-soler,通常；习惯于
-suponer,假设；意味着
-acabar de,刚刚（做完）
-darse cuenta,意识到
-echar de menos,想念
-llevar a cabo,实施；完成
+pelo,头发
+ojo,眼睛
+nariz,鼻子
+cabeza,头；头部
+cara,脸；面孔
+brazo,手臂；胳膊
+mano,手
+dedo,手指；脚趾
+pierna,腿
+pie,脚
+oído,听觉；耳朵（内耳）
+muela,臼齿；磨牙
+garganta,喉咙
+estómago,胃；腹部
+espalda,背；后背
+ser alto/bajo/gordo/delgado/guapo/feo,是高的/矮的/胖的/瘦的/好看的/难看的
+ser rubio/moreno,是金发的/深色头发的
+tener el pelo rubio/moreno/blanco,头发是金色的/深色的/白色的
+llevar/tener barba/bigote/gafas,留/有胡子、八字胡或戴眼镜
+tener los ojos claros/oscuros/azules/verdes/negros/marrones,眼睛是浅色/深色/蓝色/绿色/黑色/棕色的
+tener los ojos grandes/pequeños,眼睛大/小
+ser/estar calvo,是/处于秃头状态
+tener/llevar el pelo liso/rizado/largo/corto,头发是/留成直发/卷发/长发/短发
+llevar una gorra/un sombrero/un pañuelo,戴帽舌帽/帽子/头巾
+levantarse,起床；站起来
+ducharse,淋浴；洗澡
+escuchar,听；倾听
+lavarse,洗自己；洗漱
+peinarse,梳头
+afeitarse,刮胡子
+andar,走；步行
+pasear,散步
+correr,跑；奔跑
+subir,上；上升
+bajar,下；下降
+sentarse,坐下
+ver,看见；观看
+oír,听见
+coger,拿；取；乘（交通工具）
+hacer ejercicio/gimnasia/deporte,做运动/体操/体育锻炼
+sexo,性；性别
+nacer,出生
+crecer,成长；长大
+tener un hijo,生一个孩子；有孩子
+morir,死亡；去世
+simpático,友好的；讨人喜欢的
+antipático,不友好的；讨人厌的
+inteligente,聪明的；有智慧的
+trabajador,勤劳的；工作者
+alegre,快乐的；开朗的
+serio,严肃的；认真的
+tímido,害羞的
+sociable,善于交际的
+carácter,性格；品格
+optimista,乐观的
+abierto,开放的；开朗的
+reservado,内向的；保守的；有所保留的
+tranquilo,平静的；安静的
+nervioso,紧张的；神经质的
+generoso,慷慨的
+egoísta,自私的
+amable,友善的；和蔼的
+agradable,令人愉快的；亲切的
+tolerante,宽容的
+estar triste/contento/enfadado/nervioso/preocupado,感到悲伤/开心/生气/紧张/担心
+gustar,喜欢；使……喜欢
+encantar,非常喜欢；使着迷
+odiar,讨厌；憎恨
+tener miedo,害怕
+tener calor/frío/sueño/sed/hambre/dolor,觉得热/冷/困/渴/饿/疼
+estar cansado,累了；疲倦
+doler la cabeza/el cuello,头/脖子疼
+mirar,看；注视
+nombre,名字；名称
+(primer/segundo) apellido,第一/第二姓氏
+señor,先生
+señora,女士；夫人
+señores,各位先生；先生们
+firmar,签名；签署
+llamarse,叫做；名叫
+dirección,地址；方向
+correo electrónico,电子邮件；邮箱
+calle,街道
+avenida,大道
+paseo,林荫道；散步；游览
+plaza,广场
+piso,楼层；公寓
+número,数字；号码
+código postal,邮政编码
+casa,房子；家
+habitación,房间
+país,国家
+ciudad,城市
+pueblo,城镇；村镇；村庄
+vivir,生活；居住
+número de teléfono,电话号码
+móvil,手机；移动的
+lugar de nacimiento,出生地
+fecha de nacimiento,出生日期
+nacionalidad,国籍
+extranjero,外国人；外国的
+español,西班牙人；西班牙的；西班牙语
+alemán,德国人；德国的；德语
+mexicano,墨西哥人；墨西哥的
+japonés,日本人；日本的；日语
+marroquí,摩洛哥人；摩洛哥的
+ser de Laos/de Bali/de Mozambique,来自老挝/巴厘岛/莫桑比克
+edad,年龄
+niño,男孩；儿童
+chico,男孩；小伙子
+joven,年轻人；年轻的
+viejo,老人；老的；旧的
+tener [número cardinal]/muchos/pocos años,[基数词]/很多/很少岁
+hombre,男人
+mujer,女人；妻子
+niña,女孩；女童
+chica,女孩；姑娘
+estado civil,婚姻状况
+soltero,单身的
+casado,已婚的
+viudo,丧偶的；鳏夫/寡妇
+separado,分居的
+divorciado,离婚的
+marido,丈夫
+apellidarse,姓……；姓氏为……
+presentar(se),介绍；介绍自己
+dirección electrónica,电子地址；电子邮件地址
+prefijo,前缀；区号
+extensión,分机；延伸
+tener/pedir la nacionalidad,拥有/申请国籍
+bebé,婴儿
+adolescente,青少年
+persona mayor,老年人
+casarse,结婚
+separarse,分居；分开
+divorciarse,离婚
+pasaporte,护照
+carné de identidad/de conducir,身份证/驾驶证
+tarjeta de estudiante/de la biblioteca,学生证/图书馆卡
+llaves,钥匙
+cartera,钱包；皮夹
+bolso,手提包；包
+maleta,行李箱
+reloj,手表；钟表
+gafas,眼镜
+ordenador,电脑
+tarjeta de crédito,信用卡
+paraguas,雨伞
+agenda,日程本；议程
+tarjeta de visita,名片
+maletín,公文包；手提箱
+familia,家庭；家人
+padres,父母
+padre,父亲
+madre,母亲
+hijo,儿子；孩子
+hermano,兄弟；兄弟姐妹中的男性
+tío,叔叔；舅舅；伯父；姑父等
+sobrino,侄子；外甥
+abuelo,祖父；外祖父
+nieto,孙子；外孙
+primo,堂/表兄弟姐妹中的男性
+pareja,伴侣；情侣；一对
+novio,男朋友；未婚夫
+papá,爸爸
+mamá,妈妈
+hijo único,独生子
+(hermanos) gemelos,双胞胎兄弟姐妹
+ex marido,前夫
+ex mujer,前妻
+vivir juntos/con la pareja,一起生活/与伴侣同居
+amigo,朋友
+jefe,老板；上司
+compañero,同伴；同事；同学
+vecino,邻居
+socio,合伙人；会员
+compañero de clase/de trabajo/de piso,同学/同事/室友
+reunión,会议；聚会
+cita,约会；预约
+visitar,拜访；参观
+invitar,邀请
+fiesta,聚会；节日；派对
+fiesta de cumpleaños/de fin de curso,生日聚会/结业聚会
+regalo,礼物
+regalar,赠送；送礼物
+hacer una fiesta (de cumpleaños/de fin de curso),举办（生日/结业）聚会
+desayuno,早餐
+comida,饭；午餐；食物
+merienda,下午茶；午后点心
+cena,晚餐
+desayunar,吃早餐
+comer,吃；用餐
+merendar,吃下午点心
+cenar,吃晚餐
+tener hambre,饿；感到饥饿
+ser vegetariano,是素食者
+agua (mineral) con gas/sin gas,（矿泉）水：有气/无气
+leche,牛奶
+té,茶
+café solo/con leche/cortado,黑咖啡/牛奶咖啡/少量牛奶咖啡
+cerveza,啤酒
+vino blanco/tinto,白葡萄酒/红葡萄酒
+beber,喝
+bebida con/sin alcohol/hielo,含/不含酒精或冰块的饮料
+zumo de naranja/de tomate/de frutas,橙汁/番茄汁/果汁
+infusión,草本茶；冲泡饮料
+ron,朗姆酒
+ginebra,金酒；杜松子酒
+cava,卡瓦起泡酒
+champán,香槟
+botella,瓶子
+lata,罐；易拉罐
+tener sed,渴；口渴
+tomar algo,喝点/吃点东西
+carne,肉
+pescado,鱼；鱼肉
+fruta,水果
+verdura,蔬菜
+huevos,鸡蛋
+pan,面包
+bocadillo,夹馅面包；长棍三明治
+sándwich,三明治
+hamburguesa,汉堡包
+lechuga,生菜
+tomate,番茄；西红柿
+zanahoria,胡萝卜
+plátano,香蕉
+manzana,苹果
+naranja,橙子
+patata,土豆；马铃薯
+ajo,大蒜
+cebolla,洋葱
+perejil,欧芹
+queso,奶酪
+yogur,酸奶
+mantequilla,黄油
+mayonesa,蛋黄酱
+salsa,酱；酱汁
+merluza,无须鳕
+salmón,三文鱼；鲑鱼
+sardina,沙丁鱼
+atún,金枪鱼
+gambas,虾
+pasta,意大利面；面食
+arroz,米；米饭
+chocolate,巧克力
+galletas,饼干
+cereales,谷物；早餐麦片
+azúcar,糖
+sal,盐
+pimienta,胡椒；胡椒粉
+aceite,油；食用油
+carne de ternera/cerdo/cordero/pollo,牛肉/猪肉/羊肉/鸡肉
+filete,肉排；鱼片
+jamón serrano/York,塞拉诺火腿/约克熟火腿
+helado de chocolate/fresa/vainilla,巧克力/草莓/香草冰淇淋
+tarta de manzana/crema/chocolate,苹果/奶油/巧克力蛋糕
+receta,食谱
+ingrediente,配料；成分
+cocinar,做饭；烹饪
+llevar salsa/arroz,带有/包含酱汁或米饭
+primer/segundo plato,第一道/第二道菜
+postre,甜点
+sopa,汤
+ensalada,沙拉
+paella,西班牙海鲜饭
+tortilla,西班牙蛋饼；煎蛋
+carne/filete con patatas,肉/肉排配土豆
+plato combinado,拼盘；套餐拼盘
+tapa,小吃；塔帕斯
+aperitivo,开胃菜；餐前小吃
+bueno,好的；好吃的
+rico,美味的；富有的
+plato,盘子；一道菜
+vaso,玻璃杯
+taza,杯子；茶杯
+servilleta,餐巾
+bar,酒吧；吧台
+restaurante,餐馆
+camarero,服务员
+mesa,桌子
+el menú,菜单；套餐
+la cuenta,账单
+cafetería,咖啡馆
+pizzería,比萨店
+restaurante chino/italiano/mexicano/vegetariano,中餐馆/意大利餐馆/墨西哥餐馆/素食餐馆
+comida china/japonesa/rápida,中餐/日餐/快餐
+cocinero,厨师
+chef,主厨
+reservar una mesa,订桌
+tomar/pedir algo/el menú/una sopa/el plato del día,点/要某样东西、套餐、汤或今日特餐
+pedir/traer la carta/el menú (del día)/la cuenta,点/拿来菜单、今日菜单或账单
+instituto,中学；学院；机构
+universidad,大学
+clase,课；课堂；班级
+biblioteca,图书馆
+colegio,学校；中小学
+academia/escuela de idiomas/de ballet/de música,语言/芭蕾/音乐学院或学校
+biblioteca municipal/pública,市立/公共图书馆
+aula,教室
+profesor,老师；教授
+estudiante,学生
+director,主任；校长；经理；导演
+compañero de clase,同班同学
+alumno de la escuela/del instituto,学校/中学的学生
+clase de español/de matemáticas/de historia,西班牙语/数学/历史课
+horario,时间表；课表
+examen,考试
+programa (del curso),（课程）大纲；课程计划
+pagar la matrícula,缴注册费/学费
+hacer un curso,上一个课程；参加课程
+aprender,学习；学会
+estudiar,学习；读书
+ir a clase,去上课
+dar clases,授课；上课
+hacer/tener un examen,参加/有一场考试
+diploma,文凭
+certificado,证书
+aprobar,通过；及格；批准
+suspender,挂科；不及格；暂停
+Matemáticas,数学
+Historia,历史
+Medicina,医学
+Derecho,法律；法学
+ejercicio,练习；运动
+actividad,活动
+lección,课；课文
+unidad,单元；单位
+página,页面；页
+pregunta,问题；提问
+en parejas,两人一组
+en grupos,分组；小组形式
+hablar,说；讲话
+leer,读；阅读
+escribir,写
+entender,理解；听懂
+comprender,理解；领会
+saber,知道；会
+repetir,重复
+practicar,练习；实践
+hacer los deberes/un ejercicio/una actividad/un examen,做作业/练习/活动/考试
+preguntar,问；提问
+contestar,回答
+completar,完成；补全
+dibujar,画；绘画
+jugar,玩；做游戏；比赛
+adivinar,猜；猜出
+hacer una redacción/un dibujo,写作文/画图
+memorizar/aprender una regla/una fórmula,记忆/学习规则或公式
+repasar un ejercicio/una unidad/una lección,复习练习/单元/课文
+cometer un error,犯错误
+hacer errores,犯错误
+tener buena/mala letra,字写得好/不好
+Internet,互联网
+libro,书
+diccionario,词典
+papel,纸
+bolígrafo,圆珠笔
+lápiz,铅笔
+goma,橡皮擦；橡胶
+fotocopia,复印件
+silla,椅子
+armario,柜子；衣柜
+estantería,书架；架子
+pizarra,黑板；白板
+mapa,地图
+cuaderno,笔记本；练习本
+hoja,纸张；叶子
+regla,尺子；规则
+impresora,打印机
+fotocopiadora,复印机
+abogado,律师
+médico,医生
+taxista,出租车司机
+ama de casa,家庭主妇
+ser camarero/ingeniero,是服务员/工程师
+trabajar (en),在……工作
+dedicarse a,从事……
+dependiente,店员；售货员；依赖的
+funcionario,公务员
+comercial,销售人员；商务的
+empresario,企业家；商人
+trabajar/hacer de canguro,做保姆工作
+tener una tienda/un negocio/una peluquería,拥有一家店/生意/理发店
+tener un trabajo en un banco,在银行工作
+empresa,公司；企业
+oficina,办公室
+tienda,商店
+teléfono,电话
+fax,传真
+despacho,办公室；书房
+negocio,生意；业务
+fábrica,工厂
+multinacional,跨国公司；跨国的
+panadería,面包店
+librería,书店
+mesa de despacho,办公桌
+traje,西装；套装
+corbata,领带
+uniforme,制服
+trabajo,工作
+profesión,职业
+trabajar,工作
+comprar,买；购买
+vender,卖；出售
+cliente,客户；顾客
+comprar un producto,购买产品
+tener una reunión,开会
+hacer fotocopias,复印
+preparar una factura,准备发票
+contestar al teléfono,接电话
+hablar con clientes/con el jefe,与客户/老板交谈
+enviar un fax/un correo electrónico,发送传真/电子邮件
+estar en paro,失业
+tener trabajo,有工作
+tener una entrevista (de trabajo),参加工作面试
+escribir/enviar el currículum,写/发送简历
+vacaciones,假期；休假
+tener vacaciones,有假期；休假
+ganar dinero,赚钱
+estar jubilado,已退休
+ser trabajador,是勤劳的人；是劳动者
+turista,游客
+oficina de información/turismo,信息咨询处/旅游办公室
+viajar,旅行
+leer el periódico/un libro/una revista,读报纸/书/杂志
+ver la televisión/una película,看电视/电影
+escuchar música/la radio/una canción,听音乐/广播/歌曲
+ir a un bar/a una discoteca/a un café/a un restaurante/a un museo,去酒吧/舞厅/咖啡馆/餐馆/博物馆
+ir al cine/al teatro/al parque,去电影院/剧院/公园
+cantar,唱歌
+bailar,跳舞
+tiempo libre,空闲时间
+afición,爱好
+hobby,爱好
+parque de atracciones/zoológico,游乐园/动物园
+zoo,动物园
+quedar,约见；约好；留下
+ir de paseo/de compras/de excursión,去散步/购物/郊游
+caminar,步行；行走
+tener una cita/planes,有约会/计划
+salir con amigos,和朋友出去
+tomar algo/un café/una caña/una copa,喝点东西/咖啡/小杯啤酒/酒
+película,电影
+concierto,音乐会
+ir al teatro/al cine/al circo,去剧院/电影院/马戏团
+ir a un concierto,去听音乐会
+entrada,票；入口
+invitación,邀请；请柬
+programa,节目；计划；程序
+exposición,展览
+obra de teatro,戏剧；舞台剧
+ópera,歌剧
+musical,音乐剧；音乐的
+concierto de música clásica/de rock,古典音乐会/摇滚音乐会
+comprar/reservar una entrada (por teléfono/por Internet),通过电话/互联网买票或订票
+nadar,游泳
+esquiar,滑雪
+hacer deporte/ejercicio/gimnasia,做体育运动/锻炼/体操
+jugar al fútbol/al baloncesto/al tenis,踢足球/打篮球/打网球
+gimnasio,健身房
+piscina,游泳池
+practicar un deporte,从事一种运动
+montar en bicicleta,骑自行车
+hacer senderismo,徒步旅行
+juego,游戏；比赛
+compañero (de juego),玩伴
+jugar a las cartas/al parchís/a la oca/al ajedrez,玩纸牌/西班牙飞行棋/鹅棋/国际象棋
+televisión,电视；电视机
+radio,广播；收音机
+recibir/responder a una postal/un fax/una llamada/un correo,收到/回复明信片、传真、电话或邮件
+sobre,信封；关于
+sello,邮票；印章
+escribir una postal/una carta/un mensaje electrónico,写明信片/信/电子信息
+enviar,发送
+recibir,收到；接收
+responder,回答；回复
+enviar/recibir/responder una postal/una carta/un fax,发送/接收/回复明信片、信或传真
+dejar/escribir una nota,留/写便条
+ir a Correos,去邮局
+teléfono fijo/móvil,固定电话/手机
+tarjeta telefónica,电话卡
+cabina,电话亭；小隔间
+llamar/hablar por teléfono,打电话/通过电话交谈
+dejar un mensaje,留言
+quiosco,报刊亭
+leer un periódico/una revista,读报纸/杂志
+entrevista,采访；面试
+periodista,记者
+ver la televisión,看电视
+escuchar la radio,听广播
+anuncios,广告；公告
+publicidad,广告；宣传
+presentador,主持人；演示者
+ver un programa de televisión,看电视节目
+escuchar un programa de radio,听广播节目
+arroba,@符号；艾特
+guión,连字符；短横线
+guión bajo,下划线
+punto,句点；点；小数点
+página web,网页
+dirección de Internet,网址；互联网地址
+foro (de discusión),（讨论）论坛
+chat,聊天室；在线聊天
+virus,病毒；计算机病毒
+navegar por Internet/por la red,浏览互联网/网络
+mandar/recibir/enviar/escribir un mensaje electrónico,发送/接收/写电子邮件或电子信息
+comprar/vender/alquilar un piso/un apartamento,买/卖/租公寓或住房
+vivir en una casa/en un apartamento/en un piso,住在房子/公寓/住宅里
+buscar piso/alojamiento,找房/找住宿
+compartir piso,合租
+cambiarse de casa,搬家
+apartamento,公寓
+estudio,单间公寓；工作室
+ascensor,电梯
+escalera,楼梯
+terraza,露台；阳台
+jardín,花园
+ventana,窗户
+puerta,门
+sala de estar,起居室；客厅
+dormitorio,卧室
+cocina,厨房
+(cuarto de) baño,浴室；卫生间
+salón,客厅；大厅
+garaje,车库
+nuevo,新的
+piso exterior/interior/céntrico,外向/内向/位于市中心的公寓
+bien/mal comunicado,交通便利/不便
+tener ascensor/teléfono/aire acondicionado/calefacción (central/individual),有电梯/电话/空调/（中央或独立）暖气
+edificio,建筑物；楼房
+chalé,独栋住宅；别墅
+piso de estudiantes,学生公寓；学生合租房
+pasillo,走廊
+suelo,地板；地面
+techo,天花板；屋顶
+pared,墙
+dormitorio de invitados,客房
+propietario,业主；房东
+piso de [número cardinal] habitaciones,有[基数词]个房间的公寓
+amueblado,带家具的
+sin amueblar,不带家具的
+en buen/mal estado,状况良好/不佳
+limpio,干净的
+sucio,脏的
+limpiar la casa/la cocina/el baño,打扫房子/厨房/浴室
+lavar los platos/la ropa,洗碗/洗衣服
+cama,床
+sofá,沙发
+sillón,扶手椅
+ducha,淋浴；淋浴间
+lavabo,洗手池
+televisión (TV),电视机
+vídeo,录像；录像机
+DVD,DVD；DVD光盘
+cocina eléctrica/de gas,电炉/燃气灶
+nevera,冰箱
+lavadora,洗衣机
+lavaplatos,洗碗机
+microondas,微波炉
+carta,信；信件；菜单
+postal,明信片
+(oficina de) correos,邮局
+enviar/recibir una carta/una postal,发送/收到信件或明信片
+banco,银行
+dinero,钱；金钱
+euro,欧元
+céntimo (de euro),（欧元）分
+tarjeta (de crédito),（信用）卡
+cambiar dinero,兑换货币
+moneda,硬币；货币
+billete,纸币；票
+cajero automático,自动取款机
+hospital,医院
+enfermera,护士（女）
+Seguridad Social,社会保障；社保
+ambulancia,救护车
+Cruz Roja,红十字会
+policía,警察；警方
+bombero,消防员
+comisaría (de policía),警察局
+socorro,救命；求救
+llamar a la policía/a los bomberos,报警/叫消防员
+teléfono de emergencia,紧急电话号码
+mercado/supermercado,超市/市场
+salida,出口；离开
+información,信息；咨询
+comprador,买家；购买者
+vendedor,卖家；售货员
+centro comercial,购物中心
+papelería,文具店
+peluquería,理发店；美发店
+estanco,烟草店
+frutería,水果店
+carnicería,肉店
+tienda de ropa/de deportes/de regalos/de decoración/de discos,服装店/体育用品店/礼品店/家居装饰店/唱片店
+agencia de viajes,旅行社
+frutero,水果商；水果店店员
+carnicero,肉贩；肉店店员
+panadero,面包师；面包店店员
+devolver,退还；归还
+cambiar,更换；改变；兑换
+ir de compras/de tiendas,去购物/逛商店
+hacer la compra,采购日用品；买菜
+pantalones,裤子
+(pantalones) vaqueros,牛仔裤
+falda,裙子
+camisa,衬衫
+jersey,毛衣
+zapatos,鞋
+blusa,女式衬衫
+pijama,睡衣
+cazadora,夹克；短外套
+gorra,鸭舌帽
+sombrero,帽子
+pañuelo,围巾；头巾；手帕
+guantes,手套
+bufanda,围巾
+sujetador,胸罩
+braga,女式内裤
+calzoncillo,男式内裤
+medias,长袜；丝袜
+calcetines,袜子
+bañador,泳衣
+biquini,比基尼
+botas,靴子
+probador,试衣间
+ropa de hombre/de mujer/de niño,男装/女装/童装
+ponerse,穿上；变得
+quitarse,脱下
+probarse,试穿
+docena de huevos,一打鸡蛋
+lata de tomate/de atún,一罐番茄/金枪鱼
+paquete de harina/de arroz,一包面粉/大米
+caja de galletas,一盒饼干
+bote de mermelada/de tomate,一罐果酱/番茄酱
+litro de leche/de agua,一升牛奶/水
+kilo de patatas/de filetes,一公斤土豆/肉排
+un/medio/un cuarto de kilo,一公斤/半公斤/四分之一公斤
+cien/doscientos. gramos,一百/两百……克
+hacer la lista de la compra,列购物清单
+pesar,称重；重量为
+precio,价格
+tarjeta,卡；卡片
+pagar con tarjeta,刷卡付款
+dejar/dar una propina,留/给小费
+con/sin IVA,含/不含增值税（IVA）
+pagar en efectivo,现金付款
+estar enfermo/malo,生病；身体不舒服
+sentirse bien/mal,感觉好/不好
+tener gripe/alergia/fiebre/tos,得流感/过敏；发烧；咳嗽
+llevar una vida sana,过健康的生活
+tener una enfermedad,患病
+tener dolor de cabeza/de espalda/de estómago,头疼/背疼/胃疼
+tener tos/fiebre,咳嗽/发烧
+doler,疼；使疼痛
+enfermero,护士（男/泛称）
+ir al hospital/al médico,去医院/看医生
+urgencias,急诊；急诊室
+farmacia,药店
+tomar una medicina/un medicamento,吃药
+agua,水
+jabón,肥皂
+lavarse la cara/las manos/el pelo/los dientes,洗脸/洗手/洗头/刷牙
+bañarse,洗澡；泡澡
+bañera,浴缸
+toalla,毛巾
+champú,洗发水
+gel,凝胶；沐浴露
+crema,霜；乳霜
+colonia,古龙水
+desodorante,除臭剂
+cepillo/pasta de dientes,牙刷/牙膏
+tener/llevar el pelo/las manos/los dientes limpios/sucios,头发/手/牙齿干净或脏
+cepillarse los dientes,刷牙
+tener/llevar el pelo largo/corto/rizado/liso,留/有长发、短发、卷发或直发
+carné de identidad,身份证
+plano,平面图；地图；方案
+comprar un billete de ida/de ida y vuelta,买单程票/往返票
+oficina de información y turismo,旅游信息中心
+ir a Madrid/a la playa/a la montaña/al campo,去马德里/海滩/山区/乡下
+ir a la playa,去海滩
+ir a la montaña,去山区
+hacer/deshacer las maletas,收拾/打开行李
+mirar/consultar un plano/un mapa,查看地图/平面图
+tener un seguro de viaje,有旅行保险
+reservar un billete de tren/de avión/de autobús,预订火车票/机票/汽车票
+guía turístico,导游
+vuelo,航班；飞行
+excursión,短途旅行；郊游
+viaje corto/largo,短途/长途旅行
+ir de viaje/de excursión/de vacaciones,去旅行/郊游/度假
+viajar en avión/en barco/en tren/en coche/en autobús,乘飞机/船/火车/汽车/公交旅行
+botas (de montaña),登山靴
+mochila,背包
+abrigo,大衣；外套
+gorro,毛线帽；帽子
+hotel,酒店
+campin,露营地；露营
+habitación doble/individual/con baño/teléfono/televisión/aire acondicionado,双人房/单人房；带浴室/电话/电视/空调的房间
+pensión completa,全食宿
+media pensión,半食宿
+alojamiento y desayuno,住宿加早餐
+reservar,预订；保留
+hacer una reserva,预订
+carretera,公路；道路
+aeropuerto,机场
+puerto,港口
+estación de tren/de metro,火车站/地铁站
+parada de autobús/de taxi/de metro,公交站/出租车站/地铁站
+ir andando/en coche/en taxi/en tren/en metro/en autobús/en avión/en barco,步行/开车/乘出租车/火车/地铁/公交/飞机/船前往
+coche,汽车
+metro,地铁
+tren,火车
+autobús,公共汽车；公交车
+taxi,出租车
+conductor,司机；驾驶员
+aparcamiento,停车场；停车
+estación de tren/de metro/de autobuses,火车站/地铁站/汽车站
+ir en metro/en coche/en autobús,乘地铁/汽车/公交
+ir/viajar en barco,乘船旅行
+avión,飞机
+ir/viajar en avión,乘飞机旅行
+carné de conducir,驾驶证
+boca de metro,地铁入口
+mirar un plano de metro/un mapa,查看地铁图/地图
+ciclista,骑自行车的人
+coger/tomar un taxi/el metro/el tren,乘出租车/地铁/火车
+montar en bicicleta/en moto,骑自行车/摩托车
+coger un barco,乘船
+piloto,飞行员
+azafata,空乘；女乘务员
+viajar en avión,乘飞机旅行
+coger/tomar el avión,乘飞机
+rueda,车轮；轮子
+mecánico,机械师；修理工
+lavar el coche,洗车
+caro,贵的
+barato,便宜的
+cheque,支票
+pobre,贫穷的；穷人
+anuncio,广告；告示
+presidente,总统；主席
+empleado,雇员；员工
+agricultor,农民；农业从业者
+cerdo,猪
+vaca,牛；母牛
+cordero,羔羊；羊肉
+ciencia,科学
+tecnología,技术；科技
+científico,科学家；科学的
+(ordenador) portátil,笔记本电脑
+PC,个人电脑（PC）
+informática,计算机科学；信息技术
+informático,计算机专业人员；IT人员
+CD-ROM,CD-ROM；光盘
+navegar por Internet,浏览互联网
+chatear,在线聊天
+educación,教育
+capital,首都；资本
+rey,国王
+reina,女王；王后
+gobierno,政府
+política,政治
+partido político,政党
+(primer) ministro,（首相/总理）部长
+príncipe,王子
+princesa,公主
+Ayuntamiento,市政府；市政厅
+juez,法官
+ejército,军队
+guerra,战争
+paz,和平
+cine,电影；电影院
+teatro,戏剧；剧院
+música,音乐
+foto,照片
+museo,博物馆
+ser interesante/bonito/feo,有趣的/漂亮的/难看的
+arte,艺术
+artista,艺术家
+fotografía,摄影；照片
+literatura,文学
+monumento,纪念碑；古迹
+estatua,雕像
+novela,小说
+poesía,诗歌
+cuadro,画；绘画作品
+cantante,歌手
+escuchar música,听音乐
+músico,音乐家
+canción,歌曲
+guitarra,吉他
+piano,钢琴
+violín,小提琴
+flamenco,弗拉门戈
+rock,摇滚乐
+pop,流行音乐
+jazz,爵士乐
+tango,探戈
+(un) musical,音乐剧
+música clásica/moderna,古典音乐/现代音乐
+tocar (un instrumento),演奏（乐器）
+catedral,大教堂
+iglesia,教堂
+arquitecto,建筑师
+pintor,画家
+dibujo,图画；素描
+palacio,宫殿
+castillo,城堡
+pintar,画；绘画
+escritor,作家
+cuento,故事；短篇小说
+fotógrafo,摄影师
+cámara (de fotos),照相机
+hacer fotos/una foto,拍照/拍一张照片
+ver una exposición,看展览
+actor,男演员；演员
+actriz,女演员
+ir al cine/al teatro,去电影院/剧院
+religión,宗教
+cristiano,基督徒；基督教的
+judío,犹太人；犹太教的
+musulmán,穆斯林；伊斯兰教的
+budista,佛教徒；佛教的
+ir a la iglesia/a la mezquita/a la sinagoga,去教堂/清真寺/犹太教堂
+Iglesia,教会；教堂
+Navidad,圣诞节
+Ramadán,斋月（Ramadan）
+Sabbat,安息日（Sabbath）
+creer en Dios/en Alá/en la reencarnación,信仰上帝/安拉/轮回
+sol,太阳
+mundo,世界
+cielo,天空；天堂
+luna,月亮
+estrella,星星
+planeta,行星
+lugar,地方；地点
+Norte,北；北方
+Sur,南；南方
+Este,东；东方
+Oeste,西；西方
+montaña,山；山区
+mar,海
+río,河；河流
+playa,海滩
+región,地区；区域
+Noroeste,西北
+Nordeste,东北
+Suroeste,西南
+Sudeste,东南
+isla,岛；岛屿
+desierto,沙漠
+bosque,森林
+costa,海岸
+interior,内陆；内部
+(el) centro,中心；市中心
+parque,公园
+escuela,学校
+parada de autobús/de taxis/de metro,公交站/出租车站/地铁站
+estación de tren/de autobuses/de metro,火车站/汽车站/地铁站
+campo,乡村；田野；领域
+habitante,居民
+barrio,街区；社区
+esquina,街角；拐角
+ayuntamiento,市政府；市政厅
+plaza mayor,主广场；大广场
+calle peatonal/mayor/comercial,步行街/主要街道/商业街
+ciudad cosmopolita/abierta/industrial/antigua/moderna/universitaria,国际化/开放/工业/古老/现代/大学城式的城市
+naturaleza,自然；大自然
+primavera,春天
+verano,夏天
+otoño,秋天
+invierno,冬天
+llover,下雨
+nevar,下雪
+hacer frío/calor/sol/viento,天气冷/热/晴/刮风
+hacer buen/mal tiempo,天气好/坏
+lluvia,雨
+nieve,雪
+niebla,雾
+tormenta,暴风雨；雷雨
+nube,云
+aire,空气
+viento del norte/del sur,北风/南风
+animal,动物
+perro,狗
+gato,猫
+pájaro,鸟
+pez,鱼
+caballo,马
+mosca,苍蝇
+mosquito,蚊子
+araña,蜘蛛
+planta,植物
+flor,花
+árbol,树
+rosa,玫瑰
+margarita,雏菊
+pino,松树
+olivo,橄榄树
+ramo de flores,一束花
+músculo,肌肉
+hueso,骨头
+piel,皮肤
+corazón,心脏
+pulmón,肺
+cuello,脖子；颈部
+hombros,肩膀
+pecho,胸部
+cintura,腰；腰部
+barriga,肚子
+rodilla,膝盖
+tobillo,脚踝
+codo,肘部
+muñeca,手腕
+frente,额头
+mejilla,脸颊
+barbilla,下巴
+ceja,眉毛
+pestaña,睫毛
+cana,白发
+uña,指甲；趾甲
+cerebro,大脑
+hígado,肝脏
+riñón,肾脏
+intestino,肠；肠道
+esqueleto,骨骼
+columna,脊柱；柱子
+costilla,肋骨
+nervio,神经
+articulación,关节
+arteria,动脉
+tendón,肌腱
+postura,姿势；体态
+mirada,目光；眼神
+parecerse a su padre/a su hermano/entre ellos,像父亲/兄弟；彼此相像
+tener la piel clara/oscura/sensible/suave,皮肤浅/深/敏感/柔软
+estar moreno,晒黑了；肤色较深
+ser blanco/moreno (de piel),皮肤白/深色
+tener buen/mal tipo/figura/estilo/presencia,身材/体型/风格/仪表好或不好
+ciego,盲的；盲人
+sordo,聋的；聋人
+mudo,哑的；不会说话的
+saliva,唾液
+lágrima,眼泪
+sudor,汗
+gesto,手势；表情
+expresión,表达；表情
+ser de estatura/altura normal/media/mediana,身高正常/中等
+tener arrugas/una cicatriz,有皱纹/一道疤
+tener buen/mal color/aspecto,气色/外表好或不好
+ser clavados/idénticos/como dos gotas de agua,长得一模一样/完全相同/像两滴水
+dar un paseo,散步
+saltar,跳；跳跃
+estar sentado/de pie,坐着/站着
+respirar,呼吸
+llorar,哭
+oler,闻；有……气味
+tocar,触摸；演奏
+besar,亲吻
+abrazar,拥抱
+levantar/bajar/mover las manos/los brazos/la cabeza,抬起/放下/移动手、手臂或头
+soltar,放开；松开
+tumbarse,躺下
+tirarse,扑下；倒下；扔自己
+incorporarse,坐起；起身；加入
+alzarse,站起；升起
+agacharse,蹲下；弯腰
+cruzar los brazos/las piernas,交叉双臂/双腿
+estar agachado/derecho,蹲着/挺直
+ponerse de pie/de espaldas/de perfil/de frente/de rodillas,站着/背对着/侧着/面对着/跪着
+quedarse quieto/dormido/agachado/de espaldas/de rodillas,保持不动/睡着/蹲着/背对着/跪着
+rascarse,抓挠自己；挠痒
+arañar,抓伤；划伤
+acariciar,抚摸
+dar una patada/una torta/un puñetazo,踢一脚/扇一巴掌/打一拳
+estornudar,打喷嚏
+bostezar,打哈欠
+sudar,出汗
+masticar,咀嚼
+escupir,吐口水
+aguantar,忍受；坚持；支撑
+sujetar,抓住；扶住
+aplaudir,鼓掌
+señalar,指出；指示
+indicar,指示；表明
+menstruación,月经
+fecundación,受精
+embarazo,怀孕；妊娠
+aborto,流产；堕胎
+parto,分娩；生产
+cesárea,剖宫产；剖腹产
+vida,生命；生活
+muerte,死亡
+estar embarazada,怀孕
+esperar un hijo,怀着孩子；即将生孩子
+ser virgen,是处女/处男；未有性经验
+hacer el amor,做爱；发生性关系
+tener relaciones sexuales,发生性关系
+tomar la píldora,服用避孕药
+usar preservativos,使用安全套
+tener la regla,来月经
+maternidad,母职；母性；产科
+paternidad,父职；父性
+cadáver,尸体
+tumba,坟墓
+dar a luz,分娩；生孩子
+fallecer,去世
+enterrar,埋葬
+incinerar,火化；焚烧
+optimismo,乐观；乐观主义
+pesimismo,悲观；悲观主义
+tranquilidad/intranquilidad,平静/不安
+paciencia/impaciencia,耐心/不耐烦
+sincero,真诚的
+paciente/impaciente,耐心的/不耐烦的
+introvertido,内向的
+vago,懒惰的；游手好闲的
+travieso,淘气的
+seguro/inseguro,安全的/不安全的；自信的/不自信的
+conservador,保守的
+hablador,健谈的；话多的
+arrogante,傲慢的
+tener sentido del humor,有幽默感
+tener mucho/poco/mal carácter,脾气/性格很强、很弱或不好
+tener un/ser de carácter fuerte/débil/fácil/difícil,性格强/弱/随和/难相处
+ambición,野心；抱负
+arrogancia,傲慢
+constancia/inconstancia,恒心/反复无常
+cobardía,懦弱
+curiosidad,好奇心
+egoísmo,自私
+generosidad,慷慨
+puntualidad/impuntualidad,准时/不准时
+responsabilidad/irresponsabilidad,责任感/不负责任
+sensibilidad/insensibilidad,敏感/不敏感
+seriedad,严肃；认真
+sinceridad/insinceridad,真诚/不真诚
+ternura,温柔；柔情
+timidez,害羞；羞怯
+valentía,勇气；勇敢
+ambicioso,有野心的
+callado,沉默寡言的
+cobarde,胆小的；懦弱的
+constante,坚持不懈的；稳定的
+curioso,好奇的
+discreto,谨慎的；低调的
+tacaño,吝啬的
+tierno,温柔的；嫩的
+responsable/irresponsable,负责任的/不负责任的
+susceptible,敏感易怒的；易受影响的
+apasionado,热情的；充满激情的
+solidario,团结互助的；有社会责任感的
+(no) tener personalidad/carácter/temperamento,有/没有个性、性格或气质
+tener un/ser de carácter brusco/tranquilo/serio,性格粗鲁/平静/严肃
+tener curiosidad/ambición,有好奇心/野心
+estar acomplejado,感到自卑；有心理包袱
+tener complejo de inferioridad/de superioridad,有自卑情结/优越情结
+no tener dos dedos de frente,没脑子；很愚蠢
+estar como una cabra,疯疯癫癫；像疯子一样
+sentimiento,感情；感受
+amor,爱；爱情
+amistad,友谊
+estar aburrido/asustado/estresado/deprimido/enamorado,感到无聊/害怕/有压力/抑郁/恋爱中
+alegrarse,感到高兴；为……高兴
+divertirse,玩得开心
+enamorarse,爱上；坠入爱河
+aburrirse,感到无聊
+deprimirse,变得抑郁
+enfadarse,生气
+dar pena/lástima/miedo,使人难过/可怜/害怕
+ponerse triste/contento/de mal humor,变得悲伤/开心/心情不好
+encontrarse bien/mal/fatal,感觉良好/不好/糟透了
+no soportar,无法忍受
+alegría,喜悦；快乐
+admiración,钦佩；赞赏
+alivio,宽慰；缓解
+emoción,情绪；激动
+felicidad,幸福
+orgullo,骄傲；自豪
+angustia,痛苦；焦虑
+enfado,生气；愤怒
+estrés,压力
+odio,仇恨；厌恶
+temor,恐惧；担忧
+tristeza,悲伤
+animado/desanimado,有精神的/没精神的
+contento,满意的；开心的
+fascinado,着迷的
+feliz,幸福的；开心的
+ilusionado/desilusionado,抱有希望的/失望的
+satisfecho,满意的
+sorprendido,惊讶的
+agobiado,不堪重负的；焦头烂额的
+apenado,难过的；惋惜的
+avergonzado,羞愧的；尴尬的
+disgustado,不高兴的；反感的
+dolido,受伤的；伤心的
+indignado,愤慨的
+resignado,认命的；无奈接受的
+sin ánimos,没精神；提不起劲
+disfrutar,享受；喜欢
+hacer ilusión,令人期待；令人高兴
+amar,爱
+adorar,崇拜；非常喜爱
+volver loco,使疯狂；迷得神魂颠倒
+sorprenderse,感到惊讶
+asustarse,受惊；害怕
+estresarse,感到压力
+avergonzarse,感到羞愧
+cansarse,疲劳；累
+detestar,厌恶；痛恨
+lamentar,遗憾；哀叹
+resignarse,认命；接受现实
+tener envidia,嫉妒；羡慕
+dar asco/pánico/terror/igual,让人恶心/恐慌/恐惧/无所谓
+ponerse furioso/histérico,变得暴怒/歇斯底里
+sentir alegría/angustia,感到喜悦/痛苦
+sentirse animado/agobiado,感到精神振奋/压力很大
+tocar/sentir calor/frío/sueño/sed/hambre,感到热/冷/困/渴/饿
+estar/sentirse/encontrarse bien/mal/regular,感觉好/坏/一般
+vista,视力；视野；景色
+gusto,味觉；口味；喜好
+tacto,触觉
+olfato,嗅觉
+tener/pasar/sentir un calor/un frío horrible/espantoso,觉得热得/冷得可怕
+tener un dolor/un sueño horrible/espantoso,疼得/困得厉害
+estar agotado/hambriento/helado,筋疲力尽/饥肠辘辘/冻僵
+agotarse,耗尽；筋疲力尽
+experimentar dolor,感受疼痛
+estar consciente/inconsciente/distraído/loco,清醒/昏迷/走神/疯狂
+portarse bien/mal,表现好/不好；行为得体/不当
+ser educado/maleducado,有礼貌的/没礼貌的
+estar bien/mal educado,受过良好/不良教育
+ser atento,体贴的；周到的
+actuar correctamente,正确地行事
+tener buenos/malos modales,举止好/差
+(no) tener modales/educación,有/没有礼貌或教养
+justicia,正义；公平
+solidaridad,团结；互助
+justo,公平的；正义的；恰当的
+mejorar,改善；提高
+progresar,进步；发展
+evolucionar,演变；进化
+tener (buena/mala) suerte,运气好/坏
+vivir en las afueras/en el centro,住在郊区/市中心
+cambiar de dirección,更改地址
+recién nacido,新生儿
+anciano,老人；年长者
+varón,男性；男子
+hembra,雌性；女性
+masculino,男性的；阳性的
+femenino,女性的；阴性的
+heterosexual,异性恋的
+homosexual,同性恋的
+bisexual,双性恋的
+transexual,跨性别的；变性者
+gay,男同性恋者
+lesbiana,女同性恋者
+boda civil/religiosa,民事婚礼/宗教婚礼
+divorcio,离婚
+separación,分居；分离
+matrimonio homosexual/heterosexual,同性/异性婚姻
+pareja de hecho,事实伴侣；未婚同居伴侣
+cambiar de nombre/de apellido,改名/改姓
+llamar por el nombre/por el apellido,用名字/姓氏称呼
+tratar de tú/de usted,用 tú/usted 称呼
+tutear,用 tú 称呼；以非敬称相称
+vivir en la periferia/en el casco antiguo/en el casco histórico,住在外围/老城区/历史城区
+mudarse de barrio/de zona,搬到另一个街区/区域
+niñez,童年
+preadolescencia,青春前期
+madurez,成熟；成年期
+vejez,老年；衰老
+madurar,成熟
+envejecer,变老；衰老
+hacerse mayor,长大；年纪变大
+quedarse viudo,丧偶
+burocracia,官僚主义；行政手续
+Documento Nacional de Identidad (DNI),西班牙国民身份证（DNI）
+tener/solicitar/renovar/perder un documento,持有/申请/更新/遗失证件
+validez,有效性；效力
+fecha de expiración,到期日期
+válido de. a.,从……到……有效
+estar/tener caducado el pasaporte/el permiso de residencia,护照/居留许可已过期
+diario,日记；日报
+álbum de fotos,相册
+joya,珠宝；首饰
+anillo,戒指
+collar,项链
+pendientes,耳环
+pulsera,手链
+alianza/colgante/gargantilla/cadena de oro/de plata,金/银婚戒、吊坠、颈链或链子
+reloj de pulsera/digital/analógico,腕表/数字表/指针表
+lentillas,隐形眼镜
+gafas de sol/graduadas/de cerca/de lejos,太阳镜/度数眼镜/近用眼镜/远用眼镜
+tener un valor sentimental,有纪念意义；有情感价值
+madre soltera,单身母亲
+niño adoptado,被收养的孩子
+adoptar un niño,收养孩子
+educar a un hijo,教育孩子
+convivir con/vivir con la pareja/el novio,与伴侣/男朋友同居
+llevar [número cardinal] años (viviendo/conviviendo) juntos/en pareja,一起/作为伴侣生活了[基数词]年
+obedecer/desobedecer a los padres,听从/不听从父母
+discutir con los padres/con los hermanos/con los hijos,与父母/兄弟姐妹/孩子争吵
+crecer feliz/fuerte/sano,快乐/强壮/健康地长大
+cónyuge,配偶
+cuñado,姐夫；妹夫；大伯子；小叔子等姻亲
+suegro,岳父/公公；岳母/婆婆（suegro 泛指姻亲父亲）
+yerno,女婿
+nuera,儿媳
+bisabuelo,曾祖父；曾外祖父
+tatarabuelo,高祖父；高祖辈祖先
+mellizos,异卵双胞胎
+trillizos,三胞胎
+madre de alquiler,代孕母亲
+niño probeta,试管婴儿
+familiar cercano/lejano,近亲/远亲
+familia numerosa/adoptiva,大家庭/收养家庭
+padre/hijo adoptivo,养父母/养子女
+niño huérfano,孤儿
+ser de familia humilde/trabajadora/rica,来自贫寒/工薪/富裕家庭
+crecer/aumentar la familia,家庭扩大；添丁
+reñir,训斥；吵架
+pelearse,争吵；打架
+estar en familia,和家人在一起
+ser como de la familia,像家人一样
+educar(se),教育；受教育
+quedarse huérfano,成为孤儿
+perder a un hijo/a un hermano/a los padres,失去孩子/兄弟姐妹/父母
+heredar,继承
+hacer testamento,立遗嘱
+colega,同事；伙伴；朋友
+amigo de la infancia/universidad,童年/大学时期的朋友
+buen/gran amigo,好朋友/挚友
+tener novio/pareja/una aventura/una relación,有男/女朋友、伴侣、外遇或恋爱关系
+tener una relación de amistad/de amor/de trabajo,有友谊/恋爱/工作关系
+empezar/acabar/terminar una relación,开始/结束一段关系
+salir/romper con alguien,和某人交往/分手
+caer(se) bien/mal,让人喜欢/讨厌；相处印象好/坏
+llevarse bien/mal,相处得好/不好
+dar la mano/un abrazo/un beso,握手/拥抱/亲吻
+abrazarse,互相拥抱
+besarse,互相亲吻
+ligar,搭讪；调情；追求
+amigo íntimo/de toda la vida,密友/一辈子的朋友
+antiguo/viejo/íntimo amigo,老朋友/旧友/密友
+miembro,成员
+invitado,客人；受邀者
+enemigo,敌人
+relación amorosa/amistosa/laboral/personal/profesional/sentimental,恋爱/友好/工作/个人/职业/感情关系
+reunión de vecinos/de socios/de antiguos alumnos,邻居/合伙人/校友聚会
+tener un lío/un romance/un amante/un ligue,有暧昧关系/恋情/情人/短暂恋爱
+conocer(se) de vista/bien/por casualidad,眼熟/熟悉/偶然认识
+relacionarse/tratar con alguien,与某人交往/打交道
+hacer amigos,交朋友
+mantener/romper una relación,维持/结束关系
+saludar/despedirse calurosamente/afectuosamente,热情地/亲切地打招呼或告别
+felicitar cordialmente/sinceramente,诚挚地祝贺
+hacer una visita,拜访
+ir de visita,去拜访
+darse dos besos,见面贴面亲两下
+estar prometido,已订婚
+seducir,诱惑；勾引
+fiesta típica/popular/tradicional/de disfraces,典型/民间/传统/化装舞会
+comida de Navidad/familia/negocios,圣诞/家庭/商务聚餐
+fiesta/reunión formal/informal,正式/非正式聚会
+despedida de soltero,单身告别派对
+boda,婚礼
+cumplir años,过生日；满……岁
+hacer/dar/invitar a una despedida de soltero/una fiesta de fin de curso,举办/邀请参加单身告别派对或结业派对
+irse/estar de viaje de novios/de luna de miel,去/正在度蜜月
+felicitar,祝贺
+hacer un regalo,送礼物
+envolver/abrir un regalo,包装/打开礼物
+nacimiento,出生；诞生
+bautizo,洗礼
+(primera) comunión,（第一次）圣餐
+santo,圣人；命名日
+aniversario,周年纪念
+bodas de oro/de plata,金婚/银婚
+ceremonia,仪式；典礼
+banquete,宴会
+marcha/tarta/suite nupcial,婚礼进行曲/婚礼蛋糕/新婚套房
+fiesta nacional/local/religiosa/oficial,国家/地方/宗教/官方节日
+celebración,庆祝活动
+acto oficial/religioso/solemne/académico,官方/宗教/庄严/学术活动或仪式
+ceremonia/acto sencillo/formal/informal,简单/正式或非正式的仪式
+organizar/celebrar/cancelar/asistir a un cóctel/una celebración/una fiesta de disfraces/un funeral,组织/举行/取消/参加鸡尾酒会、庆典、化装舞会或葬礼
+conmemorar un aniversario/una fecha,纪念周年或某个日期
+ser el centro de la fiesta,成为派对焦点
+dar un discurso,发表讲话
+decir unas palabras,说几句话
+brindar,举杯；祝酒
+hacer un brindis,祝酒
+envolver/desenvolver/empaquetar/desempaquetar un regalo,拆/包礼物；拆/装礼物
+actitud agradable/positiva/extraña,愉快/积极/奇怪的态度
+tratar bien/mal a alguien,对某人好/不好
+tener una buena/una mala actitud,态度好/坏
+conducta/comportamiento prudente/discriminatorio,谨慎/歧视性的行为
+habilidad,技能；能力
+cuidado,小心；照料
+imprudencia,鲁莽；不谨慎
+hablar bien/mal de alguien,说某人的好话/坏话
+mostrar/tener una actitud/un comportamiento adecuado/injusto,表现出合适/不公正的态度或行为
+comportarse bien/mal/fatal,表现好/差/糟糕
+dar/mostrar apoyo/amistad/cariño/comprensión,给予/表达支持、友谊、关爱或理解
+mostrar/sentir/tener confianza/respeto,表现/感到/拥有信任或尊重
+alimentación sana/equilibrada,健康/均衡饮食
+producto natural/para diabéticos,天然产品/糖尿病食品
+alimento/comida pesado/ligero,难消化/清淡的食物
+calorías,卡路里；热量
+vitaminas,维生素
+proteínas,蛋白质
+fibra,纤维
+hierro,铁
+alimentar(se),喂养；摄取食物
+alimento sin conservantes/sin colorantes,无防腐剂/无色素食品
+alimento bajo en calorías/en sal/en azúcar,低热量/低盐/低糖食品
+alimento rico en calorías/en vitaminas/en proteínas/en fibra/en hierro/en calcio,富含热量/维生素/蛋白质/纤维/铁/钙的食品
+alimento/producto fresco/congelado/orgánico/dietético,新鲜/冷冻/有机/低卡食品或产品
+producto alimenticio,食品；食品产品
+comida escasa/abundante,少量/丰盛的食物
+estar en buenas/en malas condiciones,状态良好/不佳
+estar malo/podrido/caducado,变质/腐烂/过期
+ponerse malo,变坏；变质；生病
+pudrirse,腐烂
+ayunar,禁食；斋戒
+tener apetito,有食欲
+devorar,狼吞虎咽；吞食
+comer moderadamente/excesivamente,适量/过量进食
+hacer/cortarse la digestión,消化；消化受阻
+digerir,消化
+ser indigesto,难消化
+infusión de tila/de manzanilla/de poleo,椴花茶/洋甘菊茶/薄荷茶
+vino joven/de la casa,新酒/店酒
+un reserva,陈年珍藏酒（reserva）
+abrir una botella,开瓶
+servir/probar una bebida,倒/品尝饮料
+tomar una copa,喝一杯酒
+estar borracho,喝醉了
+tener resaca,宿醉
+refresco,软饮料；汽水
+licor,利口酒
+cóctel,鸡尾酒
+vino seco/dulce,干型/甜型葡萄酒
+agua potable/del grifo,饮用水/自来水
+cerveza de barril,生啤；桶装啤酒
+abrebotellas,开瓶器
+sacacorchos,开塞钻；红酒开瓶器
+corcho/tapón (de la botella),瓶塞/瓶盖
+dar/quitar la sed,解渴/使口渴
+chupar,吸；舔
+tragar,吞咽
+mamar,吃奶；哺乳
+emborracharse,喝醉
+marisco,海鲜；贝类
+especias,香料
+embutido,腌制肉肠；冷肉制品
+lomo,里脊肉
+salchichón,西班牙干香肠（salchichón）
+chorizo,西班牙辣香肠（chorizo）
+berenjena,茄子
+calabacín,西葫芦
+espinacas,菠菜
+guisantes,豌豆
+lentejas,扁豆
+judías (blancas),（白）豆
+garbanzos,鹰嘴豆
+bizcocho,海绵蛋糕
+magdalena,玛德琳小蛋糕
+cereza,樱桃
+piña,菠萝
+kiwi,猕猴桃；奇异果
+leche entera/descremada/desnatada,全脂/低脂/脱脂牛奶
+nata,奶油；鲜奶油
+margarina,人造黄油
+yogur natural/desnatado/con frutas,原味/脱脂/水果酸奶
+costilla de cordero,羊排骨
+chuleta de cerdo,猪排
+pechuga de pollo,鸡胸肉
+solomillo de ternera,牛里脊
+aceite de oliva/de girasol,橄榄油/葵花籽油
+vinagre,醋
+mostaza,芥末
+clara/yema/cáscara de huevo,蛋清/蛋黄/蛋壳
+merengue,蛋白霜
+crema pastelera,卡仕达馅；糕点奶油
+bollería,烘焙甜点；酥点
+ensaimada,恩赛马达螺旋甜面包
+palmera,棕榈酥；蝴蝶酥
+dulces,甜食；糖果
+caramelo,糖果；焦糖
+lenguado,鳎鱼
+dorada,金头鲷
+salmonete,红鲻鱼
+lubina,欧洲海鲈
+frutos del bosque,森林莓果；混合浆果
+frambuesa,覆盆子
+mora,黑莓
+grosella,醋栗
+pierna de cordero,羊腿
+magro de ternera/de cerdo,瘦牛肉/瘦猪肉
+langosta,龙虾
+langostino,大虾；明虾
+mejillón,贻贝；青口
+almeja,蛤蜊
+legumbres,豆类
+frutos secos,坚果
+almendras,杏仁
+nueces,核桃
+avellanas,榛子
+albahaca,罗勒
+romero,迷迭香
+tomillo,百里香
+orégano,牛至；奥勒冈草
+pechugas/muslos/alas de pollo/de pavo,鸡/火鸡的胸肉、腿肉或翅膀
+leche condensada/en polvo,炼乳/奶粉
+queso fresco/azul/de cabra/de oveja,鲜奶酪/蓝纹奶酪/山羊奶酪/绵羊奶酪
+harina de trigo/de maíz,小麦粉/玉米粉
+levadura,酵母
+pan integral/rallado/de molde,全麦面包/面包糠/吐司面包
+ingredientes,配料；原料
+modo de preparación,制作方法
+carne/pescado a la plancha/frito/hervido,煎烤/油炸/水煮的肉或鱼
+blando,软的
+duro,硬的
+crudo,生的；未熟的
+poco/muy hecho,三分熟/很熟；熟度低/高
+salado,咸的
+dulce,甜的；甜味
+picante,辣的
+amargo,苦的
+freír,油炸；煎
+hervir,煮沸
+cocer,煮；烹煮
+asar,烤；烧烤
+aliñar,拌调料；调味
+condimentar,调味
+cocer arroz/pasta,煮米饭/意面
+hervir agua/leche,煮开水/牛奶
+batir huevos,打鸡蛋
+freír patatas/huevos,炸土豆/鸡蛋
+pelar fruta/patatas,削水果/土豆皮
+cortar el pan/la carne,切面包/肉
+aliñar una ensalada,给沙拉调味
+quemarse la comida,饭菜烧焦
+carne a la brasa/asada/guisada,炭烤/烤制/炖制的肉
+preparar/servir una comida,准备/上餐
+cocinar un plato/un alimento,烹饪一道菜/一种食物
+exprimir un limón,挤柠檬汁
+rallar queso,擦碎奶酪
+picar carne,绞肉；切碎肉
+trocear una manzana,把苹果切块
+cocer al vapor/a fuego lento/al baño María,蒸/小火煮/隔水加热
+calentar agua/una salsa,加热水/酱汁
+rebozar/empanar una pechuga,给鸡胸裹面糊/面包糠
+dorar la cebolla,把洋葱炒至金黄
+cortar en trozos/en tacos/en dados finos/gruesos/pequeños,切成细/粗/小块、丁或小块
+sopa de pescado/de verduras,鱼汤/蔬菜汤
+gazpacho,西班牙冷汤（gazpacho）
+cocido,西班牙炖菜（cocido）
+croquetas,炸可乐饼（croquetas）
+sabor bueno/agradable,味道好/令人愉快
+soso,淡而无味的；盐少的
+sentar bien/mal,吃了舒服/不舒服；合适/不合适
+bacalao al pilpil,巴斯克蒜香鳕鱼（bacalao al pilpil）
+fabada,阿斯图里亚斯白豆炖菜（fabada）
+arroz con leche,西班牙米布丁
+macedonia de frutas,水果沙拉
+sorbete al cava,卡瓦酒冰沙
+pincho,小串小吃；pincho
+ración,一份；一盘（菜）
+sabroso,味美的；可口的
+delicioso,美味的
+exquisito,精致美味的；极好的
+comestible/incomestible,可食用的/不可食用的
+comible/incomible,能吃的/难以下咽的
+disfrutar (de) una comida,享用一餐
+cuchara,勺子
+tenedor,叉子
+cuchillo,刀
+sartén,煎锅
+cazo,小锅；长柄锅
+mantel,桌布
+copa de vino/de champán,葡萄酒杯/香槟杯
+taza de café/de té/de desayuno,咖啡杯/茶杯/早餐杯
+vaso de agua,一杯水
+jarra de agua/cerveza,一壶水/一扎啤酒
+recoger la cocina/la mesa,收拾厨房/桌子
+poner/recoger/quitar los platos/la mesa,摆上/收走/撤掉盘子或餐桌
+fregar los platos,洗碗
+poner el lavavajillas/lavaplatos,启动洗碗机
+fuente,大盘；盘子；泉源
+bol,碗；钵
+tazón,大杯；大碗
+olla (a presión),（压力）锅
+cacharro,锅具；器皿；破旧东西
+cazuela (de barro),（陶制）砂锅；炖锅
+recipiente,容器
+cuenco,碗；钵
+ensaladera,沙拉碗
+sopera,汤盆
+abrelatas,开罐器
+restaurante sencillo/de lujo,普通/高档餐厅
+comida casera/tradicional,家常/传统菜
+cocina india/andaluza/internacional,印度/安达卢西亚/国际菜
+tomar nota,记下；点单
+traer/llevarse/servir el primer/el segundo plato,端来/拿走/上第一道或第二道菜
+tomar un aperitivo/una ración,吃开胃菜/一份菜
+ir de tapas,吃塔帕斯；逛小吃店
+para tomar (aquí)/llevar,堂食/外带
+autoservicio,自助服务
+hamburguesería,汉堡店
+restaurante de fama internacional/de cuatro tenedores,国际知名/四叉等级餐厅
+bufé,自助餐
+barra,吧台；横杆
+barman,酒吧调酒师
+comedor,餐厅；饭厅
+poner/llevar/montar un restaurante,开办/经营一家餐厅
+comer de menú/a la carta,吃套餐/按菜单点菜
+tapear,吃塔帕斯
+atender/servir una mesa,招待/服务一桌客人
+sentarse a la mesa,入座用餐
+retirar el primer/el segundo plato,撤下第一道/第二道菜
+campus,校园
+secretaría,秘书处；教务处
+administración,行政管理；行政部门
+centro de recursos,资源中心
+aula multimedia,多媒体教室
+colegio público/privado/concertado,公立/私立/政府资助私立学校
+guardería,托儿所
+jardín de infancia,幼儿园
+colegio bilingüe/religioso/laico,双语/宗教/世俗学校
+escuela superior,高等学校
+alumnado,全体学生；学生群体
+profesorado,全体教师；教师队伍
+catedrático,教授；大学正教授
+rector,大学校长
+jefe de estudios,教务主任
+maestro,教师；小学老师
+tutor,导师；班主任
+director de tesis,论文导师
+delegado de curso,班级代表
+conferenciante,演讲者；讲师
+universitario,大学生；大学的
+asociación de profesores/antiguos alumnos,教师协会/校友会
+asignatura/clase teórica/práctica,理论课/实践课
+matrícula,注册；学费
+beca,奖学金
+conferencia,讲座；会议
+matricularse,注册；报名
+devolver la matrícula,退注册费/学费
+pedir/dar/ganar una beca,申请/发放/获得奖学金
+hacer un intercambio/unas prácticas,参加交换/实习
+asignatura obligatoria/común,必修/公共课程
+materia trimestral/anual,季度/全年课程
+curso elemental/obligatorio/optativo,初级/必修/选修课程
+formación continua/permanente,继续/终身教育
+educación/enseñanza primaria/secundaria/universitaria/superior/a adultos,小学/中学/大学/高等/成人教育
+estudios primarios/secundarios/superiores/universitarios,小学/中学/高等/大学教育经历
+educación pública/privada/religiosa/laica,公立/私立/宗教/世俗教育
+enseñanza/curso presencial/virtual/a distancia,面授/线上/远程课程
+curso intensivo/de iniciación/de perfeccionamiento,强化/入门/进阶课程
+seminario,研讨会
+congreso,大会；学术会议
+ofrecer/recibir educación superior/universitaria,提供/接受高等或大学教育
+solicitar/conceder una beca/una plaza,申请/授予奖学金或名额
+disfrutar de una beca,享受奖学金待遇
+conseguir/obtener una beca,获得奖学金
+obtener/dar/conseguir créditos,获得/给予学分
+tener un buen/un mal expediente,成绩档案好/差
+saber/aprender/estudiar de memoria,背诵；凭记忆学习
+pensar,思考；认为
+recordar,记得；回忆
+olvidar,忘记
+enseñar,教授；教
+enseñanza,教学；教育
+aprendizaje,学习；学习过程
+alumno brillante/estudioso/conflictivo,优秀/勤奋/问题学生
+didáctico,教学用的；教学法的
+educativo,教育的
+memorizar,记忆；背诵
+eflexionar,反思；思考
+deducir,推断；演绎
+sacar conclusiones,得出结论
+quedarse en blanco,脑子一片空白
+formarse,接受培训；成长
+educarse,接受教育；培养自己
+recibir/tomar clases,上课；接受课程
+test,测试
+control,测验；检查；控制
+notas,成绩；笔记
+hacer/tener/aprobar/suspender un examen oral/un test escrito/un control,参加/通过/不通过口试、笔试或测验
+corregir un examen,批改试卷
+tener un [número cardinal]/buena nota/mala nota,得[分数]/好成绩/差成绩
+aprobar/repetir el curso,通过/留级
+examen/prueba/control parcial/final/cuatrimestral/anual,期中/期末/学期/学年考试或测验
+nota media/final/justa/injusta/alta/baja,平均/最终/公正/不公正/高/低成绩
+evaluación parcial/final,阶段/最终评价
+autoevaluación,自我评价
+preparar(se)/pasar/presentarse a un examen,准备/参加/报考考试
+examinarse,参加考试
+hacer una prueba (de nivel),参加（分级）测试
+sacar buenas notas/malas notas/un sobresaliente/un notable/un [número cardinal],取得好/坏成绩、优秀、良好或[分数]
+poner notas,打分；给成绩
+pasar de curso,升年级
+tener/quedar una asignatura pendiente,有/留下未通过的科目
+pedir revisión de examen,申请复核考试
+bachillerato,高中阶段；西班牙大学预科
+carrera,大学专业；职业生涯
+máster,硕士
+doctorado,博士阶段；博士学位
+licenciado,大学本科毕业生；学士
+doctor,博士；医生
+estudiar/hacer/tener/empezar/acabar/terminar el bachillerato/una carrera/un máster/un doctorado,读/拥有/开始/完成高中、大学专业、硕士或博士
+(no) tener estudios,有/没有受过教育
+graduado escolar,基础教育毕业生
+formación profesional,职业教育；职业培训
+hacer/tener estudios primarios/secundarios/universitarios,接受小学/中学/大学教育
+licenciarse,大学毕业；获得 licenciatura
+titularse,毕业；取得学位
+doctorarse,获得博士学位
+hacer la tesis (doctoral),写（博士）论文
+tener una licenciatura/una diplomatura/un doctorado/la especialidad en,拥有本科/专科/博士学位或……专业资质
+ser licenciado en/doctor en Empresariales/Filología,是企业管理/语言文学专业本科生或博士
+abandonar/dejar/continuar/completar los estudios,放弃/停止/继续/完成学业
+tener una duda,有疑问
+equivocarse,弄错；犯错
+hacer una actividad en parejas/en grupos/de forma individual,两人/小组/个人完成活动
+hacer un esquema/un resumen,做提纲/总结
+buscar/mirar en un libro/en un diccionario,在书/词典中查找
+tomar notas/apuntes,记笔记
+subrayar un libro,在书上划线；标注
+escoger/elegir un tema/un compañero/un libro,选择主题/同伴/书
+cambiar de libro/de tema/de compañero,换书/主题/同伴
+levantar la mano,举手
+cambiar(se) de sitio,换位置
+salir voluntario/a la pizarra,自愿上台/到黑板前
+explicar un tema/una lección,讲解主题/课程
+hablar/charlar sobre un tema,谈论某个主题
+relacionar,关联；联系
+comparar,比较
+buscar diferencias,找差异
+corregir una redacción/un ejercicio/los deberes,批改作文/练习/作业
+hacer un descanso/una pausa,休息一下；暂停
+plantear/resolver una duda,提出/解决疑问
+aplicar una fórmula,应用公式
+deducir/seguir una regla,推导/遵循规则
+analizar/debatir/discutir un tema,分析/辩论/讨论主题
+consultar (en) un libro/una enciclopedia/Internet/una gramática,查阅书、百科全书、互联网或语法书
+hacer una síntesis/un comentario/un experimento/un cuadro/una tabla,做综合摘要/评论/实验/图表/表格
+hacer una presentación,做展示；演示
+presentar un proyecto,展示项目
+ponerse de pie,站起来
+salir al recreo,出去课间休息
+pasar lista,点名
+estar castigado,被处罚；被留堂
+enciclopedia,百科全书
+apuntes,笔记；讲义
+folio,一张纸；对开纸
+papel reciclado/de impresora,再生纸/打印纸
+carpeta,文件夹
+tinta para/de impresora,打印机墨水
+cartucho de tinta,墨盒
+grapadora,订书机
+grapa,订书钉
+clip,回形针
+celo,透明胶带
+borrador,黑板擦；草稿
+retroproyector,投影仪；老式透明胶片投影仪
+transparencia,透明胶片；透明度
+diapositiva,幻灯片
+papel cuadriculado,方格纸
+cartulina,卡纸
+rotulador fluorescente/de punta fina/de punta gruesa,荧光/细头/粗头记号笔
+poner/proyectar una transparencia/una diapositiva,放映透明胶片/幻灯片
+director de RR. HH.,人力资源主管
+empleado de banca,银行职员
+responsable de ventas,销售负责人
+oficio,手艺；职业
+profesión liberal,自由职业
+sustituto,替补；代班人员
+ayudante,助手
+estudiante en prácticas,实习生
+trabajar para una empresa de transportes/de servicios,为运输/服务公司工作
+estar de auxiliar/canguro,做助理/保姆
+contratado,受雇的；签约的
+interino,临时任职的
+trabajador en prácticas,实习员工
+tener un empleo en la Administración/en una multinacional,在政府部门/跨国公司任职
+tener/ocupar un cargo público/directivo/de responsabilidad,担任公共/管理/责任岗位
+ejercer de/como abogado/veterinario,从事律师/兽医工作
+trabajar como autónomo,自雇；自由职业
+departamento de recursos humanos/de contabilidad/de administración,人力资源/会计/行政部门
+bufete,律师事务所；办公室
+laboratorio,实验室
+planos,图纸；计划图
+programa informático,计算机程序；软件
+casco,头盔
+almacén,仓库
+granja,农场
+quirófano,手术室
+lugar bien/mal acondicionado/iluminado,设备/采光良好或不佳的场所
+destornillador,螺丝刀
+cable,电缆；线
+enchufe,插头；插座
+mono,工装连体服；猴子
+delantal,围裙
+gafas de protección,护目镜
+ir de traje/corbata/uniforme,穿西装/打领带/穿制服
+hacer una presentación/un informe/un presupuesto/un proyecto,做展示/报告/预算/项目
+hacer un pedido,下订单
+clasificar/archivar documentos,分类/归档文件
+atender clientes/usuarios,接待客户/用户
+meter/introducir datos en el ordenador,向电脑录入数据
+empleo,工作；就业
+ocupación,职业；工作
+contrato indefinido/fijo/temporal/basura/de prácticas,无固定期限/固定/临时/垃圾/实习合同
+trabajo físico/manual/intelectual/cualificado/especializado/creativo/en equipo/en cadena/en serie,体力/手工/脑力/技能型/专业/创意/团队/流水线工作
+trabajar por cuenta propia/por cuenta ajena/a tiempo completo/a tiempo parcial,自雇/受雇；全职/兼职工作
+ejercer una profesión/un oficio/una función,从事职业/手艺/职能
+desarrollar/llevar a cabo un trabajo/una función/una tarea/un servicio,开展工作/职能/任务/服务
+ocupar un puesto/una plaza/un cargo,担任职位/岗位/职务
+ascender a subdirector/jefe de sección/responsable de unidad,升为副主任/科长/单元负责人
+realizar/preparar/presentar un presupuesto,制定/准备/提交预算
+coordinar un departamento/un equipo (de trabajo)/un proyecto,协调部门/团队/项目
+negociar/redactar/firmar/ampliar/renovar un contrato,谈判/起草/签署/延长/续签合同
+distribuir un producto,分销产品
+trabajar a (dis)gusto/honradamente,愉快/不情愿地；诚实地工作
+trabajar en buenas/malas/óptimas condiciones,在良好/恶劣/最佳条件下工作
+firmar un presupuesto,签署预算
+revisar la instalación eléctrica,检查电气安装
+poner un enchufe/un punto de luz/una toma de corriente,安装插座/灯点/电源插座
+arreglar un interruptor/un enchufe/un aparato eléctrico,修理开关/插座/电器
+oferta,报价；提供；供给
+demanda,需求
+anuncio de trabajo,招聘广告
+entrevistado,受访者；面试者
+entrevistador,采访者；面试官
+tener formación/experiencia,有培训背景/经验
+buscar trabajo,找工作
+escribir/enviar una carta de presentación,写/发送求职信
+hacer/presentar el currículum vítae,制作/提交简历
+hacer/realizar una entrevista (de trabajo),进行工作面试
+firmar un contrato,签合同
+despedir,解雇
+empleo/desempleo,就业/失业
+despido,解雇；裁员
+oferta (pública) de empleo,（公共）招聘岗位
+Instituto Nacional de Empleo (INEM),西班牙国家就业局（INEM）
+Empresa de Trabajo Temporal (ETT),临时就业公司（ETT）
+carta de recomendación/de despido,推荐信/解雇信
+subir/bajar el paro/el desempleo,失业率上升/下降
+crecer/aumentar/disminuir el número de desempleados,失业人数增加/减少
+estar/participar en un proceso de selección (de personal),参加人员选拔流程
+llamar/citar a alguien para una entrevista (de trabajo),通知/约某人参加工作面试
+contratar a alguien,雇用某人
+conseguir un trabajo/puesto/empleo,找到工作/岗位
+renovar un contrato,续签合同
+perder el empleo,失去工作
+ser despedido,被解雇
+estar desempleado,失业
+cobrar una indemnización,领取赔偿金
+tener buenas/malas referencias,有好/差的推荐证明
+contrato,合同
+sueldo,工资；薪水
+(total) disponibilidad,（完全）可用性；随时到岗
+estabilidad laboral,职业稳定性；工作稳定
+horario flexible,弹性工作时间
+incorporación inmediata,立即入职
+formación a cargo de la empresa,公司承担培训
+posibilidad de promoción,晋升机会
+sindicato,工会
+tener/ganar un sueldo,有/赚取工资
+subir/bajar el sueldo,加薪/降薪
+estar de vacaciones,在休假
+hacer huelga,罢工
+jubilarse,退休
+anticipo,预支款
+comisión,佣金；委员会
+dietas,出差补贴；膳宿津贴
+flexibilidad de horario,时间安排灵活性
+jornada laboral/de trabajo,工作日；工时
+día laborable/festivo,工作日/节假日
+comité/representante de empresa,公司委员会/员工代表
+cláusula del contrato/del convenio colectivo,合同/集体协议条款
+cotización a la Seguridad Social,缴纳社会保障费
+contratar,雇用；签约
+ser contratado,被录用
+estar en/superar el periodo de prueba,处于/通过试用期
+cobrar un sueldo/un salario fijo/una nómina/una paga extra/una hora extra/un anticipo/comisiones/dietas,领取工资、固定薪资、工资单、额外奖金、加班费、预支款、佣金或补贴
+cobrar un sueldo razonable/ridículo,工资合理/低得可笑
+cotizar a la Seguridad Social,缴纳社会保障
+tener/pedir un día libre,有/申请一天休假
+pedir un aumento de sueldo/un ascenso/un anticipo/un día de permiso/la jubilación (anticipada),申请加薪/升职/预支/请假一天/提前退休
+tener un accidente de trabajo,发生工伤事故
+prevenir el estrés/los riesgos laborales,预防压力/职业风险
+estar de baja por paternidad/por enfermedad,休陪产假/病假
+reivindicar,争取；主张；提出诉求
+estar en huelga,正在罢工
+estar retirado,已退休
+retirarse,退休；退出
+capacidad,能力；容量
+profesionalidad,专业素养
+experiencia,经验
+cualificado,有资格的；合格的
+competente/incompetente,胜任的/不胜任的
+profesional,专业的；专业人士
+experto/inexperto,有经验的/缺乏经验的
+capaz/incapaz,有能力的/无能力的
+perezoso,懒惰的
+descanso,休息
+vacación,假期；休假
+jardinería,园艺
+bricolaje,DIY；家庭手工维修
+ir de camping,去露营
+hacer un picnic,野餐
+hacer turismo,旅游；观光
+inscribirse en un club/en una asociación/en un grupo,加入俱乐部/协会/团体
+colaborar como voluntario,做志愿者
+tener tiempo libre,有空闲时间
+estar ocupado/libre,忙/有空
+tener un compromiso,有约；有安排
+ir/salir de copas/de tapas/de marcha,出去喝酒/吃塔帕斯/夜生活
+pasar(se)lo bien/mal,玩得开心/不开心
+hacer un curso de jardinería/de cocina,上园艺/烹饪课程
+ser aficionado a,是……的爱好者
+hacer crucigramas,做填字游戏
+coleccionar sellos/monedas,收藏邮票/硬币
+pasatiempo,消遣；爱好
+ocio,休闲；闲暇
+parque natural/temático/acuático,自然/主题/水上公园
+fiesta de disfraces,化装舞会
+fuegos artificiales,烟花
+cohetes,火箭；烟火火箭
+entretenerse,娱乐；打发时间
+pasar el rato,消磨时间
+ir/salir/estar de juerga/de fiesta,去/外出/正在狂欢或聚会
+disfrazarse,化装；打扮成
+resolver pasatiempos,做益智游戏
+ser coleccionista de,是……收藏家
+pasar(se)lo fenomenal/en grande,玩得特别开心
+asiento/fila de un cine/de un teatro,电影院/剧院的座位或排
+espectador,观众；观看者
+público,公众；观众
+escenario,舞台；场景
+galería (de arte),（艺术）画廊
+plaza de toros,斗牛场
+poner una película,放映电影
+hacer cola,排队
+ser un éxito,取得成功；很成功
+desfile,游行；巡游
+muestra,展览；样品
+presentación,展示；介绍
+acomodador,引座员
+guardarropa,衣帽间
+taquilla,售票处；票房
+butaca,剧院座椅；扶手椅
+sala de exposiciones/de cine/de conciertos,展厅/电影院/音乐厅
+pista de baile/de una discoteca/del circo,舞池/夜店舞池/马戏场地
+función de teatro/de circo,戏剧/马戏演出
+sesión de cine,电影场次
+espectáculo apto para todos los públicos/para mayores de 18 años,适合所有观众/18岁以上观众的演出
+espectáculo deportivo,体育表演；体育赛事
+representación teatral,戏剧演出
+festival de música,音乐节
+estreno,首映；首次演出
+estrenar,首映；首次推出
+inaugurar,开幕；启用
+montar/organizar una exposición,布置/组织展览
+cancelar un espectáculo,取消演出
+árbitro,裁判
+entrenador,教练
+deportista,运动员
+jugador,球员；玩家
+perdedor,失败者
+ganador,获胜者
+balón de fútbol/de baloncesto,足球/篮球
+pelota de tenis/de golf,网球/高尔夫球
+raqueta,球拍
+esquíes,滑雪板
+partido/equipo de fútbol/de baloncesto,足球/篮球比赛或球队
+carrera ciclista/de motos/de coches,自行车/摩托车/汽车比赛
+guantes de boxeo,拳击手套
+chándal,运动服
+zapatos deportivos,运动鞋
+ganar,赢；获得
+perder,输；失去
+empatar,打平；平局
+jugar al balonmano/al voleibol/al béisbol,打手球/排球/棒球
+hacer atletismo/ciclismo/natación,做田径/骑行/游泳运动
+campo de fútbol,足球场
+pista de tenis,网球场
+campeonato,锦标赛；冠军赛
+liga,联赛
+instalaciones deportivas,体育设施
+palacio de deportes,体育馆
+estadio,体育场
+aficionado,爱好者；球迷
+fan,粉丝；球迷
+empate,平局
+victoria,胜利
+triunfo,胜利；成功
+deporte de invierno/de equipo/de riesgo/de competición,冬季/团队/极限/竞技运动
+juegos olímpicos (JJ. OO.),奥运会（JJ. OO.）
+olimpiada,奥林匹克运动会
+Comité Olímpico Internacional (COI),国际奥林匹克委员会（COI）
+entrenar,训练
+calentar,热身；加热
+participar en el entrenamiento,参加训练
+sufrir/tener/hacerse una lesión,受/有运动损伤
+eliminar,淘汰；消除
+vencer,战胜；获胜
+acertar,答对；命中
+fallar,失败；失误；没命中
+ser de un equipo,属于某支球队
+hacerse socio de un club/de una asociación (deportiva),成为俱乐部/体育协会会员
+clasificarse para la final/semifinal/para la eliminatoria/para el campeonato,晋级决赛/半决赛/淘汰赛/锦标赛
+ser campeón/subcampeón,成为冠军/亚军
+quedar campeón/subcampeón de liga/de copa/del mundo,获得联赛/杯赛/世界冠军或亚军
+ganar/conseguir la copa/una medalla,赢得奖杯/奖牌
+retirarse un deportista,运动员退役
+ficha,棋子；筹码；卡片；档案
+dado,骰子
+tablero,游戏板；棋盘
+casilla,格子；方格
+concurso,比赛；竞赛
+videojuego,电子游戏
+consola,游戏机；控制台
+juego de mesa/de cartas,桌游/纸牌游戏
+jugar a los bolos/a los dardos/al billar,打保龄球/飞镖/台球
+jugar con los juguetes/con la pelota,玩玩具/玩球
+tocar un premio/el Gordo/la lotería,中奖；中头奖/彩票
+juego de azar/de ingenio/limpio/sucio,赌博/益智/公平/作弊的游戏
+rompecabezas,益智拼图；难题
+puzle,拼图
+jugar una partida,玩一局
+tocarle el turno a alguien,轮到某人
+barajar,洗牌
+repartir,发牌；分配
+sacar/echar una carta,抽/出一张牌
+jugar al escondite/a las canicas/a la comba,玩捉迷藏/弹珠/跳绳
+montar en los columpios/en el tobogán,荡秋千/玩滑梯
+jugar a la lotería,买彩票
+hacer quinielas,参加足球彩票竞猜
+hacer una apuesta,下注
+apostar,赌博；下注
+sacar/comer/avanzar con una ficha,拿/吃掉/移动一个棋子
+tirar el dado/los dados,掷骰子
+seguir/entender/explicar/saltarse las reglas del juego,遵守/理解/解释/跳过游戏规则
+hacer trampas,作弊
+medios de comunicación/información,传播/信息媒体
+noticia,新闻；消息
+comentario,评论
+opinión,意见；观点
+informar,通知；报道
+dar/tener información,提供/拥有信息
+dar una noticia,告知消息
+estar/mantenerse bien/mal informado,信息充分/不足；保持知情
+dejar un recado/un mensaje,留言；捎话
+comunicarse con alguien por carta/por correo (electrónico)/por teléfono/por correo,通过信件/邮件/电话与某人联系
+cortar(se) la comunicación,通信中断
+comunicación telefónica/audiovisual/escrita/radiofónica,电话/视听/书面/广播通信
+rumor,传闻；谣言
+dato,数据；信息
+anécdota,轶事；小故事
+comunicación/noticia fiable/oficial/extraoficial/de última hora,可靠/官方/非官方/最新消息
+comentar,评论；谈论
+comunicar,传达；沟通
+declarar,声明；宣布
+anunciar,宣布；刊登广告
+opinar,发表意见
+mantener/establecer la comunicación/el contacto,保持/建立沟通或联系
+comunicarse personalmente/diariamente/oralmente/por escrito,亲自/每日/口头/书面沟通
+formular una pregunta/una crítica,提出问题/批评
+conocer un rumor/un dato,知道传闻/数据
+enterarse de una noticia por casualidad/casualmente/por la prensa,偶然/通过媒体得知消息
+buzón,邮箱；信箱
+remitente,寄件人；发件人
+destinatario,收件人
+apartado de correos,邮政信箱
+posdata,附言；P.S.
+firma,签名
+saludo,问候；致意
+despedida,告别；结尾敬语
+carta formal/personal,正式/私人信件
+cerrar un sobre,封信封
+echar una carta,寄信；投信
+mandar por correo,邮寄
+abrir el buzón,打开信箱
+carta de solicitud de trabajo/de reclamación,求职/投诉信
+carta confidencial/privada/oficial,机密/私人/公函
+escribir una carta a mano/a máquina/a ordenador,手写/打字/电脑写信
+certificar una carta/un paquete,挂号寄信/包裹
+entregar una carta/un telegrama/un mensaje,递送信件/电报/消息
+entregar en mano,亲手交付
+abrir/recibir/entregar/enviar/recoger la correspondencia,打开/接收/递送/发送/收取邮件
+contestador automático,电话答录机；自动应答机
+buzón de voz,语音信箱
+llamada,电话；通话
+línea (ocupada),（占线的）电话线路
+batería/tarjeta de teléfono,手机电池/电话卡
+conversación telefónica,电话交谈
+guía telefónica,电话簿
+páginas amarillas,黄页
+marcar un número de teléfono,拨电话号码
+colgar/descolgar/coger/contestar a/ponerse a el teléfono,挂断/拿起/接听电话
+quedarse sin batería/sin saldo,手机没电/余额不足
+hacer/pasar/devolver/atender/recibir/desviar una llamada,拨打/转接/回拨/接听/接收/转移电话
+estar comunicando,占线
+(servicio de) atención/información al cliente,客户服务/信息服务
+teléfono digital/analógico,数字/模拟电话
+recibo/factura del teléfono,电话账单
+línea/red/conexión/compañía telefónica/de teléfono,电话线路/网络/连接/公司
+telefonear,打电话
+cortar la línea,切断电话线路
+cortarse la comunicación,通信中断
+llamar a cobro revertido,打对方付费电话
+hacer una llamada urbana/local/interurbana/interprovincial/internacional/gratuita,拨打市内/本地/长途/跨省/国际/免费电话
+dar de alta/baja la línea (telefónica),开通/注销电话线路
+tener/contratar (la) tarifa plana/ADSL,办理包月套餐/ADSL
+tener/dar un buen/un mal servicio,服务好/差；提供好/差服务
+periodismo,新闻学；新闻业
+prensa,新闻媒体；报刊
+editorial,出版社；社论
+cartelera,演出/电影排期；公告栏
+(sección de) economía/cultura/deportes,经济/文化/体育版块
+agencia de prensa/de fotografía,新闻社/摄影通讯社
+suplemento cultural/de economía,文化/经济副刊
+publicar/redactar una noticia/un reportaje/una entrevista/un artículo,发布/撰写新闻、报道、采访或文章
+titular,标题；头条
+subtítulo,副标题
+pie de foto,图片说明
+portada,封面；头版
+primera página,第一页；头版
+crónica,新闻报道；纪事
+crítica,评论；批评
+carta al director,致编辑的信
+editor,编辑；出版商
+redactor (jefe),（主编）编辑；记者
+corresponsal,驻外记者；通讯员
+enviado especial,特派记者
+edición,版本；版次
+redacción,编辑部；撰写
+artículo de opinión/de fondo,评论文章/社论性文章
+periódico de la mañana/de la tarde,晨报/晚报
+prensa escrita/rosa/del corazón/deportiva/amarilla/económica/gratuita,纸媒/八卦媒体/娱乐媒体/体育媒体/黄色新闻/财经媒体/免费报刊
+libertad de prensa/de expresión,新闻自由/言论自由
+censura,审查制度；删改
+noticias de actualidad,时事新闻
+suscribirse a un periódico/una revista,订阅报纸/杂志
+dar una rueda de prensa,召开新闻发布会
+canal,频道
+emisora,广播电台；发射台
+locutor,播音员；主持人
+cadena/canal público/privado/regional/nacional,公共/私人/地区/全国频道或电视台
+capítulo,章；集
+episodio,一集；一段
+serie,系列；电视剧
+culebrón,肥皂剧；狗血连续剧
+telenovela,电视连续剧；肥皂剧
+debate,辩论；讨论
+documental,纪录片
+telebasura,低俗电视节目；电视垃圾
+programa de información general/deportiva,综合/体育新闻节目
+película en versión original/con subtítulos,原声电影/带字幕电影
+cambiar de canal/cadena/emisora,换频道/电台
+consultar la programación,查看节目表
+audición,试听；听力；广播
+emisión,播出；节目
+programa televisivo/radiofónico,电视/广播节目
+oyente,听众
+telespectador,电视观众
+teleadicto,电视迷；电视成瘾者
+cámara,摄像机；相机
+redactor,编辑；记者
+reportero,记者；现场报道员
+televisión por cable/vía satélite/digital/analógica,有线/卫星/数字/模拟电视
+medio audiovisual/periodístico,视听/新闻媒体
+parte meteorológico,天气预报
+informativos,新闻节目；新闻资讯
+espacio publicitario,广告时段
+programación de calidad/cultural/(apta) para todos los públicos,高质量/文化/适合全年龄观众的节目编排
+seguir/grabar/perderse un programa de televisión/de radio,收看/录制/错过电视或广播节目
+zapear,不停换台；频道冲浪
+contraseña,密码
+nombre de usuario,用户名
+navegador,浏览器
+buscador,搜索引擎
+ratón,鼠标
+antivirus,杀毒软件
+línea ADSL,ADSL线路
+buscar/intercambiar información/datos/imágenes/documentos,搜索/交换信息、数据、图像或文件
+colgar una fotografía/un documento/un texto en Internet,把照片/文件/文字上传到互联网
+consultar/entrar en/acceder a una página web/de Internet,查看/进入/访问网页
+descargarse/bajarse un programa/un archivo/música,下载程序/文件/音乐
+conectarse a/tener conexión a Internet,连接互联网；有网络连接
+abrir(se) una cuenta de correo (electrónico),开设电子邮箱账户
+adjuntar/reenviar un documento,附加/转发文件
+poner/enviar una copia (oculta) a alguien,抄送/密送给某人
+equipo informático,计算机设备；IT设备
+servidor,服务器
+proveedor (de acceso/de conexión),（接入/网络）服务提供商
+videoconferencia,视频会议
+audioconferencia,音频会议
+comunicación a través del ordenador,通过计算机通信
+entrar en/acceder a/pinchar en un enlace,进入/访问/点击链接
+instalar/manejar un programa/un antivirus,安装/操作程序或杀毒软件
+participar/inscribirse/apuntarse en una lista de distribución,参加/订阅邮件列表
+comunicarse por correo electrónico/por videoconferencia,通过电子邮件/视频会议沟通
+entrar/atacar/eliminar un virus,感染/攻击/清除病毒
+construir/hacer una casa/un edificio,建房子/建筑
+casero,房东；屋主
+compra,购买；购物
+alquiler,租赁；租金
+visitar/ir a ver un piso,看房
+pagar el alquiler/la hipoteca/el piso,付房租/按揭/房款
+pagar (el recibo de) la luz/la comunidad/el gas/el agua/el teléfono,缴电费/物业费/燃气费/水费/电话费
+empresa/camión de mudanzas,搬家公司/搬家卡车
+hacer una mudanza/un traslado,搬家；迁移
+irse (a vivir) a,搬去……住
+albañilería,泥瓦工；砌筑工程
+fontanería,管道工程；水暖
+carpintería,木工；木作
+material de construcción,建筑材料
+cemento,水泥
+ladrillo,砖
+hacer una reforma,装修；翻修
+reformar,装修；翻新
+inmobiliaria,房地产中介；房产公司
+constructora,建筑公司；开发商
+gastos de comunidad/de portería/de agua,物业费/门房费/水费
+vivir/estar de alquiler,租房居住
+firmar una hipoteca/un contrato (de alquiler),签按揭/租赁合同
+dar de alta/de baja la luz/el agua/el teléfono/el gas,开通/停用电、水、电话或燃气
+residencia temporal/permanente/estival,临时/永久/夏季度假住宅
+vivienda,住房；住宅
+alojamiento,住宿；住处
+hogar,家；家庭住所
+convivir,共同生活；同居
+trasladarse a,搬迁到
+bloque de pisos,公寓楼
+edificio de apartamentos,公寓大楼
+portero,门卫；看门人
+dueño,主人；业主
+piso de segunda mano/luminoso/soleado,二手/明亮/向阳的公寓
+ático,顶层公寓；阁楼房
+dúplex,复式住宅
+buhardilla,阁楼；斜顶阁楼房
+casa de campo,乡村住宅
+segunda residencia,第二居所；度假房
+vivienda de alquiler/en propiedad,租赁住房/自有住房
+escalera de incendios,消防楼梯
+salida de emergencia,紧急出口
+comunidad (de vecinos),业主社区；邻里共同体
+administrador,管理员；物业管理员
+conserje,门卫；管理员
+buena/mala distribución,布局好/差
+bien/mal orientado,朝向好/差
+orientado al norte/al sur,朝北/朝南
+acogedor,温馨的；舒适的
+lujoso,豪华的
+espacioso,宽敞的
+dar a la calle/a un patio/al jardín,朝向街道/庭院/花园
+fregar el suelo/los platos,拖地/洗碗
+barrer,扫地
+hacer la cama/la compra,铺床/采购日用品
+pasar el aspirador,吸尘
+sacar la basura,倒垃圾
+planchar,熨衣服
+tender la ropa,晾衣服
+decoración,装饰；装修风格
+ambiente/estilo moderno/clásico,现代/古典氛围或风格
+decorar,装饰
+iluminar una habitación/un espacio,照亮房间/空间
+escoba,扫帚
+recogedor,簸箕
+fregona,拖把
+trapo,抹布
+detergente,洗涤剂
+lavavajillas,洗碗机；洗洁精
+suavizante,衣物柔顺剂
+suciedad,污垢；脏
+limpieza,清洁；卫生
+arreglar/recoger la casa,整理房子
+quitar el polvo,除尘
+dejar/tener la casa recogida/limpia,把/保持房子整洁干净
+dejar/tener la cama hecha/la mesa puesta,把/保持床铺好、餐桌摆好
+recuerdo,纪念品；回忆
+adorno,装饰品
+ambiente cálido/íntimo/acogedor/fresco,温暖/私密/温馨/清新的氛围
+iluminación/luz directa/indirecta/suave/tenue/alegre,直接/间接/柔和/昏暗/明快的照明
+amueblar una habitación,给房间配家具
+alfombra,地毯
+cortina,窗帘
+florero,花瓶
+póster,海报
+espejo,镜子
+cómoda,五斗柜；梳妆柜
+mesilla de noche,床头柜
+(pequeño) electrodoméstico,小家电
+frigorífico,冰箱
+congelador,冰柜；冷冻室
+horno,烤箱
+cafetera,咖啡机
+equipo de música,音响设备
+funcionar,运作；起作用
+estar roto/estropeado,坏了；故障
+encender/apagar/poner/quitar/conectar/programar/enchufar/desenchufar un electrodoméstico,打开/关闭/启动/停止/连接/设置/插上或拔掉家电
+freidora,油炸锅
+robot de cocina,料理机；多功能厨师机
+exprimidor,榨汁机
+picadora,绞肉机；切碎机
+batidora,搅拌机
+timbre,门铃
+bombilla,灯泡
+linterna,手电筒
+interruptor,开关
+estropearse/averiarse un electrodoméstico,家电坏了/发生故障
+cartero,邮递员
+mensajero,快递员；信使
+empleado de correos,邮局工作人员
+buzón (de correos),邮箱；邮筒
+repartidor,配送员
+cartero comercial,商务邮递员
+envío,寄送；货件
+entrega,交付；配送
+gastos de envío,运费
+empresa de mensajería,快递公司
+correo ordinario/postal/aéreo,普通/邮政/航空邮件
+carta certificada/urgente,挂号/加急信
+giro postal/telegráfico,邮政/电汇汇款
+cheque/paquete postal,邮政支票/包裹
+enviar contra reembolso/con acuse de recibo,货到付款/回执寄送
+cuenta,账户；账单
+cheque (de viaje),旅行支票
+meter/poner dinero de la cuenta,往账户存钱
+sacar dinero de la cuenta,从账户取钱
+abrir/cerrar una cuenta,开/销账户
+caja fuerte,保险箱
+ahorro,储蓄
+cobro,收款；收费
+ingreso,收入；存款
+pago,付款
+hipoteca,抵押贷款；按揭
+crédito,信用；贷款额度
+préstamo,贷款
+talonario de cheques,支票簿
+accionista,股东
+inversor,投资者
+ingresos periódicos/extra/elevados,定期/额外/高收入
+cuenta corriente,活期账户
+ahorrar/cobrar/invertir dinero,存钱/收款/投资
+pedir/solicitar/conceder/pagar una hipoteca/un crédito/un préstamo,申请/批准/偿还按揭、信用贷款或贷款
+domiciliar un recibo/un pago,设置账单/付款自动扣款
+hacer un ingreso/una transferencia (bancaria),存款/银行转账
+ingresar/retirar dinero,存入/取出钱
+cobrar/firmar un cheque,兑现/签署支票
+clínica,诊所
+seguro médico,医疗保险
+ir de/estar en urgencias,去急诊/在急诊
+compañía de seguros,保险公司
+cubrir un accidente/una prestación,承保事故/福利项目
+vigilante,保安；警卫
+ladrón,小偷；盗贼
+asesino,杀人犯
+robo,盗窃；抢劫
+robar,偷；抢
+matar,杀死
+policía municipal/de tráfico,市政警察/交警
+inspector/agente (de policía),警察督察/警员
+comisario,警察局长；委员
+(servicio de) seguridad,安保服务
+sospechoso,嫌疑人
+secuestrador,绑架者
+banda de delincuentes/de criminales,犯罪团伙
+vigilancia,监控；警戒
+protección,保护
+seguridad (ciudadana),（公共）安全；治安
+delito,犯罪；罪行
+violación,强奸；侵犯
+atraco,持械抢劫；抢劫
+asesinato,谋杀
+secuestro,绑架
+pista,线索
+coartada,不在场证明
+huella,指纹；痕迹
+prueba,证据；测试
+medida de seguridad,安全措施
+retrato robot,嫌疑人合成画像
+poner una denuncia,报案；提出控告
+denunciar,举报；控告
+seguir/encontrar una pista,追查/找到线索
+detener/interrogar a un sospechoso/a un delincuente,逮捕/审问嫌疑人或罪犯
+confesar,坦白；供认
+psicólogo,心理学家
+voluntario de ONG,非政府组织志愿者
+servicios sociales,社会服务
+ayuda,帮助；援助
+colaboración,合作
+ayuda económica,经济援助
+cuidar,照顾；护理
+ayudar,帮助
+recibir/ofrecer una ayuda,接受/提供援助
+atender a personas mayores,照顾老年人
+asistente/trabajador social,社会工作助理/社会工作者
+monitor de actividades,活动辅导员；带队人员
+adaptación,适应
+integración,融入；融合
+marginación,边缘化
+menores,未成年人
+inmigrantes,移民
+personas mayores/discapacitadas/sin recursos (económicos),老年人/残障人士/经济困难者
+personas sin trabajo/sin hogar/en paro,失业者/无家可归者
+desempleo,失业
+inmigración,移民；移民现象
+tercera edad,老年阶段；第三年龄
+oficina del INEM,INEM就业局办公室
+apoyar,支持
+cooperar,合作；协作
+colaborar,合作
+perder el empleo (de forma temporal/indefinida),临时/无限期失去工作
+cobrar el subsidio de desempleo,领取失业救济金
+baños/aseos públicos,公共厕所
+W. C.,厕所；WC
+semáforo,交通信号灯
+farola,路灯
+contenedor de basuras/de vidrio/de papel/de plástico,垃圾/玻璃/纸/塑料回收箱
+compañía eléctrica/telefónica/de gas/de agua,电力/电话/燃气/供水公司
+servicio de limpieza/de recogida de basura,清洁/垃圾收集服务
+recoger la basura,收垃圾
+barrer las calles,扫街
+regar los jardines/las zonas verdes,给花园/绿地浇水
+llegar/pagar/deber/cobrar la factura/el recibo del agua/de la luz,收到/支付/欠/收取水费或电费账单
+escaleras mecánicas,自动扶梯
+descuento,折扣
+garantía,保修；保证
+hacer una devolución/un cambio,退货/换货
+salir de/ir de/poner/haber/tener rebajas,进入/去/实行/有打折季
+tener/hacer un descuento,有/给折扣
+subir/bajar el precio,涨价/降价
+estar de oferta,特价促销
+tener garantía,有保修
+tener/haber precios especiales,有特殊价格/优惠价
+comprar/vender por catálogo/por Internet,通过目录/互联网购买或销售
+establecimiento,营业场所；商铺
+comercio,商业；商店
+cadena,连锁；链条
+artículo,商品；文章；条款
+producto,产品
+mercancía,货物；商品
+distribución,分销；分布
+reparto,配送；分发
+clientela,顾客群
+consumidor,消费者
+etiqueta,标签
+alarma,警报；防盗器
+horario comercial/continuo,营业时间/连续营业制
+dar/pedir la vez,排队取号/询问轮到谁
+poner una reclamación,提出投诉
+pedir el libro de reclamaciones,索要投诉簿
+echar un vistazo,看一眼；浏览
+hacerse una idea,形成大致印象
+ver escaparates,逛橱窗；看橱窗
+perder/ganar clientes,失去/赢得客户
+ropa interior/de verano/de invierno/de deporte,内衣/夏装/冬装/运动服
+zapatos planos/de tacón,平底鞋/高跟鞋
+zapatillas de deporte,运动鞋
+vestido/traje de fiesta/de noche/de novia,礼服/晚礼服/婚纱
+minifalda,迷你裙
+falda corta/larga,短裙/长裙
+lana,羊毛
+algodón,棉；棉花
+lino,亚麻
+liso,纯色的；光滑的；直的
+de rayas,条纹的
+de cuadros,格子的
+quedar bien/mal/ancho/estrecho/grande/pequeño/largo/corto,穿着合适/不好/宽/窄/大/小/长/短
+coser,缝纫
+complementos,配饰；附件
+conjunto,套装；组合
+albornoz,浴袍
+bata,睡袍；工作服外罩
+camisón,女式睡衣；睡裙
+calzador,鞋拔
+aguja,针
+alfiler,别针
+hilo,线
+cremallera,拉链
+percha,衣架
+ropa de temporada/de calle/de cama/de montaña,当季服装/外出服/床上用品/登山服
+zapatos abiertos/cerrados/de fiesta,露趾/包头/礼服鞋
+estampado,印花；图案
+cosido/descosido,缝好的/开线的
+arrugado,皱的
+doblado,折叠的
+encoger,缩水
+darse de sí,撑大；变松
+limpiar en seco,干洗
+llevar al tinte,送去干洗/染洗店
+quedar ajustado/apretado/amplio/flojo,合身/紧/宽松/松垮
+apretar los zapatos/la cintura,鞋/腰部勒紧
+estar pasado de moda,过时；不时髦
+carro/carrito/cesta/bolsa (de la compra),购物车/篮/购物袋
+(sección de) congelados/lácteos/bebidas,冷冻/乳制品/饮料区
+loncha de jamón/de queso,一片火腿/奶酪
+trozo de tarta/de pan,一块蛋糕/面包
+estar malo/caducado,变质/过期
+tener/estar de oferta/de promoción,正在特价/促销
+producto natural/alimenticio,天然产品/食品
+alimento básico/nutritivo,基本/营养食品
+alimento/comida pesada/ligera/sin conservantes/sin colorantes,油腻/清淡/无防腐剂/无色素食品
+bajo en calorías/en sal/en azúcar,低热量/低盐/低糖
+rico en calorías/en vitaminas/en proteínas/en fibra/en calcio,富含热量/维生素/蛋白质/纤维/钙
+llevar/hacer el pedido,下/处理订单
+cambio,零钱；更换
+vuelta,找零；返回
+pagar/cobrar intereses,支付/收取利息
+pasar por (la) caja,去收银台结账
+factura,发票
+recibo,收据；账单
+presupuesto,预算；报价
+condiciones de financiación/de pago,融资/付款条件
+pagar a plazos/al contado,分期/现金一次性付款
+dejar una señal,支付定金
+hacer/pedir una factura/un recibo/un presupuesto,开/索要发票、收据或报价
+salir/ser gratis,免费；不花钱
+dos por (el precio de) uno,买一送一
+tener/solicitar tarjeta de cliente/de fidelidad,拥有/申请会员卡或忠诚卡
+seguro médico/de enfermedad/público/privado,医疗/疾病/公共/私人保险
+tener diarrea/cáncer/sida,腹泻/癌症/艾滋病
+ponerse enfermo/malo/bien,生病/恢复健康
+tener buena/mala salud,健康好/差
+cuidar/curar a un enfermo,照顾/治愈病人
+hacer (un) régimen,节食；进行饮食疗法
+estar sano/de baja,健康/病休中
+diagnóstico,诊断
+tratamiento,治疗
+faringitis,咽炎
+diabetes,糖尿病
+bronquitis,支气管炎
+neumonía,肺炎
+depresión,抑郁；抑郁症
+tener la tensión alta/baja,高血压/低血压
+tener el colesterol alto,胆固醇高
+tener azúcar,血糖高；有糖尿病
+ataque al corazón/epiléptico/de ansiedad,心脏病发作/癫痫发作/焦虑发作
+enfermedad crónica/leve/grave/terminal/mental/contagiosa/hereditaria,慢性/轻微/严重/终末期/精神/传染性/遗传性疾病
+atender a un enfermo,照料病人
+contagiar(se),传染；被传染
+transmitir,传播；传染
+curativo,治疗性的；有疗效的
+medicinal,药用的；医疗的
+terapéutico,治疗的；疗法的
+perjudicial,有害的
+beneficioso,有益的
+diagnosticar,诊断
+cuidarse,照顾自己；保重
+reponer fuerzas,恢复体力
+padecer/sufrir/pasar una enfermedad,患/经历疾病
+coger/contagiar un virus/un catarro,感染病毒/感冒
+dar/sufrir un infarto/una parálisis/una reacción alérgica/un desmayo,发生心梗/瘫痪/过敏反应/晕厥
+estar en coma,昏迷中
+estar a régimen/a dieta,正在节食
+tener una salud de hierro/a prueba de bomba,身体非常健康；铁打般健康
+hacerse un empaste,补牙
+perder el apetito/las ganas de comer,失去食欲
+quemadura,烧伤
+corte,割伤；切口
+herida,伤口
+caer(se),跌倒
+dar(se) un golpe,撞一下；受撞击
+quemar(se)/cortar(se) un dedo/una mano,烧伤/割伤手指或手
+hacerse una herida,弄伤；造成伤口
+romperse una pierna/un brazo,摔断腿/胳膊
+adelgazar,减肥；变瘦
+engordar,增肥；变胖
+escayolar,打石膏
+vendar,包扎
+herida grave/profunda/superficial/leve,严重/深/浅/轻微伤口
+tener/quedar una cicatriz,留下/有疤痕
+curar(se) una herida,伤口愈合/处理伤口
+tener un tirón/una contractura (muscular),肌肉拉伤/挛缩
+hacerse un esguince,扭伤
+torcerse un tobillo,扭伤脚踝
+dar puntos,缝针
+poner una escayola/una venda/un esparadrapo/una gasa,打石膏/缠绷带/贴胶布/敷纱布
+ganar/perder peso,增重/减重
+estar agotado/estresado/resfriado/mareado,筋疲力尽/有压力/感冒/头晕
+síntoma,症状
+cansancio,疲劳
+debilidad,虚弱
+mareos,头晕
+náuseas,恶心
+fiebre alta/baja,高烧/低烧
+vomitar,呕吐
+marearse,头晕；晕车/晕船
+sentir cansancio/dolor,感到疲劳/疼痛
+estar deprimido/decaído,感到抑郁/低落
+tener ansiedad/escalofríos/mareos/náuseas/malestar/molestias,焦虑/发冷/头晕/恶心/不适
+enfermo,病人；生病的
+centro de salud,社区卫生中心
+médico/hospital/farmacia de guardia,值班医生/医院/药房
+análisis de sangre/de orina,血液/尿液检查
+dentista,牙医
+ginecólogo,妇科医生
+oculista,眼科医生
+cirujano,外科医生
+paciente,患者
+pedir hora/cita,预约时间/门诊
+hacerse una revisión,做体检
+hacerse unas pruebas/un control/un análisis de sangre/de orina,做检查/化验/血液或尿液分析
+ingresar en un hospital/en urgencias,住院/进入急诊
+dar de alta/baja,办理出院/病休
+dar el alta/la baja (médica),开出出院/病假证明
+especialista,专科医生；专家
+ambulatorio,门诊中心
+consultorio,诊所；诊室
+sanatorio,疗养院；医院
+radiografía,X光片
+escáner,扫描；扫描仪
+TAC,CT扫描（TAC）
+transfusión de sangre,输血
+ecografía,超声检查
+chequeo,体检；全面检查
+consulta del médico/del dentista/del ginecólogo,医生/牙医/妇科诊室；问诊
+asistencia médica/domiciliaria,医疗/上门护理
+pediatra,儿科医生
+otorrino(laringólogo),耳鼻喉科医生
+traumatólogo,创伤科/骨科医生
+anestesista,麻醉医生
+trabajador/asistente social,社会工作者/助理
+botiquín,急救箱
+camilla,担架；诊疗床
+cirugía,外科；手术
+revisión ginecológica/dental/anual,妇科/牙科/年度检查
+hospitalizar,使住院；住院治疗
+operar,手术；操作
+anestesiar,麻醉
+curar,治愈；治疗
+tomar(se) la tensión,量血压
+tirita,创可贴
+alcohol,酒精
+agua oxigenada,双氧水；过氧化氢
+termómetro,温度计
+antibiótico,抗生素
+aspirina,阿司匹林
+gotas,滴剂；滴液
+vacuna,疫苗
+pastilla,药片
+darse una crema,涂抹药膏/面霜
+echarse unas gotas,滴药水
+ponerse una vacuna/el termómetro,打疫苗/夹体温计
+hacer/dar una receta (médica),开处方
+inyección,注射；针剂
+pomada,药膏；软膏
+calmante,止痛药；镇静剂
+supositorio,栓剂
+analgésico,镇痛药
+antiinflamatorio,抗炎药
+prospecto,药品说明书
+contraindicaciones,禁忌症
+efectos secundarios,副作用
+síntomas,症状
+gasa,纱布
+venda,绷带
+esparadrapo,医用胶布
+medicamento genérico/homeopático/contraindicado,仿制/顺势疗法/禁忌药物
+dosis mínima/diaria/recomendada,最低/每日/推荐剂量
+vacunarse,接种疫苗
+recetar,开药；开处方
+cepillo,刷子；梳子
+peine,梳子
+secador de pelo,吹风机
+zapatillas,拖鞋；运动鞋
+gorro de ducha/baño,浴帽/泳帽
+espuma/gel/maquinilla/cuchilla de afeitar,剃须泡沫/凝胶/剃须刀/刀片
+pastilla de jabón,一块肥皂
+perfume,香水
+esencia,精华；香精
+sales de baño,浴盐
+hilo/seda dental,牙线
+tijeras,剪刀
+lima,锉刀；指甲锉
+cortaúñas,指甲钳
+bañera de hidromasaje,按摩浴缸
+jacuzzi,按摩浴池；Jacuzzi
+cabina de ducha,淋浴房
+pelo graso/sano/brillante,油性/健康/有光泽的头发
+dientes blancos/amarillentos/sanos,洁白/发黄/健康的牙齿
+darse una ducha caliente/fría/rápida,洗热水/冷水/快速淋浴
+darse un baño caliente/frío/relajante/de espuma,泡热水/冷水/放松/泡泡浴
+cortarse/limarse/cepillarse las uñas,剪/锉/刷指甲
+enredarse/desenredarse/recogerse/cepillarse el pelo,梳开/扎起/梳理头发
+barra de labios,口红
+corte de pelo,发型；理发
+peinado,发型；梳妆
+pintarse los ojos/los labios,画眼妆/涂口红
+tener las manos/la piel suave,手/皮肤柔软
+cortarse el pelo,剪头发
+melena,长发；头发
+maquillaje,化妆；彩妆
+colorete,腮红
+sombra de ojos,眼影
+rímel,睫毛膏
+laca,发胶；定型喷雾
+gel fijador,定型啫喱
+gomina,发蜡/强力发胶
+masaje/hidromasaje,（水疗）按摩
+sauna,桑拿
+estética,美容；美学
+cosmética (natural),（天然）化妆品学/美容
+productos cosméticos,化妆品
+salón/centro de belleza,美容院/美容中心
+balneario,温泉疗养地；水疗中心
+manchas,斑点；污渍
+granos,痘痘；颗粒
+crema hidratante/suavizante/limpiadora/nutritiva/solar,保湿/柔润/洁面/滋养/防晒霜
+ponerse guapo,打扮漂亮
+cambiar de peinado/de aspecto,换发型/改变外貌
+mantenerse/conservarse bien/mal/joven,保持得好/差/年轻
+darse un masaje terapéutico/relajante,做治疗性/放松按摩
+recortarse el bigote/la barba,修剪胡子/络腮胡
+DNI (Documento Nacional de Identidad),西班牙国民身份证（DNI）
+visado,签证
+cheques de viaje,旅行支票
+equipaje,行李
+bolsa de aseo/de viaje,洗漱包/旅行袋
+exceso de equipaje,超重行李
+mapa de carreteras,公路地图
+plano turístico,旅游地图
+callejero,城市街道图
+anular/cambiar un billete,取消/改签票
+facturar/perder el equipaje/las maletas,托运/丢失行李
+hacer un crucero/un safari,乘邮轮/去游猎
+viaje de trabajo/de estudios/de negocios/de larga duración,工作/学习/商务/长期旅行
+viajar en familia/en grupo,家庭/团队旅行
+irse/marcharse/salir de puente/de fin de semana,周末或小长假出行
+hacer/contratar un viaje organizado,参加/购买跟团游
+subir(se) a/bajar(se) de un tren/un autobús/un avión,上/下火车、公交或飞机
+arena,沙；沙滩
+olas,海浪
+sandalias,凉鞋
+sombrilla,遮阳伞
+pelota,球
+buceador,潜水员
+tomar el sol,晒太阳
+pasear por la orilla,沿岸边散步
+jugar en la arena,在沙滩上玩
+montañero,登山者
+senderista,徒步者
+escalador,攀岩者
+cazador,猎人
+dar un/ir de paseo,散步；去散步
+hacer una marcha/una excursión,徒步行进/郊游
+hacer senderismo/escalada,徒步/攀岩
+registrar/inspeccionar las maletas/el equipaje,检查行李
+extraviar las maletas,遗失行李
+viaje de novios/de placer/de recreo/oficial,蜜月/休闲/娱乐/公务旅行
+turismo rural/de aventura/cultural/de montaña,乡村/探险/文化/山地旅游
+ruta,路线
+trayecto,路程；行程
+itinerario,行程安排；路线
+recorrer/atravesar/cruzar el océano/el país,穿越海洋/国家
+viajar en clase turista/en clase preferente/en primera (clase),乘经济舱/优选舱/头等舱旅行
+dar la vuelta al mundo,环球旅行
+pasar el verano,过夏天；度夏
+montar/organizar un viaje,策划/组织旅行
+cubo,桶
+pala,铲子
+rastrillo,耙子
+flotador,游泳圈
+zona nudista,裸体海滩区
+puesto de socorro,救护站
+paseo marítimo,海滨长廊
+bandera verde/amarilla/roja,绿/黄/红色旗帜
+darse un baño,洗澡；下水游泳
+ir de pesca,去钓鱼
+jugar a las palas/al vóley,打沙滩球拍/排球
+estar el agua fría/caliente/buena/limpia/sucia/transparente,水冷/热/适宜/干净/脏/清澈
+quemarse la espalda/los hombros,晒伤背部/肩膀
+monte,山地；荒野
+colina,小山；丘陵
+anorak,防寒夹克；羽绒/滑雪外套
+escalar,攀登；攀岩
+hacer alpinismo/descenso de barrancos,登山/峡谷运动
+hostal,旅馆；客栈
+pensión,小旅馆；食宿旅店
+tienda de campaña,帐篷
+recepción,接待处；前台
+recepcionista,前台接待员
+saco de dormir,睡袋
+manta,毯子
+nevera portátil,便携冰箱；保温箱
+ir de/hacer camping,露营
+haber servicio de habitaciones/sala de reuniones/instalaciones para minusválidos/aparcamiento,有客房服务/会议室/无障碍设施/停车场
+estar completo,客满
+haber plazas libres,有空位/空房
+albergue,青年旅舍；宿舍
+bungaló,平房；度假小屋
+parador,国营古堡酒店（parador）
+vestíbulo,大厅；门厅
+consigna,行李寄存处
+cama supletoria,加床
+colchoneta,垫子；睡垫
+acampar,扎营
+ir de acampada,去露营
+hacer una acampada,进行露营
+registrarse,登记；注册；入住
+alojarse en un hotel/en un apartamento,住在酒店/公寓
+dar a,朝向；通向
+tener vistas,有景观；看得到
+alquilar/alojarse en una cabaña/un bungaló/un apartamento,租/住小屋、平房或公寓
+montar/desmontar/recoger la tienda de campaña,搭/拆收帐篷
+autopista,高速公路
+vía,道路；轨道；线路
+andén,站台
+túnel,隧道
+paso de cebra/de peatones,斑马线/人行横道
+carril bus/bici,公交专用道/自行车道
+haber caravana/(un) atasco/un embotellamiento,有车流/堵车/拥堵
+ir/salir/llegar con retraso,晚点出发/到达
+parar,停下；停车
+viajero,旅客
+tranvía,有轨电车
+moto,摩托车
+camión,卡车
+asiento,座位
+fila,排；行
+maletero,后备箱；行李架
+cinturón,安全带；腰带
+conducir,驾驶
+aparcar,停车
+girar,转弯
+subir(se) a/montar(se) en/bajar(se) de una bicicleta/una moto/un coche,上/骑/下自行车、摩托或汽车
+hacer transbordo,换乘
+perder el tren/el autobús,错过火车/公交
+barca,小船
+piragua,皮划艇；独木舟
+marinero,水手
+capitán,船长；机长；队长
+navegar,航行；浏览
+subir(se) a/bajar(se) de un barco,上/下船
+helicóptero,直升机
+globo,气球；热气球
+ala delta,悬挂式滑翔翼
+parapente,滑翔伞
+terminal,航站楼；终端
+punto de información/de encuentro,信息点/集合点
+tarjeta/puerta de embarque,登机牌/登机口
+sala de llegadas/de embarque,到达厅/登机厅
+ventanilla,窗口；舷窗
+despegar,起飞
+aterrizar,着陆
+hacer escala,经停；中途停留
+facturar/recoger el equipaje/las maletas,托运/领取行李
+subir(se) a/bajar(se) de un avión,上/下飞机
+circulación,交通；流通
+tráfico,交通；车流
+policía de tráfico,交通警察
+accidente de tráfico/de coche,交通/汽车事故
+haber/tener/ver un accidente,发生/遭遇/看到事故
+gasolinera,加油站
+gasolina sin plomo/normal/súper,无铅/普通/高标号汽油
+gasoil,柴油
+estar estropeado,坏了；故障
+arreglar el coche,修车
+seguro del coche/obligatorio,汽车保险/强制保险
+autovía,高速公路；快速路
+carretera nacional/comarcal/principal/secundaria,国道/地区道路/主干道/次要道路
+autopista de peaje,收费高速公路
+curva,弯道；曲线
+cruce,交叉路口；十字路口
+rotonda,环岛
+bache,坑洼
+área de descanso,休息区
+peaje,收费站；通行费
+autobús urbano/interurbano,市内/城际公交
+IBERIA,伊比利亚航空（IBERIA）
+RENFE (Red Nacional de Ferrocarriles Españoles),西班牙国家铁路（RENFE）
+haber (mucho/poco) tráfico/circulación/movimiento,交通/车流量大或小
+cruzar la frontera,越过边境
+pasar la aduana,过海关
+pasar un control de carreteras/de aduana,通过公路/海关检查
+pasajero,乘客
+peatón,行人
+coche de carreras/oficial/particular,赛车/公务车/私家车
+(número de) matrícula,车牌号
+compartimento,车厢隔间；舱室
+vagón,车厢
+arrancar,启动；发动
+acelerar,加速
+frenar,刹车；减速
+adelantar,超车
+poner el intermitente,打转向灯
+tocar el claxon,按喇叭
+circular en coche,开车行驶
+llevar una moto,骑摩托车
+manejar,驾驶；操作
+barco de pasajeros/de vela/pesquero,客船/帆船/渔船
+ferry,渡轮
+tripulación,船员；机组人员
+marítimo,海上的；海事的
+embarcar/desembarcar,登船/下船
+hacer un crucero,乘邮轮
+puente/transporte/accidente aéreo,空中桥梁/航空运输/空难
+vuelo chárter/directo/con escalas/nacional/internacional/de líneas regulares,包机/直飞/经停/国内国际/定期航班
+pilotar,驾驶飞机；领航
+anunciar/cancelar/retrasar un vuelo,宣布/取消/延误航班
+señal (de tráfico),交通标志
+carné por puntos,积分驾驶证
+normas/permiso de circulación,交通规则/行驶许可证
+casco/cinturón/silla/chaleco homologado,认证头盔/安全带/儿童座椅/反光背心
+ceda el paso,让行
+prohibido aparcar/girar,禁止停车/转弯
+dirección obligatoria/prohibida,必须/禁止通行方向
+curva/cruce peligroso,危险弯道/路口
+ponerse el cinturón de seguridad/el casco,系安全带/戴头盔
+aparcar en zona azul/verde/prohibida,停在蓝区/绿区/禁停区
+renovar/sacar(se) el carné de conducir,续期/考取驾驶证
+renovar el permiso de circulación,更新车辆行驶证
+reducir/aumentar la velocidad,降低/提高速度
+poner/pagar una multa,开/缴罚款
+ceder el paso,让行
+perder el control,失去控制
+pinchar(se) (una rueda),轮胎扎破
+tener un pinchazo,爆胎；轮胎漏气
+quedarse sin gasolina/sin frenos,没油/刹车失灵
+producirse un accidente,发生事故
+chocar contra algo,撞上某物
+salirse de la carretera,冲出道路
+taller,修理厂；车间
+grúa,拖车；起重机
+ayuda en carretera,道路救援
+rueda de repuesto,备胎
+arreglo,修理；修补
+reparación,维修
+revisión anual/periódica/a fondo,年度/定期/全面检查
+cambiar el aceite/una rueda/una pieza,换机油/轮胎/零件
+arreglar un pinchazo,修补轮胎
+indemnización,赔偿金
+pagar/contratar un seguro,支付/购买保险
+tener el coche asegurado/un seguro,车辆已投保/有保险
+economía,经济；经济学
+economista,经济学家
+pobreza,贫困
+riqueza,财富
+Tercer Mundo,第三世界
+países ricos/pobres/en vías de desarrollo,富国/穷国/发展中国家
+tener/llevar cambio/suelto,有零钱/零钞
+pagar en metálico/en efectivo,现金付款
+gastar,花费；消费
+subir/bajar los intereses,利率上升/下降
+gasto,开支；费用
+ahorros,储蓄；积蓄
+ingresos,收入
+ganancias,收益；利润
+pérdidas,损失；亏损
+moneda extranjera,外币
+cheque de viaje,旅行支票
+recursos (económicos),经济资源
+crisis financiera,金融危机
+enviar/mandar dinero,汇钱；寄钱
+prestar/dejar dinero,借钱给人
+hacer un giro (postal)/una transferencia,办理邮政汇款/转账
+bolsa,证券交易所；股市
+subir/bajar la bolsa,股市上涨/下跌
+acción,股票；行动
+participación,股份；参与
+tipo de interés (fijo/variable),（固定/浮动）利率
+inversión,投资
+invertir (en),投资于
+ahorrar,储蓄
+tener un interés del + [número cardinal] + por ciento,利率为[基数词]％
+Cámara de Comercio,商会
+pagar impuestos,纳税
+Ministerio de Hacienda,财政部
+hacer/presentar la declaración de la renta,填写/提交个人所得税申报
+inspector de hacienda,税务稽查员
+inspección,检查；稽查
+denunciar/investigar/luchar contra el delito fiscal,举报/调查/打击税务犯罪
+venta,销售
+importación,进口
+exportación,出口
+deber dinero,欠钱
+pagar en metálico/con cheque,现金/支票付款
+tener/hacer (un) descuento,有/给折扣
+subir/bajar/aumentar/disminuir el precio,价格上涨/下降/增加/减少
+importar,进口
+exportar,出口
+márquetin,市场营销
+cartel,海报；标牌
+folleto,宣传册；传单
+catálogo,目录；产品册
+exhibición,展览；展示
+publicitario,广告的；宣传的
+consumo,消费
+competencia,竞争；竞争对手
+sociedad de consumo,消费社会
+comerciante,商人；零售商
+comercialización,商业化；营销
+pedido,订单
+representante,代表；代理人
+comercio exterior/interior/internacional/legal/ilegal/justo,对外/国内/国际/非法或合法/公平贸易
+obtener un descuento,获得折扣
+negociar,谈判
+hacer una compra/una venta/una inversión,购买/销售/投资
+tener una deuda,有债务
+mercancía nacional/internacional/extranjera,国内/国际/外国货物
+entrada/salida/comercio/circulación/importación/exportación/transporte de mercancías,货物的进入/输出/贸易/流通/进出口/运输
+campaña publicitaria,广告活动
+lanzamiento de un producto,产品发布
+estudio de mercado,市场调研
+propaganda,宣传；宣传品
+buzoneo,投递广告传单
+pancarta,横幅；标语牌
+pegatina,贴纸
+avisar,通知；提醒
+publicar,出版；发布
+hacer publicidad,做广告
+estar de oferta/promoción,正在特价/促销
+organización,组织；机构
+compañía,公司；陪伴
+agencia,机构；代理公司
+producción,生产
+fabricación,制造
+puesto de trabajo,工作岗位
+huelga,罢工
+producir,生产
+fabricar,制造
+asociación,协会；组织
+gestión,管理；经营
+cargo,职位；职务
+plantilla (de trabajadores),员工队伍；模板
+jefe de personal,人事主管
+nave industrial,工业厂房
+estar de baja,病休；停工
+estar en crisis/en crecimiento,处于危机/增长中
+industria,工业
+agricultura,农业
+ganadería,畜牧业
+pesca,渔业；捕鱼
+construcción,建筑业；建设
+transportes,运输业
+materia prima,原材料
+energía,能源
+pescador,渔民
+barco de pesca,渔船
+actividad/desarrollo/crecimiento industrial,工业活动/发展/增长
+cristalería,玻璃制品业；玻璃器皿
+elaboración,制作；加工
+explotación,开发；开采；经营
+carbón,煤
+petróleo,石油
+recursos naturales,自然资源
+revolución industrial,工业革命
+jefe de obra,工地负责人；施工经理
+técnico,技术员；技术的
+constructor,建筑商；施工方
+aparejador,建筑技术师；工料测量师
+industria textil/siderúrgica,纺织/钢铁工业
+energía nuclear/solar/eléctrica,核能/太阳能/电能
+campesino,农民；乡下人
+tractor,拖拉机
+ganado,牲畜
+finca,地产；农庄
+huerta,菜园；灌溉农田
+huerto,果蔬园；菜园
+pescado fresco/congelado/azul/blanco/de mar/de río,鲜/冻/油脂鱼/白肉鱼/海鱼/淡水鱼
+análisis,分析
+método,方法
+materia,物质；科目
+invento,发明
+descubrimiento,发现
+experimento,实验
+conocer,了解；认识
+inventar,发明
+físico,物理学家；物理的
+químico,化学家；化学的
+matemático,数学家；数学的
+astrónomo,天文学家
+investigación,研究；调查
+investigador,研究人员
+ley,法律；定律
+principio,原则；原理
+fórmula,公式
+símbolo,符号
+teoría,理论
+capacidad/método/técnica de análisis,分析能力/方法/技术
+nuevas tecnologías,新技术
+avance científico/tecnológico,科学/技术进步
+objeto/método/técnica de estudio/de análisis,研究/分析对象、方法或技术
+área de estudio/de conocimiento,研究/知识领域
+analizar,分析
+investigar,研究；调查
+desarrollar/introducir una técnica,开发/引入一种技术
+demostrar/confirmar una hipótesis,证明/确认假设
+basarse en una investigación/un estudio,基于一项研究
+ser objeto de estudio/de análisis,成为研究/分析对象
+ecología,生态学
+biología,生物学
+veterinaria,兽医学
+genética,遗传学
+biólogo,生物学家
+veterinario,兽医
+ecológico,生态的；环保的
+especie,物种；种类
+molécula,分子
+neurona,神经元
+célula,细胞
+genético,遗传的；基因的
+biológico,生物的
+círculo,圆；圆圈
+triángulo,三角形
+sumar,加；相加
+restar,减；相减
+multiplicar,乘；相乘
+dividir,除；分割
+cálculo,计算；微积分
+álgebra,代数
+estadística,统计学；统计数据
+número par/impar/decimal,偶数/奇数/小数
+cifra,数字；位数
+línea recta/diagonal/horizontal/vertical,直线/对角线/水平线/垂直线
+fórmula (matemática),数学公式
+ángulo (recto),（直）角
+calcular una cantidad/un porcentaje con precisión/mentalmente,精确/心算数量或百分比
+teclado,键盘
+tecla,按键；键
+pantalla,屏幕
+cibercafé,网吧
+impresora láser/en color,激光/彩色打印机
+hacer clic (con el ratón),（用鼠标）点击
+pulsar,按；按下
+abrir/cerrar/guardar/eliminar un documento,打开/关闭/保存/删除文件
+copiar/cortar/pegar/insertar/seleccionar/buscar una palabra,复制/剪切/粘贴/插入/选择/查找单词
+instalar/desinstalar un programa,安装/卸载程序
+usuario,用户
+bajar(se)/descargar(se) un programa,下载程序
+procesador de textos,文字处理软件
+base de datos,数据库
+hoja de cálculo,电子表格
+disco duro,硬盘
+monitor,显示器
+altavoz,扬声器
+módem,调制解调器
+pantalla plana,平板显示器
+inteligencia artificial,人工智能
+enlace,链接
+escritorio,桌面
+cursor,光标
+pinchar,点击；点选
+hacer doble clic,双击
+arrastrar,拖动
+cambiar el tipo/el tamaño de letra,更改字体/字号
+grabar un archivo,保存文件
+maximizar/minimizar una ventana/un documento,最大化/最小化窗口或文档
+configurar,配置；设置
+cambiar la configuración,更改设置
+(re)iniciar/bloquear(se) el ordenador,重启/电脑死机
+física,物理学
+química,化学
+electricidad,电；电学
+oro,金
+plata,银
+electrónico,电子的
+orgánico,有机的
+inorgánico,无机的
+símbolo/elemento químico,化学符号/元素
+estado sólido/líquido/gaseoso,固态/液态/气态
+congelar(se),冷冻；结冰
+evaporarse,蒸发
+átomo,原子
+aluminio,铝
+oxígeno,氧
+nitrógeno,氮
+formulación,配方；公式化
+fórmula química,化学式
+microscopio,显微镜
+dureza,硬度
+elasticidad,弹性
+fragilidad,脆性
+sociología,社会学
+historia,历史
+sociólogo,社会学家
+historiador,历史学家
+político,政治人物；政治的
+ciudadano,公民
+comunidad,社区；共同体
+club,俱乐部
+historia antigua/medieval/universal/contemporánea/del arte,古代史/中世纪史/世界史/当代史/艺术史
+derechos,权利
+deberes,义务；职责
+crisis,危机
+progreso,进步
+privado,私人的；私有的
+cortesía,礼貌；礼仪
+amabilidad,友善；亲切
+educado,有教养的；有礼貌的
+buena persona,好人
+respetar,尊重；遵守
+igualdad/desigualdad,平等/不平等
+norma,规范；规则
+poder,权力；能力
+rebeldía,反叛；叛逆
+clase social/trabajadora,社会阶层/工人阶级
+minoría/mayoría étnica/social/religiosa,族群/社会/宗教少数或多数
+derechos humanos/básicos/constitucionales/del ciudadano,人权/基本权利/宪法权利/公民权利
+común,共同的；普通的
+comunitario,社区的；共同体的
+civil,民事的；公民的
+estatal,国家的；国有的
+integrar(se),融入；整合
+ser de clase alta/media/baja,属于上层/中产/下层阶级
+perdón,原谅；宽恕
+compasión,同情；怜悯
+convivencia,共处；共同生活
+cooperación,合作
+integración social,社会融入
+discriminación,歧视
+tolerancia,宽容
+hipocresía,虚伪
+agresividad,攻击性；侵略性
+buenas maneras,良好礼仪
+buenos modales,良好举止
+justicia/injusticia social,社会正义/不公
+distribución de la riqueza,财富分配
+nación,民族；国家
+estado,国家；状态
+provincia,省
+distrito,区；行政区
+ministro (de Interior/de Defensa/de Educación/de Asuntos Exteriores),（内政/国防/教育/外交）部长
+jefe de Estado,国家元首
+vicepresidente,副总统；副主席
+alcalde,市长
+senado,参议院
+parlamento,议会
+Ministerio,部；政府部门
+Unión Europea (UE),欧盟（UE）
+Organización de las Naciones Unidas (ONU),联合国（ONU）
+embajador,大使
+cónsul,领事
+embajada,大使馆
+consulado,领事馆
+república,共和国
+monarquía,君主制
+democracia,民主；民主制度
+dictadura,独裁；独裁制度
+partido de izquierdas/de derechas/de centro/de la oposición,左翼/右翼/中间派/反对党
+comunista,共产主义的；共产党人
+socialista,社会主义的；社会主义者
+demócrata,民主主义者；民主党人
+liberal,自由主义的；自由派
+republicano,共和主义的；共和党人
+gobernar,执政；治理
+diputado,议员；众议员
+senador,参议员
+parlamentario,议会议员；议会的
+diplomático,外交官；外交的
+dictador,独裁者
+candidato,候选人
+líder,领导者
+votante,选民
+electorado,选民群体
+referéndum,公投；全民公决
+papeleta,选票
+urna,投票箱
+voto (en blanco/nulo),空白票/废票
+abstención,弃权
+jornada de reflexión,选举前静默期；反思日
+colegio/calendario/campaña/compromiso/discurso/periodo/propaganda/programa/mesa electoral,投票站/选举日历/竞选/承诺/演说/周期/宣传/纲领/选举委员会
+poder judicial/legislativo/político,司法权/立法权/政治权力
+gobierno nacionalista/independiente/central/democrático/progresista/liberal/totalitario,民族主义/独立/中央/民主/进步/自由/极权政府
+comunismo,共产主义
+fascismo,法西斯主义
+anarquía,无政府状态；无政府主义
+marxismo,马克思主义
+socialismo,社会主义
+hacer campaña,竞选
+votar,投票
+abstenerse,弃权
+elecciones generales/autonómicas/municipales/locales,全国/自治区/市政/地方选举
+celebrar/convocar/ganar/perder/presentarse a (las) elecciones,举行/宣布/赢得/输掉/参加选举
+pertenecer a/ser de un partido político,属于某政党
+dar un golpe de Estado,发动政变
+constitución,宪法
+terrorista,恐怖分子
+terrorismo,恐怖主义
+grupo terrorista,恐怖组织
+atentado terrorista,恐怖袭击
+ser legal/ilegal,合法/非法
+ir a la cárcel,坐牢
+criminal,罪犯；犯罪的
+testigo,证人
+víctima,受害者
+atentado,袭击；恐怖袭击
+inocente,无辜的
+culpable,有罪的；罪犯
+tribunal,法院；法庭
+juicio,审判；诉讼
+sentencia,判决；句子
+fiscal,检察官
+acusado,被告；被指控者
+jurado (popular),（陪审团）陪审员
+Tribunal (Constitucional/Supremo),宪法法院/最高法院
+derecho civil/penal,民法/刑法
+mafia,黑手党
+banda organizada/terrorista/armada/de delincuentes,有组织/恐怖/武装/犯罪团伙
+red de prostitución/de tráfico de armas/de falsificación de documentos,卖淫/武器走私/伪造文件网络
+separación de poderes,权力分立
+abogado defensor/criminalista/laboralista,辩护/刑事/劳动法律师
+condenar a [cardinal] años de cárcel/pena de muerte,判处[基数词]年监禁/死刑
+secuestrar a/asesinar a/atentar contra alguien,绑架/谋杀/袭击某人
+aprobar/reformar una ley,通过/改革法律
+obedecer una ley,遵守法律
+ser justo/injusto,公平/不公平
+ganar/perder un juicio,赢/输官司
+cometer/detener por/estar acusado de un delito de agresión/de malos tratos/de tráfico de drogas,实施/因……被捕/被指控犯袭击、虐待或贩毒罪
+general,将军；一般的
+militar,军人；军事的
+soldado,士兵
+guerra civil/mundial/de independencia,内战/世界大战/独立战争
+pistola,手枪
+bomba,炸弹
+estar en guerra,处于战争状态
+batalla,战役；战斗
+fusil,步枪
+cañón,大炮
+bala,子弹
+espada,剑
+aliado,盟友；同盟的
+submarino,潜艇
+tanque,坦克
+servicio militar (obligatorio),（义务）兵役
+ejército profesional,职业军队
+tratado de paz,和平条约
+disparar,射击；开枪
+luchar,战斗；斗争
+defender,保卫；防御
+atacar,攻击
+enfrentarse a,面对；对抗
+declarar la guerra,宣战
+firmar la paz,签署和平协议
+imaginación,想象力
+obra/galería de arte,艺术作品/画廊
+arquitectura,建筑学；建筑风格
+arte/estilo clásico/moderno,古典/现代艺术或风格
+crear,创造
+diseñar,设计
+fotografiar,拍摄；摄影
+artístico,艺术的
+original,原创的；原始的
+ser un genio,是天才
+obra representativa/conocida/desconocida,代表性/知名或不知名作品
+creación,创作；创造
+creatividad,创造力
+inspiración,灵感
+belleza,美；美丽
+pureza,纯净；纯洁
+armonía,和谐
+colorido,色彩；丰富色彩
+equilibrio,平衡
+sensibilidad,敏感性；感受力
+romanticismo,浪漫主义
+clasicismo,古典主义
+cubismo,立体主义
+artes plásticas/escénicas,视觉艺术/表演艺术
+crítico de arte/de cine,艺术/电影评论家
+arte contemporáneo/abstracto/gótico/oriental,当代/抽象/哥特/东方艺术
+estilo arquitectónico/literario/propio/definido/particular,建筑/文学/个人/鲜明/独特风格
+arte/autor/estilo futurista/modernista/impresionista,未来主义/现代主义/印象主义的艺术、作者或风格
+componer un poema/una canción,创作诗/歌曲
+baile,舞蹈
+bailarín,舞者
+ballet,芭蕾
+orquesta,管弦乐团
+grupo (musical),乐队
+letra (de una canción),歌词
+compositor,作曲家
+director de orquesta,乐团指挥
+guitarrista,吉他手
+pianista,钢琴家
+violinista,小提琴家
+festival,节日；音乐节
+coreografía,编舞
+acto,行为；活动；幕
+escena,场景；舞台一幕
+(compañía de) danza clásica/contemporánea,古典/现代舞团
+clarinete,单簧管
+saxofón,萨克斯管
+trompeta,小号
+contrabajo,低音提琴
+violonchelo,大提琴
+batería,鼓；鼓组
+ritmo,节奏
+compás,拍子；节拍
+música de cámara/barroca/tradicional/popular/religiosa,室内乐/巴洛克/传统/民间/宗教音乐
+sinfonía,交响曲
+himno,颂歌；国歌
+nota (musical),音符
+do,do 音
+re,re 音
+mi,mi 音
+fa,fa 音
+la,la 音
+si,si 音
+componer,作曲；组成
+dirigir,指挥；领导
+grabar,录制；记录
+actuar,表演；行动
+diseñador,设计师
+escultor,雕塑家
+escultura,雕塑
+pintar un cuadro/un paisaje/un retrato,画画/风景/肖像
+construir un acueducto/una muralla/una mezquita/una sinagoga,建造渡槽/城墙/清真寺/犹太教堂
+pirámide,金字塔
+fachada,立面；建筑正面
+feria/muestra de arte,艺术博览会/展览
+estilo/obra/conjunto arquitectónico/escultórico/pictórico,建筑/雕塑/绘画风格、作品或整体
+arte/estilo románico/gótico/barroco/impresionista/expresionista/cubista/realista/abstracto,罗马式/哥特式/巴洛克/印象派/表现主义/立体主义/现实主义/抽象艺术或风格
+estatua/escultura de bronce/de mármol/de barro,青铜/大理石/陶土雕像或雕塑
+ciudad/conjunto/zona monumental,纪念性城市/建筑群/区域
+hacer/dibujar un esquema/un plano/un proyecto,画草图/平面图/项目图
+pintar al óleo/a la acuarela,画油画/水彩画
+desarrollar/imitar un estilo,发展/模仿一种风格
+poeta,诗人
+novelista,小说家
+traductor,译者；翻译家
+personaje,人物；角色
+protagonista,主人公；主角
+poema,诗
+biografía/autobiografía,自传/传记
+literatura clásica/moderna,古典/现代文学
+novela policiaca/histórica/de amor/de ciencia ficción/de aventuras,侦探/历史/爱情/科幻/冒险小说
+contar (la historia de),讲述（……的故事）
+tratar de,关于；讲的是
+autor,作者
+autor teatral,剧作家
+narrador,叙述者
+prosa,散文
+verso,诗句；韵文
+narración,叙述；故事
+monólogo,独白
+argumento,情节；论点
+tema,主题
+relato,故事；叙事
+leyenda,传说
+literatura contemporánea/medieval/romántica/realista,当代/中世纪/浪漫主义/现实主义文学
+obra/texto/concurso/revista/premio literario,文学作品/文本/竞赛/杂志/奖项
+estilo elegante/cuidado/ágil/directo,优雅/严谨/流畅/直接的风格
+novela rosa/negra,言情小说/黑色小说
+narrar,叙述
+describir,描述
+relatar,讲述；叙述
+rimar,押韵
+recitar,朗诵
+editar/imprimir/publicar/distribuir/agotarse un libro,编辑/印刷/出版/发行/售罄一本书
+interpretar/analizar/resumir un texto,解读/分析/概括文本
+citar/copiar textualmente,逐字引用/抄写
+cámara digital,数码相机
+foto(grafía) digital/en color/en blanco y negro,数码/彩色/黑白照片
+flash,闪光灯
+zum,变焦；zoom
+tomar/sacar una foto,拍照
+hacer una copia,制作副本；冲印
+imprimir,打印；印刷
+fotografía artística/abstracta/científica/de estudio,艺术/抽象/科学/棚拍摄影
+retrato,肖像；人像
+primer plano,特写
+fondo,背景
+enfocar,对焦
+apretar el botón,按按钮
+revelar una foto(grafía)/un carrete,冲洗照片/胶卷
+enmarcar,装框
+hacer una ampliación,放大照片
+día del espectador,观众优惠日
+espectáculo,演出；表演
+comedia,喜剧
+drama,戏剧；剧情片
+película policiaca/romántica/de amor/de terror/de risa/de ciencia ficción/de acción/de aventuras/de guerra/de dibujos animados,侦探/浪漫/爱情/恐怖/喜剧/科幻/动作/冒险/战争/动画电影
+película en versión original/doblada/subtitulada,原声/配音/字幕电影
+final feliz/triste/abierto,幸福/悲伤/开放式结局
+hacer una película,拍电影
+poner una película/una obra de teatro,放映电影/上演戏剧
+función,演出；场次
+sesión,场次；时段
+productor,制片人
+guionista,编剧
+largometraje,长片
+corto (metraje),短片
+iluminación,照明；灯光
+decorado,布景
+banda sonora,原声带
+efectos especiales,特效
+vestuario,服装；戏服
+secuencia,镜头段落；序列
+cámara lenta,慢动作
+plano general/de fondo,全景/背景镜头
+actuación,表演
+interpretación,演绎；解释
+tragedia,悲剧
+tragicomedia,悲喜剧
+obra/representación/temporada teatral,戏剧作品/演出/演出季
+estreno/guión cinematográfico,电影首映/电影剧本
+principal/secundario,主要的/次要的；主角/配角
+hacer/interpretar un papel,扮演角色
+rodar/echar/estrenar una película,拍摄/上映/首映电影
+representar/escenificar/poner en escena una obra teatral,演出/舞台化/上演戏剧
+el Papa,教皇
+san,圣人；圣……
+creyente,信徒
+ateo,无神论者
+sacerdote,神父；祭司
+ir a misa,参加弥撒
+Iglesia católica/anglicana/evangélica,天主教/英国国教/福音派教会
+Biblia,《圣经》
+Corán,《古兰经》
+Torá,《托拉》；犹太律法书
+infierno,地狱
+católico,天主教徒；天主教的
+protestante,新教徒；新教的
+ortodoxo,东正教的；正统的
+practicar la religión,实践宗教信仰
+celebrar una boda,举行婚礼
+rezar,祈祷
+rabino,拉比
+imán,伊玛目
+cura,神父；牧师
+párroco,本堂神父
+monja,修女
+religión mayoritaria/minoritaria/monoteísta/politeísta,多数/少数/一神/多神宗教
+catolicismo,天主教
+protestantismo,新教
+hinduismo,印度教
+cristianismo,基督教
+islamismo,伊斯兰教
+budismo,佛教
+ateísmo,无神论
+paraíso,天堂；乐园
+purgatorio,炼狱
+alma,灵魂
+espíritu,精神；灵
+Antiguo/Nuevo Testamento,《旧约》/《新约》
+Sagradas Escrituras,圣经经文；神圣经典
+Evangelio,福音书；福音
+oración,祈祷；祷文
+procesión,宗教游行；行列
+pecado,罪；罪恶
+pecador,罪人
+secta religiosa/satánica,宗教/撒旦教邪教组织
+agnóstico,不可知论者
+(no) practicante,践行/不践行宗教者
+laico,世俗的；非宗教的
+bendecir,祝福
+decir/celebrar misa,主持/举行弥撒
+celebrar un bautizo,举行洗礼
+tener fe,有信仰
+pecar,犯罪；犯宗教意义上的罪
+hacer un milagro,创造奇迹
+confesarse,忏悔；告解
+comulgar,领圣餐
+hacer penitencia/un sacrificio/una promesa,苦修/牺牲/许愿
+convertirse al cristianismo/al hinduismo/al islamismo,皈依基督教/印度教/伊斯兰教
+hacerse católico/budista,成为天主教徒/佛教徒
+filosofía,哲学
+filósofo,哲学家
+razón,理性；理由
+pensamiento,思想；思考
+conocimiento,知识
+idea,想法；观念
+filosófico,哲学的
+ideológico,意识形态的
+metafísico,形而上学的
+razonar,推理
+reflexionar,反思；思考
+horóscopo,星座运势；占星预测
+universo,宇宙
+espacio,空间；太空
+atmósfera,大气；气氛
+astronauta,宇航员
+cohete,火箭
+satélite,卫星
+viaje espacial,太空旅行
+universal,普遍的；宇宙的
+mundial,世界性的；全球的
+astronomía,天文学
+astrología,占星术
+signo del zodiaco,黄道十二宫星座
+Capricornio,摩羯座
+Leo,狮子座
+Cáncer,巨蟹座
+constelación,星座
+galaxia,星系；银河
+cometa,彗星
+eclipse total/parcial/de sol/de luna,日全/偏食；月全/偏食
+luna llena,满月
+Saturno,土星
+Mercurio,水星
+Venus,金星
+Osa Mayor,大熊座
+Osa Menor,小熊座
+salir/ponerse el sol,日出/日落
+estación/lanzamiento espacial,空间站/太空发射
+girar (un planeta),（行星）旋转
+brillar/apagarse (una estrella),（星星）发光/熄灭
+geografía,地理学
+sitio,地点；地方
+zona,区域
+paisaje,景观；风景
+comunidad autónoma,自治区
+población,人口
+hemisferio/polo norte/sur,北/南半球；北/南极
+Oriente,东方
+Occidente,西方
+oriental,东方的
+occidental,西方的
+internacional,国际的
+nacional,国家级的；全国的
+regional,地区的
+emigrante,移民（迁出者）
+inmigrante,移民（迁入者）
+geográfico,地理的
+continente,大洲；大陆
+península,半岛
+valle,山谷
+lago,湖
+selva,丛林；热带雨林
+Europa,欧洲
+Asia,亚洲
+África,非洲
+América,美洲
+Oceanía,大洋洲
+océano Atlántico/Pacífico/Ártico,大西洋/太平洋/北冰洋
+mar Mediterráneo/Báltico/Rojo,地中海/波罗的海/红海
+tierra/suelo húmedo/seco,湿润/干燥的土地或土壤
+área,区域；面积
+altitud,海拔
+profundidad,深度
+ecuador,赤道
+trópico de Cáncer/de Capricornio,北回归线/南回归线
+Extremo Oriente,远东
+Oriente Próximo/Medio,近东/中东
+superpoblación,人口过多
+índice de población/natalidad/mortalidad,人口/出生率/死亡率指标
+crecimiento/aumento/disminución de la población/de la natalidad/de la mortalidad,人口/出生率/死亡率的增长、增加或减少
+sector/densidad de población,人口部门/人口密度
+habitantes por metro cuadrado,每平方米居民数
+zona/región poblada/superpoblada,人口稠密/过度稠密的地区
+población joven/adulta/activa/urbana,青年/成年/劳动/城市人口
+emigración,移民迁出；移居国外
+territorial,领土的
+continental,大陆的
+provincial,省级的
+local,地方的；本地的
+urbano,城市的
+rural,农村的
+ecuatorial,赤道的
+tropical,热带的
+estar situado,位于
+limitar al norte/al sur/al este/al oeste,北/南/东/西接壤
+horizonte,地平线
+cabo,海角；岬
+golfo,海湾
+estrecho,海峡；狭窄的
+pantano,水库；沼泽
+laguna,泻湖；小湖
+cascada,瀑布
+cordillera,山脉
+llanura,平原
+orilla del río/del mar,河岸/海岸
+nacimiento/corriente/caudal de un río,河流的源头/水流/流量
+paisaje natural/urbano/industrial/tropical/volcánico/desértico/rocoso,自然/城市/工业/热带/火山/沙漠/岩石景观
+costero,沿海的
+insular,岛屿的
+peninsular,半岛的
+subir/bajar la marea,涨潮/退潮
+(las) afueras,郊区；外围
+comisaría de policía,警察局
+parque de bomberos,消防站
+barrio/zona comercial/residencial/industrial,商业/住宅/工业街区或区域
+casco histórico/antiguo,历史/老城区
+céntrico,市中心的
+camino,道路；小路
+prado,草地；牧场
+tierra,土地；地球
+cultivo,作物；种植
+plantar,种植
+cultivar,耕作；种植
+regar,浇水；灌溉
+acera,人行道
+señal,标志；信号
+papelera,垃圾桶
+contenedor de basuras/de papel/de vidrio,垃圾/纸/玻璃回收箱
+edificación,建筑；建造
+urbanización,住宅小区；城市开发
+alrededores,周边；附近地区
+ciudadano(s),公民
+vecindario,邻里；街坊
+basurero/estadio/policía municipal,市政垃圾场/体育场/警察
+violencia/actividad/arte callejero,街头暴力/活动/艺术
+zona verde/ajardinada,绿地/园林区
+haber/estar en obras,正在施工
+corral,畜栏；鸡舍
+ganadero,畜牧户；牧场主
+agrícola,农业的
+forestal,林业的
+semilla,种子
+cosecha,收成；收获
+sembrar,播种
+estación (del año),季节
+granizo,冰雹
+hielo,冰
+huracán,飓风
+ola de frío/de calor,寒潮/热浪
+clima seco/húmedo,干燥/湿润气候
+nublarse,多云起来
+salir el sol,太阳升起；日出
+estar (el cielo) despejado/nublado,天空晴朗/多云
+temporal,暴风雨；恶劣天气
+chaparrón,阵雨；暴雨
+trueno,雷
+relámpago,闪电
+borrasca,低气压；风暴
+anticiclón,高气压；反气旋
+previsión/parte meteorológico,天气预报
+clima suave/continental/mediterráneo/tropical/lluvioso/caluroso/templado/desértico,温和/大陆性/地中海/热带/多雨/炎热/温带/沙漠气候
+tiempo/temperatura primaveral/veraniego/otoñal/invernal/variable/estable/inestable,春季/夏季/秋季/冬季/多变/稳定或不稳定的天气或温度
+hacer un día estupendo/horrible,天气非常好/糟糕
+caer una nevada/una helada/una tormenta/un chaparrón,下大雪/结霜/暴风雨/阵雨
+soplar (el viento),（风）吹
+helar,结冰；霜冻
+granizar,下冰雹
+mamífero,哺乳动物
+insecto,昆虫
+ave,鸟类
+reptil,爬行动物
+animal doméstico/salvaje/de compañía,家养/野生/宠物动物
+conejo,兔子
+oveja,绵羊
+gallo,公鸡
+gallina,母鸡
+león,狮子
+tigre,老虎
+elefante,大象
+serpiente,蛇
+cocodrilo,鳄鱼
+animal terrestre/volador/marino,陆生/飞行/海洋动物
+especie autóctona/protegida/en (peligro de) extinción,本土/受保护/濒危物种
+clínica veterinaria,兽医诊所
+perro policía/de caza,警犬/猎犬
+perro/gato callejero,流浪狗/猫
+pollo de corral,散养鸡；土鸡
+mascota,宠物
+dócil,温顺的
+manso,驯服的；温顺的
+noble,高贵的；温良的
+feroz,凶猛的
+bravo,勇猛的；野性的
+poner un huevo,下蛋
+parque natural,自然公园
+hierba,草；草本
+césped,草坪
+tronco,树干
+rama,树枝
+raíz,根
+planta de interior/de exterior,室内/室外植物
+árbol frutal,果树
+plantar un árbol,种树
+regar las plantas/el jardín,给植物/花园浇水
+caerse/secarse las hojas,树叶掉落/干枯
+cortar una flor,剪下一朵花
+alga,藻类
+seta,蘑菇；菌类
+arbusto,灌木
+pétalo,花瓣
+savia,树液；汁液
+polen,花粉
+fruto,果实
+planta carnívora/trepadora/acuática/silvestre/venenosa,食虫/攀缘/水生/野生/有毒植物
+maceta,花盆
+jarrón,花瓶
+jardinera,花槽；花盆架
+flor natural/artificial/seca/silvestre/exótica/delicada,鲜花/人造花/干花/野花/异国花/娇嫩的花
+ramillete/centro/corona/guirnalda de flores,花束/插花/花冠/花环
+dar flor/fruto,开花/结果
+brotar,发芽
+florecer,开花
+trasplantar,移植；移栽
+talar un árbol,砍树
+deshojar una flor,摘掉花瓣
+contaminación,污染
+polución,污染；公害
+terremoto,地震
+ecologista,环保主义者；生态学家
+reciclaje,回收利用
+papel/cartón/vidrio reciclado,再生纸/纸板/玻璃
+contenedor de papel/de vidrio,纸/玻璃回收箱
+cambio climático,气候变化
+energía alternativa,替代能源
+agujero de la capa de ozono,臭氧层空洞
+contaminado,被污染的
+contaminante,污染性的；污染物
+tóxico,有毒的
+cuidar/respetar/proteger/conservar el medio ambiente/la naturaleza,爱护/尊重/保护/保存环境或自然
+reciclar vidrio/pilas/papel/cartón/latas,回收玻璃/电池/纸/纸板/罐头
+ecosistema,生态系统
+biosfera,生物圈
+sequía,干旱
+marea negra,海上石油污染；油污潮
+desertización,荒漠化
+maremoto,海啸；海震
+inundación,洪水；淹水
+catástrofe/desastre natural,自然灾害
+problema medioambiental,环境问题
+efecto invernadero,温室效应
+desarrollo sostenible,可持续发展
+ahorro energético,节能
+energía nuclear/eólica/solar/eléctrica,核能/风能/太阳能/电能
+biomasa,生物质
+zona/área/litoral protegido/virgen,受保护/原生态地区、区域或海岸
+impacto medioambiental,环境影响
+residuos atómicos/radiactivos/tóxicos,核/放射性/有毒废物
+alimentos transgénicos,转基因食品
+agricultura ecológica,生态农业；有机农业
+exponerse a/protegerse de la radiación solar,暴露于/防护太阳辐射
+inundar(se),淹没；被淹
+incendiar(se),点燃；起火；烧毁
+extinguir(se),熄灭；灭绝
+aprovechar/agotarse los recursos naturales,利用/耗尽自然资源
+preservar el medio ambiente,保护环境
