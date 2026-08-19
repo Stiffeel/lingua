@@ -2083,6 +2083,49 @@ function pulseGlossPrompt(k, words) {
   ];
 }
 
+/* ---------------- Daily Pulse：用选中的词造句 ----------------
+   难点在「既要塞进 N 个指定的词，又不能因此把难度顶上去」。
+   所以把两件事拆开说死：句子【可以长】，但语法和词汇的难度必须停在设定档位；
+   宁可用并列和简单从句把词串起来，也不要为了凑词上高级句式。 */
+function pulseSentPrompt(k, words) {
+  const L = LANGS[k];
+  const n = (S.cfg.diff && S.cfg.diff[k]) || 0;
+  const lvl = '【难度 —— 硬性要求】这句话的语法和词汇难度必须停在「' + L.level + '」' +
+    (n ? '，并且按用户设定再' + (n > 0 ? '略难 ' : '略简单 ') + Math.abs(n) + ' 档（一档 ≈ 多一个从句或一个次常用词，严禁跨级跳跃）' : '') + '。' +
+    '\n为了装下指定的词，【句子长度可以放宽】——可以写成长句、并列句、带一两个简单从句。' +
+    '但长≠难：不要因此使用超出上述水平的时态、语气、句式或生僻词。' +
+    '把词用并列、连接词、简单从句自然地串起来即可。';
+  let extra = '';
+  if (k === 'kk') extra = '\n' + KK_CYR_ONLY + '\n"alt" 和 "translit" 一律留空字符串。';
+  if (k === 'bo') extra = '\n"text" 用藏文书写；"translit" 给出安多口语注音。' + boPronRule() +
+    '\n"tokens" 每项末尾保留音节点 ་（句末保留 །）。';
+  if (k === 'ru') extra = '\n' + RU_RULE +
+    '\n"text" 与 "tokens" 不带重音符号；"translit" 填【带重音符号的西里尔】整句。';
+  if (k === 'ja') extra = '\n"translit" 给出全句假名读音 + 罗马字。';
+  return [
+    { role: 'system', content: BASE },
+    {
+      role: 'user', content:
+        '请用下面这些' + L.zh + '单词造【一句话】（只要一句，不是一段）：\n' +
+        words.map(w => '· ' + w).join('\n') +
+        '\n\n【必须全部用上】上面每一个词都要出现在这句话里，一个都不能漏。\n' +
+        '【允许变形】可以按语法需要变位、变格、变复数、加词缀——但必须是【这个词本身】的形式，' +
+        '不能换成同义词、近义词或同根的另一个词。\n' +
+        '【逐词交代】"used" 数组里，每个原词对应它在句中实际出现的形式，' +
+        '这个形式必须和句子里的写法【一字不差】（含大小写与标点之外的一切）。原词按上面给的顺序，一个不漏。\n\n' +
+        lvl + '\n\n' +
+        '输出 JSON：\n' +
+        '{"text":"目标语言的那一句话","alt":"","translit":"","zh":"中文翻译","en":"' + (L.en ? '英文翻译' : '留空') + '",' +
+        '"tokens":["逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"],' +
+        '"used":[{"w":"给定的原词","form":"它在句中的实际形式"}],' +
+        '"note":"逐个说明每个词在句中用了什么形式、为什么这么变；再点出这句话里值得注意的语法点。中文，250 字以内"}' +
+        TOK_STRICT +
+        '"gloss" 数组长度必须与 "tokens" 完全一致。' +
+        extra
+    }
+  ];
+}
+
 /* ---------------- 单词查询 ---------------- */
 function lookupPrompt(q) {
   return [
@@ -4166,12 +4209,16 @@ function pulseState() {
   if (!S.pulse.known || typeof S.pulse.known !== 'object') S.pulse.known = {};
   if (!S.pulse.cur || typeof S.pulse.cur !== 'object') S.pulse.cur = {};
   if (!S.pulse.gl || typeof S.pulse.gl !== 'object') S.pulse.gl = {};
+  if (!S.pulse.sent || typeof S.pulse.sent !== 'object') S.pulse.sent = {};
   return S.pulse;
 }
 const pKnown = k => { const p = pulseState(); return p.known[k] || (p.known[k] = {}); };
 const pCur = k => { const p = pulseState(); return Array.isArray(p.cur[k]) ? p.cur[k] : []; };
 const pGl = k => { const p = pulseState(); return p.gl[k] || (p.gl[k] = {}); };
 const pulseKnownCount = k => Object.keys(pKnown(k)).length;
+/* 勾选 = 标记熟知，同时也是造句的选词。两件事共用一个勾。 */
+const pulseSel = k => pCur(k).filter(w => pKnown(k)[w]);
+const pSent = k => { const p = pulseState(); return p.sent[k] || null; };
 
 /* 抽一批。已熟知的永久排除；刚看过的这一批虽然「回到词库」，
    但只要池子还够大就避开它们，免得点了换一批还是同样几个词。 */
@@ -4193,7 +4240,7 @@ function pulseDraw(k, words) {
 const savePulse = q => { persistKey('pulse', pulseState()); if (!q) cloudTouch(); };
 
 /* ---------------- 视图 ---------------- */
-const P = { lang: null, busy: false, err: '' };
+const P = { lang: null, busy: false, gen: false, err: '', serr: '' };
 
 VIEWS.pulse = async function (k) {
   P.lang = k; P.err = '';
@@ -4232,12 +4279,21 @@ function paintPulse() {
   const total = b.words.length, kn = pulseKnownCount(k);
   const left = total - kn;
 
+  const sel = pulseSel(k), allOn = items.length > 0 && sel.length === items.length;
+
   body += '<div class="row" style="margin-bottom:4px">' +
     '<button class="btn sm" onclick="pulseNext(this)">&#8635; 换一批</button>' +
+    '<button class="btn sm" onclick="pulseAll(' + (allOn ? 'false' : 'true') + ')">' +
+    (allOn ? '全不选' : '全选') + '</button>' +
     '<span class="hint" style="margin-left:auto">词库 ' + total + ' · 已熟 ' + kn + ' · 剩 ' + left + '</span>' +
     '</div>' +
-    '<p class="note" style="margin-bottom:14px">勾「熟」的词以后不会再出现。没勾的在「换一批」之后会回到词库里，' +
-    '以后还有机会再遇到。点词看释义，点「详解」调 AI 做完整解析。</p>';
+    '<button class="btn pri wide" style="margin-top:10px" onclick="pulseMakeSent(this)"' +
+    (sel.length && !P.gen ? '' : ' disabled') + '>' +
+    (P.gen ? LOADER + ' 正在造句' : '用勾选的 ' + sel.length + ' 个词造句') + '</button>' +
+    '<p class="note" style="margin-bottom:14px">勾「熟」的词以后不会再出现，同时也是造句要用的词。' +
+    '没勾的在「换一批」之后会回到词库里。点词看释义，点「详解」调 AI 做完整解析。</p>';
+
+  body += pulseSentHtml(k);
 
   if (P.busy) body += '<div style="margin-bottom:12px">' + LOADER + ' 正在补齐释义</div>';
   if (P.err) body += '<div class="err">' + esc(P.err) + '</div>';
@@ -4269,6 +4325,8 @@ function paintPulse() {
     if (pKnown(k)[it.w]) delete pKnown(k)[it.w]; else pKnown(k)[it.w] = Date.now();
     savePulse(); paintPulse();
   });
+  const ps = pSent(k);
+  if (ps) bindTapWords(k, () => ({ text: ps.text, tokens: ps.tokens, gloss: ps.gloss }));
   const open = i => { const it = at(i); showWord(k, it.w, it.g, it.w); };
   document.querySelectorAll('[data-pw]').forEach(el => el.onclick = () => open(+el.dataset.pw));
   document.querySelectorAll('[data-pd]').forEach(el => el.onclick = () => open(+el.dataset.pd));
@@ -4285,9 +4343,19 @@ function pulseNext(btn) {
   if (!b.words.some(x => !pKnown(k)[x.w])) { toast('这门语言的词库已经全部标记为熟知了'); return; }
   if (btn) { btn.disabled = true; }
   pulseState().cur[k] = pulseDraw(k, b.words);
+  delete pulseState().sent[k];                  // 换了词，上一句就不该再挂在这里
+  P.serr = '';
   savePulse();
   paintPulse();
   pulseFillGloss(k);
+}
+
+/* 全选 / 全不选：只动【当前这一批】，不碰历史上标记过的熟知记录 */
+function pulseAll(on) {
+  const k = P.lang;
+  pCur(k).forEach(w => { if (on) pKnown(k)[w] = Date.now(); else delete pKnown(k)[w]; });
+  savePulse();
+  paintPulse();
 }
 
 async function pulseReload() {
@@ -4314,6 +4382,101 @@ async function pulseFillGloss(k) {
     }
   } catch (e) { P.err = '补齐释义失败 · ' + e.message; }
   P.busy = false; paintPulse();
+}
+
+/* ---------------- 用勾选的词造句 ----------------
+   模型经常「声称」用了某个词其实没用，或者偷偷换成同义词。所以要求它逐词
+   交代在句中的实际形式，然后本地逐条核对那个形式是不是真的出现在句子里——
+   这一步是确定性的，模型说了不算。 */
+function pulseVerify(text, words, used) {
+  const t = String(text || ''), tl = t.toLowerCase();
+  const m = new Map();
+  (Array.isArray(used) ? used : []).forEach(u => {
+    if (!u) return;
+    const w = String(u.w == null ? '' : u.w).trim();
+    const f = String(u.form == null ? '' : u.form).trim();
+    if (w && f && !m.has(w)) m.set(w, f);
+  });
+  const miss = [], forms = [];
+  words.forEach(w => {
+    const f = m.get(w) || '';
+    const hit = (f && (t.indexOf(f) > -1 || tl.indexOf(f.toLowerCase()) > -1)) ||
+      t.indexOf(w) > -1 || tl.indexOf(w.toLowerCase()) > -1;
+    if (hit) forms.push({ w: w, f: f && f !== w ? f : '' });
+    else miss.push(w);
+  });
+  return { miss: miss, forms: forms };
+}
+
+async function pulseMakeSent(btn) {
+  if (needKey() || P.gen) return;
+  const k = P.lang, words = pulseSel(k);
+  if (!words.length) { toast('先勾几个词'); return; }
+  P.gen = true; P.serr = ''; paintPulse();
+  try {
+    const j = await aiJson(pulseSentPrompt(k, words), k);
+    const sent = buildSent(j, k);
+    if (!sent.text) throw new Error('模型返回了空句子');
+    const v = pulseVerify(sent.text, words, j.used);
+    pulseState().sent[k] = {
+      text: sent.text, alt: sent.alt, translit: sent.translit,
+      zh: sent.zh, en: sent.en, tokens: sent.tokens, gloss: sent.gloss,
+      note: unmark(j.note || ''), words: words, forms: v.forms, miss: v.miss, ts: Date.now()
+    };
+    savePulse();
+  } catch (e) { P.serr = '造句失败 · ' + e.message; }
+  P.gen = false; paintPulse();
+  const el = document.getElementById('psent');
+  if (el) el.scrollIntoView({ block: 'nearest' });
+}
+
+function pulseSentHtml(k) {
+  const s = pSent(k), L = LANGS[k];
+  if (P.serr) return '<div class="err" style="margin-bottom:14px">' + esc(P.serr) +
+    '<div class="row" style="margin-top:10px"><button class="btn sm" onclick="pulseMakeSent(this)">重试</button></div></div>';
+  if (!s) return '';
+
+  let h = '<div class="card" id="psent" style="margin-bottom:18px">' +
+    '<div class="sent ' + scriptCls(k) + '">' + tapWords(k, s.text, s.tokens, s.gloss, 'pv') + '</div>' +
+    (k === 'kk' && s.alt ? '<div class="sent ar" style="margin-top:14px">' + esc(s.alt) + '</div>' : '') +
+    (s.translit ? '<div class="translit">' + esc(s.translit) + '</div>' : '') +
+    handHtml(k, s.text) +
+    '<div class="trans">' + esc(s.zh) +
+    (s.en ? '<div class="en">' + esc(s.en) + '</div>' : '') + '</div>';
+
+  /* 逐词交代用了什么形式——既是校验结果，也正好是最该记的东西 */
+  if (s.forms.length) {
+    h += '<div class="forms" style="margin-top:14px">' + s.forms.map(f =>
+      '<div><b>' + esc(f.w) + '</b><span>' + (f.f ? esc(f.f) : '原形') + '</span></div>').join('') + '</div>';
+  }
+  if (s.miss.length) {
+    h += '<div class="err" style="margin-top:12px">这一句里没找到：' + esc(s.miss.join('、')) +
+      '<br>模型漏用或换成了别的词，建议重新造一句。</div>';
+  }
+  if (s.note) h += '<div class="expl">' + esc(s.note) + '</div>';
+
+  h += '<div class="row" style="margin-top:16px">' +
+    (L.tts ? speakBtn(k, s.text) : '') +
+    '<button class="btn sm" onclick="pulseMakeSent(this)">&#8635; 重新造句</button>' +
+    '<button class="btn sm" onclick="pulseDropSent()">收起</button>' +
+    '</div>' +
+    '<p class="hint" style="margin-top:12px">点句中任意单词查看释义</p>' +
+    '</div>' +
+    '<button class="btn pri wide" style="margin-bottom:18px" onclick="pulseSentCard(this)">把这句存到卡片库</button>';
+  return h;
+}
+
+function pulseDropSent() {
+  delete pulseState().sent[P.lang];
+  P.serr = '';
+  savePulse();
+  paintPulse();
+}
+
+function pulseSentCard(btn) {
+  const k = P.lang, s = pSent(k);
+  if (!s) return;
+  detailFor(k, { text: s.text, alt: s.alt, translit: s.translit, zh: s.zh, en: s.en }, [], btn);
 }
 /* ================= Yulengua · 卡片库 ================= */
 
