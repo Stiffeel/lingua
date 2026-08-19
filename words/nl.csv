@@ -1,2213 +1,2213 @@
-﻿# Yulengua 词库 · 荷兰语
-# 来源：NT2Lex-CGN v01；筛选：A1/A2出现，归一化频率峰值为A1或A2，A1+A2原始频次>=2；释义列为等级/词性/频率信息，不是双语词典释义。
-词,释义
-'s,"A2分级词条；词性/标签：BW() / LID(bep)；NT2Lex频次：A1=2, A2=26"
-'s avond,"A2分级词条；词性/标签：LID(bep) N(soort)；NT2Lex频次：A1=1, A2=27"
-'s middag,"A2分级词条；词性/标签：LID(bep) N(soort)；NT2Lex频次：A1=1, A2=3"
-'s morgen,"A1分级词条；词性/标签：LID(bep) N(soort)；NT2Lex频次：A1=4, A2=5"
-'s nacht,"A2分级词条；词性/标签：LID(bep) N(soort)；NT2Lex频次：A1=0, A2=20"
-Karel de Grote,"A2分级词条；词性/标签：SPEC(deeleigen) SPEC(deeleigen) SPEC(deeleigen)；NT2Lex频次：A1=0, A2=5"
-Kerstmis,"A2分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=0, A2=18"
-Los Angeles,"A1分级词条；词性/标签：SPEC(deeleigen) SPEC(deeleigen)；NT2Lex频次：A1=4, A2=0"
-Meneer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=5, A2=96"
-Pasen,"A2分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=0, A2=2"
-Pinksteren,"A2分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=0, A2=2"
-Witte Donderdag,"A2分级词条；词性/标签：SPEC(deeleigen) SPEC(deeleigen)；NT2Lex频次：A1=0, A2=2"
-aaien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-aan,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=12, A2=368"
-aan de hand,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=19"
-aan de man,"A1分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=1, A2=2"
-aanbetaling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-aandachtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-aandoen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-aangaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-aankijken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-aankleden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-aankloppen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-aankomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=25"
-aanlopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=15"
-aanrijden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-aanschuiven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-aansteken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-aanvallen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-aanzien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-aap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-aardappel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=16"
-aardbei,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-aarde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-aardig,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=12, A2=39"
-aardrijkskunde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-aarzelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=17"
-accordeon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-ach,"A2分级词条；词性/标签：TSW()；NT2Lex频次：A1=0, A2=43"
-achter,"A2分级词条；词性/标签：VZ(init) / VZ(fin)；NT2Lex频次：A1=3, A2=129"
-achteraan,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-achterblijven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-achteren,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-achterkamer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-achterkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-achterna,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-achterom,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=6"
-achterop,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-adel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-adem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-ademen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-ademhalen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-administratie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=3"
-adres,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=16"
-af,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=1, A2=131"
-afbijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-afdoen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-afkomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-afkomst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-aflopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=27"
-afmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-afscheid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=17"
-afschuw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-afslaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-afsprakenlijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-afspreken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=14"
-afspringen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-afvallen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=1"
-afwas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-afwassen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=3"
-afzuigkap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ah,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-akelig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-al,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=10, A2=360"
-alarm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-aldoor,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-alkoof,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-allebei,"A1分级词条；词性/标签：VNW(onbep,det)；NT2Lex频次：A1=10, A2=27"
-alleen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=19, A2=247"
-allemaal,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=7, A2=139"
-alles,"A2分级词条；词性/标签：VNW(onbep,pron)；NT2Lex频次：A1=17, A2=168"
-als,"A2分级词条；词性/标签：VG(onder)；NT2Lex频次：A1=32, A2=731"
-alsjeblieft,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=5, A2=9"
-alstublieft,"A2分级词条；词性/标签：WW() / BW()；NT2Lex频次：A1=0, A2=5"
-altaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-altijd,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=21, A2=142"
-alweer,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=18"
-amsterdammers,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-an,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=4"
-anders,"A2分级词条；词性/标签：BW() / ADJ()；NT2Lex频次：A1=6, A2=93"
-andijviestamppot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-angstig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=13"
-antilliaans,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-antwoorden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=153"
-apparatuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-appartement,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=1"
-appel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=8"
-appelmoes,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-appelsap,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=1"
-appeltaart,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-arabier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-arm,"A1分级词条；词性/标签：N(soort) / ADJ()；NT2Lex频次：A1=11, A2=140"
-armband,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-armoe,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-armoedig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-arrestatie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-arrestatiebevel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-arresteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-as,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-atlas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-au,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-auto,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=31, A2=14"
-autorijden,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=0"
-avondeten,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=4"
-avondschool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-baas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=10, A2=88"
-badkamer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=16"
-badpak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-bakker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=15"
-bakkersjongen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=23"
-balen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-balie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-baljurk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-balkon,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=13"
-balzaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-bang,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=28, A2=101"
-bank,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=11, A2=51"
-barbier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-barsten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=3"
-barvrouw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-basisonderwijs,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-basisschool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-bastaardzoon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bazin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-bed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=10, A2=164"
-bedanken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=11"
-bedelaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-bedenken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=36"
-bedgordijnen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-bediende,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=75"
-bedienen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-bedoelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=37"
-bedriegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=13"
-bedroeven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-bedrog,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-beeldschoon,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-been,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=31"
-beer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-beest,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=31"
-beet,"A1分级词条；词性/标签：N(soort) / ADJ()；NT2Lex频次：A1=14, A2=118"
-beginnen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=8, A2=199"
-beginnerscursus,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-begraven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-begrijpen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=23, A2=116"
-behalve,"A2分级词条；词性/标签：VG(onder)；NT2Lex频次：A1=0, A2=13"
-bek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-beker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-bel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=21"
-beleefd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-belkoord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-bellen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=11, A2=34"
-belofte,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-belonen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-beloven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=39"
-bende,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-beneden,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=35"
-benieuwd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=8"
-benzine,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-berging,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=0"
-beroven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-beschuit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-beschuldigen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-beschuldiging,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bespaartip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-best,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=49"
-bestand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bestelling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bestormen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-besturen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=5, A2=2"
-beuren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=47"
-bevel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-bevelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-beven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=15"
-bevrijden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-bewaker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=29"
-bewondering,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bewusteloos,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-bezetting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bezielen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-bibberen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-bidden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=30"
-biechten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-bierlip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bij,"A1分级词条；词性/标签：VZ(init)；NT2Lex频次：A1=66, A2=513"
-bij elkaar,"A1分级词条；词性/标签：VZ(init) VNW(recip,pron)；NT2Lex频次：A1=4, A2=24"
-bijbel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-bijl,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-bijsluiter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-bijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=16"
-bijwerking,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-binnen,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=11, A2=145"
-binnenkomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=23"
-binnenlaten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-binnenmens,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-binnenplaats,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-binnenzak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bisschop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-bisschopskleren,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-blad,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-blaffen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=19, A2=2"
-blauw,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=7, A2=30"
-blazen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-bleek,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=11"
-blij,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=52, A2=90"
-blijdschap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-blijven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=228"
-bliksem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-blind,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-bloed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=46"
-bloeden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-bloem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=31"
-bloemenmand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-bloes,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=2"
-blond,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=6, A2=14"
-bloot,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=14"
-blootje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bocht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bode,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-boef,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-boem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-boer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=80"
-boerenkool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-bol,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-bonken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-bons,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-boodschap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=23"
-boodschapper,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-boog,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-boomstam,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-boord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-boos,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=4, A2=53"
-boot,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=32, A2=132"
-bord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=20"
-boren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-bos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=54"
-bot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-boterham,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=5, A2=4"
-boven,"A2分级词条；词性/标签：VZ(fin) / VZ(init)；NT2Lex频次：A1=2, A2=78"
-bovenaan,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-bovenin,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=4"
-bovenkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-bovenlip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-bovenmeester,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-braden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-brand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-branden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=27"
-brandkast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-brandstapel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-brandweerman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-breekijzer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-brief,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=32, A2=75"
-broeder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-broekzak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-broer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=13, A2=32"
-brommen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-brood,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=48"
-brug,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-brugwachter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-bruid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-bruidegom,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-bruidsjurk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-bruiloft,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-bruin,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=7, A2=57"
-brullen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-brutaal,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-buigen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=27"
-buiging,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-buik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-buit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-buiten,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=1, A2=43"
-buitendeur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-buitenkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-buitenlucht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-buitenmens,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-burcht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-burgerzaken,"A2分级词条；词性/标签：N(soort) / WW()；NT2Lex频次：A1=0, A2=5"
-bus,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=26, A2=6"
-buschauffeur,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=19, A2=3"
-bushalte,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=3"
-buurt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=34"
-buurvrouw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-cadeau,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=27"
-café,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=10, A2=5"
-calorie,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=0"
-cape,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-capulet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-carnaval,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-cent,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-chocola,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=1"
-chocolademelk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-citroensap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-clarijs,"A2分级词条；词性/标签：N(soort) / BW()；NT2Lex频次：A1=0, A2=18"
-clarisse,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-clarissenklooster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-cola,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=0"
-combimagnetron,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-conducteur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-consult,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-croissant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-crèmespoeling,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-cursusmanager,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-cursusseizoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-daar,"A2分级词条；词性/标签：VNW(aanw,adv-pron)；NT2Lex频次：A1=21, A2=488"
-daarheen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=4"
-daarna,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=10, A2=81"
-daarom,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=27, A2=99"
-daaronder,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-daarop,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=7"
-dag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=29, A2=326"
-dagboek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-dagen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-dakgoot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dakraam,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dan,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=64, A2=1094"
-dank,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-dankbaar,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=13"
-danken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=11, A2=28"
-dans,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-dansen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=15, A2=35"
-dansfeest,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=14, A2=0"
-dapper,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=17"
-das,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-dat,"A2分级词条；词性/标签：VNW(aanw,pron)；NT2Lex频次：A1=55, A2=1066"
-dat wel,"A2分级词条；词性/标签：VNW(aanw,pron) BW()；NT2Lex频次：A1=0, A2=11"
-datje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-de moeite waard,"A2分级词条；词性/标签：LID(bep) N(soort) ADJ()；NT2Lex频次：A1=0, A2=2"
-dealen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-deeg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-deftig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=16"
-degene,"A2分级词条；词性/标签：VNW(aanw,det)；NT2Lex频次：A1=0, A2=5"
-deinen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-dek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-deken,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-deksel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-denken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=58, A2=515"
-designhuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-detective,"A2分级词条；词性/标签：N(soort) / ADJ()；NT2Lex频次：A1=0, A2=17"
-deur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=136"
-deurpost,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dicht,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=2, A2=52"
-dicht bij,"A1分级词条；词性/标签：ADJ() VZ(init)；NT2Lex频次：A1=6, A2=7"
-dichtbij,"A2分级词条；词性/标签：ADJ() / VZ(init)；NT2Lex频次：A1=0, A2=20"
-dichtdoen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=1"
-dichter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-dichterbij,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-dichtmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-dichttrekken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-dief,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=44"
-dienaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dienares,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dienstmeisje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=54"
-dier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=100"
-dierenverhaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-dik,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=36"
-ding,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=11, A2=82"
-dinsdag,"A2分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=1, A2=8"
-distel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dit,"A2分级词条；词性/标签：VNW(aanw,pron)；NT2Lex频次：A1=4, A2=188"
-dochter,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=38"
-dode,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-doden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=45"
-doen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=44, A2=633"
-dokter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=64"
-dolk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-dom,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=15"
-donder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-donderdagavond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-donderslag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-donker,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=1, A2=68"
-dood,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=1, A2=231"
-doodgaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=20"
-doodmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-doodmoe,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-doodsbang,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-doodsbed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-doodskist,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=28"
-doodstil,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-doodtrappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-doordeweeks,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-doorheen,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=8"
-doorlopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-doorvaren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-doorvertellen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-doorzichtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-doorzoeken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-dorp,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=30"
-dorst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=4"
-dosering,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-douane,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-draad,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-draaien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=49"
-draaikolk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-draven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-drempel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-drie,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=18, A2=87"
-drie uur,"A2分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=1, A2=8"
-driftig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-dringen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-drinken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=18, A2=95"
-droevig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=13"
-drogen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-dromen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=22"
-droog,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=11"
-droom,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-druif,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-druk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=37"
-dubbeltje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-duif,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-duin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-duinroos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-duintop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-dun,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-duren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=45"
-durven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=51"
-duwen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=28"
-dwaas,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-echt,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=2, A2=194"
-edel,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-edele,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-edelman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-edelsteen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-een,"A2分级词条；词性/标签：VNW(onbep,det)；NT2Lex频次：A1=3, A2=33"
-een jaar of,"A2分级词条；词性/标签：LID(onbep) N(soort) VG(onder)；NT2Lex频次：A1=0, A2=3"
-een voor een,"A2分级词条；词性/标签：TW(hoofd) VZ(init) TW(hoofd)；NT2Lex频次：A1=0, A2=2"
-eenzaam,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=8, A2=2"
-eerst,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=9, A2=103"
-eetcafé,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-eetlepel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-eettafel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-eetzaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-effe,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=4"
-eh,"A2分级词条；词性/标签：TSW()；NT2Lex频次：A1=0, A2=3"
-ei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=17"
-eigenlijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=89"
-eigenwijs,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-eiland,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=11, A2=9"
-eindelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=41"
-elf,"A1分级词条；词性/标签：N(soort) / TW(hoofd)；NT2Lex频次：A1=2, A2=14"
-email,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-emir,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=56"
-emmer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-eng,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=17"
-engel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-engels,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=6, A2=20"
-entree,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-entreeprijs,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-envelop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-er,"A2分级词条；词性/标签：VNW(onbep,adv-pron)；NT2Lex频次：A1=0, A2=3"
-eraf,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=7"
-erasmusbeurs,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-erbij,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=14"
-erdoor,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-eren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-erg,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=39, A2=188"
-erheen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-erin,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=22"
-ernaast,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-ernstig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=20"
-eruit,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=2, A2=16"
-ervoor,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=25"
-erwtensoep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-eten,"A1分级词条；词性/标签：WW() / N(soort)；NT2Lex频次：A1=60, A2=214"
-even,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=282"
-exclusief,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=1"
-ezel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-fabriek,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=3"
-fakkel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-familie,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=92, A2=75"
-familiegraf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-faust,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=56, A2=0"
-feest,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=37"
-feestmaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-feestprogramma,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-fezziwig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-fiets,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=13, A2=14"
-fietsen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=8, A2=8"
-fijn,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=15, A2=62"
-file,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=8"
-filevrij,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-flacon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-fladderen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-fles,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=12, A2=32"
-flink,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=15"
-fluisteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=78"
-fluiten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-fluittoon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-fontein,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-fornuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-frisdrank,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=2"
-fruit,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=7"
-fulltime,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-gaan,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=217, A2=1251"
-gaar,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-gaat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-galerij,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-galg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-galmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-gang,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=43"
-gans,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=11"
-gapen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-gasfornuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-gat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=28"
-gauw,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=69"
-gebaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-gebaren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-gebed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gedaante,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-gedag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-geen een,"A2分级词条；词性/标签：VNW(onbep,det) TW(hoofd)；NT2Lex频次：A1=0, A2=2"
-geest,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=108"
-gegil,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-gehakt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-geheim,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=23"
-geheimzinnig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=8"
-gehoorzamen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-gek,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=1, A2=46"
-gekreun,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-geliefd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=14"
-geliefde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-gelijk,"A2分级词条；词性/标签：N(soort) / VG(onder)；NT2Lex频次：A1=0, A2=7"
-geloven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=67"
-geluid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=26"
-geluidsoverlast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gelukken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-gelukkig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=8, A2=87"
-gemeen,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=12"
-gemeentebestuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gemeentehuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-genezen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-geschiedenisles,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=1"
-geschreeuw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-gespannen,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-gestalte,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-getuigschrift,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-geur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-gevaarlijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=28"
-gevallen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-gevangenis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-gevangennemen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-gevecht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=21"
-geven,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=33, A2=272"
-gevoelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-geweer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-geweldig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=24"
-gewond,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-geworden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=50"
-gezelschapsdier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gezeur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gezicht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=92"
-gids,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=37"
-gier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=28"
-gieten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-gif,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-gil,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-glad,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-glanzen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-glijbaan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-glijden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-glimlachen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=7, A2=19"
-glimworm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-glinsteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-gluren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-godenzoon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-godin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-godsdienstles,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-goed,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=75, A2=596"
-goedemiddag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=10"
-goedemorgen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-goedenavond,"A1分级词条；词性/标签：TSW()；NT2Lex频次：A1=3, A2=2"
-goedvinden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-golf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-gooien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=3, A2=36"
-gordel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-gordijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=17"
-goud,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-gouden,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=28"
-goudstuk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-graad,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-graaf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=51"
-graag,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=28, A2=92"
-gracht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-graf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=33"
-grafkelder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-grafsteen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gram,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=32"
-grap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-grappenmaker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gras,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=21"
-grasspriet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-grauw,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-graven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=18"
-gravin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-griep,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=11"
-griezelig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-griezelverhaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-griffel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-grijns,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-grijnzen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-grijpen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=24"
-grijs,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=5, A2=12"
-grimberen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-grinniken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-groente,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=14"
-groentewinkel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-groepsreis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-groet,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=18"
-grommen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-grond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=65"
-grondgebied,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-grootmoeder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-grootouder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-grootvader,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-gulden,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-gulzig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-gut,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gymnasium,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-gymnastiek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gymp,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-gymschoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-gymvereniging,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-ha,"A2分级词条；词性/标签：TSW() / N(soort)；NT2Lex频次：A1=0, A2=13"
-haai,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-haak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-haan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-haar,"A1分级词条；词性/标签：VNW(bez,det) / VNW(pers,pron) / N(soort)；NT2Lex频次：A1=169, A2=877"
-haarband,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-haard,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-haardvuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-haas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-haast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-haasten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-haastig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-hagelslag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hakken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-hal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-halen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=141"
-half een,"A2分级词条；词性/标签：ADJ() LID(onbep)；NT2Lex频次：A1=0, A2=2"
-half negen,"A1分级词条；词性/标签：ADJ() TW(hoofd)；NT2Lex频次：A1=2, A2=1"
-half vijf,"A1分级词条；词性/标签：ADJ() TW(hoofd)；NT2Lex频次：A1=2, A2=0"
-half zes,"A1分级词条；词性/标签：ADJ() TW(hoofd)；NT2Lex频次：A1=2, A2=1"
-halfjaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-halftwaalf,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-halfuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-halfvol,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-hals,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-halsketting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ham,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-hamburger,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=0"
-hampstead,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=195"
-handschoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-hangen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=75"
-hard,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=8, A2=108"
-hardlopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=2"
-hardop,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=10"
-haring,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-harnas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-harpoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-harpoenier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-hart,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=44"
-hartelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=8"
-hartklopping,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-havo,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-hazenkop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hazenvel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-hbo,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-he,"A2分级词条；词性/标签：TSW()；NT2Lex频次：A1=0, A2=4"
-hebben,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=223, A2=2051"
-heel,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=66, A2=469"
-heen,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=79"
-heen en weer,"A2分级词条；词性/标签：VZ(fin) VG(neven) BW()；NT2Lex频次：A1=0, A2=17"
-heer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=97"
-heerlijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=39"
-heffen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-heg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-heimwee,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-heks,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-hel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-helder,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=9"
-helemaal,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=2, A2=115"
-helm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-helpen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=13, A2=114"
-helper,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hem,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=20, A2=772"
-hemel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-hemelbed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hemzelf,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=0, A2=2"
-herberg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=35"
-herbergen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-herinneren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-herkennen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=26"
-hertog,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-het,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=119, A2=1814"
-het zwart,"A2分级词条；词性/标签：LID(bep) ADJ()；NT2Lex频次：A1=0, A2=2"
-heten,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=60, A2=66"
-hetzelfde,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=29"
-heuvel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-hier,"A2分级词条；词性/标签：VNW(aanw,adv-pron)；NT2Lex频次：A1=17, A2=331"
-hierheen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=5"
-hiernaartoe,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-hiernaast,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=4"
-hij,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=278, A2=3910"
-hijgen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-hijzelf,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=0, A2=4"
-hitte,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hmm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ho,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-hobbelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-hobby,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=2"
-hoed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-hoef,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hoesten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-hoeveel,"A1分级词条；词性/标签：TW(hoofd) / TW(rang)；NT2Lex频次：A1=4, A2=15"
-hoeven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=61"
-hoever,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-hoezo,"A2分级词条；词性/标签：BW() / N(soort)；NT2Lex频次：A1=0, A2=6"
-hof,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-hofdag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hofdame,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hofzaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-hok,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-hol,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=15"
-hollen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=23"
-holmes,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-hond,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=27, A2=34"
-hondenbezitter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hondenpoep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-honderd,"A2分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=0, A2=26"
-hongaars,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-honger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=21"
-honing,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-hoofd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=158"
-hoofdman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hoofdstuk,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=28"
-hoofdzuster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hooiberg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-hoorn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-hopelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-hopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=48"
-horen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=12, A2=324"
-horloge,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=8"
-hotelkamer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-houden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=15, A2=225"
-hout,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=34"
-houthakker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-huid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-huilen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=6, A2=80"
-huis,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=77, A2=232"
-huisarts,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=14"
-huishouden,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=5"
-hulpeloos,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-hup,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-hut,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=23"
-hutspot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-huwelijk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-huwelijksnacht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-huwelijksreis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-hè,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=39"
-hé,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=21"
-ieder,"A1分级词条；词性/标签：VNW(onbep,det)；NT2Lex频次：A1=7, A2=52"
-iedereen,"A1分级词条；词性/标签：VNW(onbep,pron)；NT2Lex频次：A1=17, A2=133"
-ier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-iers,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-ij,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ijs,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=12"
-ijskoud,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=7"
-ijzer,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=12"
-ik,"A1分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=429, A2=3156"
-in,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=6, A2=162"
-in de hand,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=8"
-in de knoop,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=2"
-in de steek,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=3"
-in de wind,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=2"
-in hand,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=2"
-in het licht van,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort) VZ(init)；NT2Lex频次：A1=0, A2=3"
-in orde,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=9"
-in principe,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=3"
-indeling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-indiaas,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-indringer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ineens,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=137"
-influenzavirus,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ingaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-ingang,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-ingrediënt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-inhalen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-innemen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-inspecteur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-instemmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-intrekken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-intussen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=23"
-invoegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-inwonen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=6, A2=8"
-ivoor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ja,"A2分级词条；词性/标签：TSW()；NT2Lex频次：A1=24, A2=307"
-ja horen,"A2分级词条；词性/标签：TSW() WW()；NT2Lex频次：A1=0, A2=2"
-jacht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-jagen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-jager,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-jaloers,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=12"
-jam,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-jammer,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=20"
-jammeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-jas,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=31"
-jawel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-jazeker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-je,"A2分级词条；词性/标签：VNW(pr,pron)；NT2Lex频次：A1=7, A2=160"
-jee,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-jezus,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-jij,"A1分级词条；词性/标签：VNW(pers,pron) / N(soort)；NT2Lex频次：A1=29, A2=229"
-jijzelf,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=0, A2=2"
-joelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-johannes,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-jong,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=127"
-jongen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=59"
-jongerencentrum,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-jonkvrouw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-joos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-jou,"A1分级词条；词性/标签：VNW(pers,pron) / VNW(bez,det)；NT2Lex频次：A1=18, A2=113"
-journaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-juffrouw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=42"
-juichen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-jullie,"A2分级词条；词性/标签：VNW(pers,pron) / VNW(bez,det)；NT2Lex频次：A1=10, A2=151"
-jurk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=24"
-jus,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-kaal,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-kaars,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-kaarslicht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-kaart,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=14"
-kabouter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-kachel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-kaft,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kajuit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kalender,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=0"
-kali-gelovige,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-kalief,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-kalkoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-kam,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-kamer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=17, A2=242"
-kamerdeur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kamerheer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kamerjas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-kamerscherm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kammen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=1"
-kan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-kantine,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-kantoor,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=26"
-kantoorbediende,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kantoortuin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-kap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kapitein,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=174"
-kapot,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=13"
-kapotmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-kar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=21"
-kartuizerklooster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-karwei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=19"
-kastanje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kasteel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=87"
-kasteelpoort,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=37"
-kater,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-katholiek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-keel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-keer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=16, A2=126"
-kelder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-kelner,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kerel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-kerkhof,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-kerkklok,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kerst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-kerstdag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-kerstfeest,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-kerstnacht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kersttijd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-ketting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-keuken,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=12, A2=45"
-keukenblok,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-keukenkast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-keukenmeisje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-keurig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=9"
-keuzevak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kijken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=45, A2=615"
-kikker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kil,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-kin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-kinderachtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-kinderfeest,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=27"
-kist,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=45"
-klaar,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=56"
-klaarmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-klaarstaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-klagen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=20"
-klant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=25"
-klap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-klappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-klas,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=21"
-klederdracht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-kleed,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=41, A2=67"
-klein,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=22, A2=148"
-klemmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-kleuren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-kleurkrijt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-klimmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=27"
-klinken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=53"
-klok,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-klooster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=37"
-kloosterpoort,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kloppen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=45"
-klopper,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-klucht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kluizenaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-knecht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=33"
-knie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=12"
-knielen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-knijpen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-knik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-knikken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=138"
-knipogen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-knoflook,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-knolselderie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-knoop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-knopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-knorren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-koek,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=3"
-koel,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=9"
-koeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-koets,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-koetsier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-koffie,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=17, A2=19"
-kogel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kok,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-koken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=19"
-kokkin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kolenkit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-kom,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-komen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=38, A2=882"
-komisch,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-konijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-konijnenhol,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-koning,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=398"
-koningin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=63"
-kool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-koopavond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-koopman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=23"
-koopzondag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-koor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-koord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-koorddansen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-koorddanser,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-koorts,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=10"
-kop,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=10, A2=51"
-kopen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=23, A2=62"
-kostbaarheid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kou,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-koude,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kous,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kozijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-krabben,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-krans,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-kreet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-krekel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-krekelschool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-krentenbroodje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kreunen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-kreupel,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-kring,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-kroegbaas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kronkelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-kroon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-kruid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-kruik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kruipen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=32"
-kruis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-kruisen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-kruisspin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kruk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-krul,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kuil,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-kunstarm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kunstbeen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-kus,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=13"
-kust,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-kuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-kwaad,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=37"
-kwart voor negen,"A2分级词条；词性/标签：N(soort) VZ(init) TW(hoofd)；NT2Lex频次：A1=0, A2=6"
-kwartier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-kwast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-kwetteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-kwijt,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=18"
-laagopgeleid,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-laars,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-lach,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-lachen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=25, A2=146"
-lafaard,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-laken,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-lam,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=6"
-lamp,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-lang,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=34, A2=195"
-langs,"A1分级词条；词性/标签：VZ(init) / VZ(fin)；NT2Lex频次：A1=9, A2=65"
-langzaam,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=54"
-lans,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-larf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-last,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=14"
-laten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=5, A2=302"
-latijns,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-lawaai,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=7"
-ledenpas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-leeg,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=2, A2=39"
-leegdrinken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-leegmaken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=1"
-leerling,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=15, A2=14"
-leeuw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-leger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-legerleider,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-leggen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=10, A2=90"
-lei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-lekker,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=14, A2=99"
-lente,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-lepel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-leraar,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=7"
-lerares,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=2"
-les,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=17, A2=15"
-letten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=30"
-letter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-leuk,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=54, A2=103"
-leunen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-leven,"A2分级词条；词性/标签：N(soort) / WW()；NT2Lex频次：A1=5, A2=203"
-libel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-lichaam,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=37"
-licht,"A2分级词条；词性/标签：N(soort) / ADJ()；NT2Lex频次：A1=0, A2=79"
-lief,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=9, A2=64"
-liefde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=68"
-liefdesdrank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-liefdesrelatie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-liefdesverhaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-liegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=17"
-lieverd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-ligbad,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=1"
-liggen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=20, A2=231"
-lijf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-lijk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-lijkbaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-likken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-linkerhand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-linkerkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-linkerschoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-links,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=8"
-lip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=35"
-list,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-liter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-litteken,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-lk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-loffelijk,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=4"
-logeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=17"
-lokaal,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=5, A2=1"
-loket,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-longontsteking,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-lopen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=56, A2=487"
-loslopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-losmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-lucht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=29"
-luchtrooster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-luik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-luipaard,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-luis,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-luisteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=6, A2=69"
-lukken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=24"
-lunchen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-lunchpauze,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-lus,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-lusteloos,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-maag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-maagd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-maagpijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-maan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-maand,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=33"
-maandag,"A1分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=4, A2=24"
-maanlicht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-maar,"A2分级词条；词性/标签：VG(neven) / BW()；NT2Lex频次：A1=109, A2=1745"
-maar goed,"A2分级词条；词性/标签：BW() ADJ()；NT2Lex频次：A1=0, A2=8"
-maarschalk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-machtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-mager,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=7, A2=8"
-magnetron,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-majesteit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-mal,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-maling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-man,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=19, A2=460"
-mand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-mannenstem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-mantel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-marktplein,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-martelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-masker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-mast,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-mat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-matroos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=33"
-mbo,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-me,"A2分级词条；词性/标签：VNW(pr,pron)；NT2Lex频次：A1=16, A2=336"
-medicijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=27"
-mee,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=17, A2=220"
-meegeven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-meekomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-meel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-meelopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-meenemen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=26"
-meester,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=37"
-meeuw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-meevaren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-meikever,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-meisje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=17, A2=164"
-melk,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=15"
-mens,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=54, A2=423"
-merken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=59"
-mes,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-met,"A1分级词条；词性/标签：VZ(init)；NT2Lex频次：A1=166, A2=1367"
-meteen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=5, A2=158"
-metro,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=0"
-mevrouw,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=12, A2=48"
-middag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=39"
-middeleeuwer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-midden,"A2分级词条；词性/标签：BW() / N(soort)；NT2Lex频次：A1=0, A2=31"
-middenin,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-middernacht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-mier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-mierenvolk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-mij,"A2分级词条；词性/标签：VNW(pr,pron)；NT2Lex频次：A1=16, A2=316"
-mijn,"A1分级词条；词性/标签：VNW(bez,det)；NT2Lex频次：A1=135, A2=728"
-mijzelf,"A2分级词条；词性/标签：VNW(pr,pron)；NT2Lex频次：A1=0, A2=2"
-milt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-min,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=5"
-minstreel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-minuut,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=10, A2=26"
-mis,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=12"
-misbruiken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-miss,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-mist,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-mmm,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=1, A2=7"
-mmmm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-moe,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=4, A2=137"
-moed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-moeder,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=82, A2=187"
-moeras,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-moerasmonster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-moeten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=63, A2=842"
-mogen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=12, A2=164"
-mol,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-mollig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-mompelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=28"
-mond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=42"
-monnik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-monster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-mooi,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=16, A2=225"
-moord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-moordaanslag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-moorden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-moordenaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-mopperen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-morgen,"A1分级词条；词性/标签：BW() / N(soort)；NT2Lex频次：A1=13, A2=79"
-morgenavond,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-morgenochtend,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=9"
-morgenvroeg,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-mos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-moslim,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-mug,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-muis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-munt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-muntstuk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-musical,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-muts,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-muur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=43"
-muziek,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=11, A2=19"
-na,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=58"
-naaien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-naaimachine,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-naaister,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-naaiwerk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-naambord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-naar,"A1分级词条；词性/标签：VZ(init) / ADJ() / VZ(fin)；NT2Lex频次：A1=236, A2=1381"
-naar buiten,"A2分级词条；词性/标签：VZ(init) VZ(fin)；NT2Lex频次：A1=3, A2=49"
-naar voren,"A2分级词条；词性/标签：VZ(init) BW()；NT2Lex频次：A1=0, A2=12"
-naartoe,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=45"
-naast,"A2分级词条；词性/标签：VZ(init)；NT2Lex频次：A1=6, A2=64"
-nacht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=80"
-nachtjapon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-nachtslot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-nar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-natuurkunde,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-natuurlijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=182"
-nee,"A2分级词条；词性/标签：TSW()；NT2Lex频次：A1=15, A2=216"
-neef,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=82"
-neer,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=30"
-negen,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=2, A2=8"
-negen uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=5, A2=1"
-nek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=25"
-nerveus,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=0"
-net,"A2分级词条；词性/标签：BW() / ADJ() / N(soort)；NT2Lex频次：A1=0, A2=170"
-neus,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-neusgat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-neusspray,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-nicht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-niemand,"A2分级词条；词性/标签：VNW(onbep,pron)；NT2Lex频次：A1=7, A2=151"
-niet,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=195, A2=1770"
-niet waar,"A2分级词条；词性/标签：BW() ADJ()；NT2Lex频次：A1=0, A2=12"
-niet-fietser,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-niets,"A2分级词条；词性/标签：VNW(onbep,pron)；NT2Lex频次：A1=15, A2=227"
-nieuw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-nieuwjaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-nieuwsgierig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=16"
-nijdig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=10"
-nodig,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=13, A2=65"
-nodigen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=3"
-nog,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=25, A2=681"
-nog eens,"A2分级词条；词性/标签：BW() BW()；NT2Lex频次：A1=0, A2=31"
-non,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-non-stop,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-nooit,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=14, A2=182"
-normaal,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=14, A2=10"
-nos-journaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-nou,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=176"
-nou ja,"A2分级词条；词性/标签：BW() TSW()；NT2Lex频次：A1=0, A2=3"
-nu,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=35, A2=514"
-ober,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-och,"A2分级词条；词性/标签：TSW() / ADJ()；NT2Lex频次：A1=0, A2=13"
-ochtend,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=39"
-oerwoud,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-oever,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-olie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-om,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=77"
-om zich heen,"A2分级词条；词性/标签：VZ(init) VNW(refl,pron) VZ(fin)；NT2Lex频次：A1=0, A2=21"
-oma,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=41"
-omdat,"A1分级词条；词性/标签：VG(onder)；NT2Lex频次：A1=43, A2=116"
-omdraaien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-omhoog,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=26"
-omkopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-omlaag,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=7"
-onder,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=1, A2=5"
-onder de indruk,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=4"
-onderaan,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=3"
-onderbrengen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-ondersteboven,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-onderweg,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=16"
-onderwijsinstelling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ondeugend,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-oneerlijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-ongeduldig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-ongelukkig,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=7, A2=9"
-ongemerkt,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-ongerust,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=9"
-onophoudelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-onregelmatig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-onrustig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-ontbijt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=21"
-ontbijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=5"
-onthoofden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-onthouden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-ontmoeting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-ontroeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-ontslag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-ontsnappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-ontsteking,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-ontstressen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-ontvoeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-ontwaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-ontzetten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-onzichtbaar,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-onzin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-oog,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=12, A2=143"
-oogmasker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ook,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=104, A2=778"
-oor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=24"
-oorpijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-oorwurm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-oosten,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-op,"A1分级词条；词性/标签：VZ(init) / VZ(fin)；NT2Lex频次：A1=170, A2=1664"
-op en neer,"A2分级词条；词性/标签：VZ(fin) VG(neven) BW()；NT2Lex频次：A1=0, A2=2"
-op slot,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=15"
-op tijd,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=1, A2=16"
-op zichzelf,"A2分级词条；词性/标签：VZ(init) VNW(refl,pron)；NT2Lex频次：A1=0, A2=2"
-opa,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=27"
-opeen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=22"
-open,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=7, A2=120"
-opendoen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-openen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=22"
-openingstijd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-openmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-opeten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-opgaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-opgelucht,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-ophangegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-ophangen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-ophouden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-opium,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-opiumkit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-opiumpijp,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-opkamer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-opknappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-oplichter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-opluchten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-opmaak,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-opmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-opoe,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-oppas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-oppassen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-opscheplepel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-opschieten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-opschrijven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=15"
-opsluiten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-optillen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-optocht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-opvang,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-opvoeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-opwinden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-opzetplaatje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-oud,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=25, A2=127"
-ouder,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=14, A2=50"
-oven,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-overal,"A2分级词条；词性/标签：VNW(onbep,adv-pron) / BW()；NT2Lex频次：A1=3, A2=36"
-overdag,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=10"
-overeind,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=9"
-overgaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-overgeven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-overkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-overkomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-overnachten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-overstappen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=0"
-pa,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=63"
-paard,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=91"
-paardrijden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-paasdag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-pakken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=17, A2=148"
-paleis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=37"
-pan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-pantoffel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-pap,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=1"
-papiaments,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-papier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=23"
-paracetamol,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-paraplu,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-parel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-park,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=16"
-parttime,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-pas,"A2分级词条；词性/标签：BW() / N(soort)；NT2Lex频次：A1=5, A2=117"
-passen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=5, A2=69"
-pastoor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-pedagogisch,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-peinzen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-pelgrim,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-pen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=17"
-perfect,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=1"
-pet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-petroleumlamp,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-peulvrucht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-piepen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-pijl,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-pijp,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-pikdonker,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-pikkedonker,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-pinksterdag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-piraat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-pistool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-plafond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-plak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-plakken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-plan,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=10, A2=45"
-plank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-planten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-plattegrond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-platzak,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-plein,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-plek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=34"
-ploegijzer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-plotseling,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=26"
-pluizer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=30"
-plunderen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-po,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-poep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-poepen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-poes,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-politiebureau,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-pond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=32"
-pook,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-poort,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-poos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-poot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-portemonnee,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-portier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-potlood,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-praat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-prachtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=84"
-praten,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=67, A2=115"
-precies,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=76"
-prei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-priester,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=27"
-prikken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-prima,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=16"
-prins,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=40"
-prinses,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-probleem,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=32, A2=26"
-professor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-programmeur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-proost,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-pudding,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-puntig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-raak,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-raam,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=78"
-raar,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=37"
-rail,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ram,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-rammel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rammelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-rat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-razen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-recept,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-rechterhand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-rechterhandschoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rechterkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-rechtop,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=17"
-rechts,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=4, A2=12"
-rechtszitting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-reclameplaatje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-redden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=23"
-reddingsboei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-rei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-reis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=52"
-rekensom,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rennen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=19, A2=56"
-repareren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-repetitor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rest,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=27"
-restaurantmedewerker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-revolver,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-rib,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-ridder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=39"
-ridderzaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-riem,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=1"
-riet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-rietstengel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rij,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-rijdans,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-rijk,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=68"
-rijtjeshuis,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-rijtuig,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-rillen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=15"
-rilling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-ring,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-rivier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=42"
-roddel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-roei,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-roeispaan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-roepen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=300"
-roeping,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-roer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-roeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-roerloos,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-roet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rolstoel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-roltrap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-rommelmarkt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rond,"A2分级词条；词性/标签：VZ(fin) / ADJ()；NT2Lex频次：A1=0, A2=40"
-rondkijken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-rondlopen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-rondreizen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-rondvliegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-rood,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=17, A2=64"
-roodborstje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-rooftocht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rook,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-rookworst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-roos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-rooster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-rots,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-rotweer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-routebeschrijving,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-roven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-rover,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-rozenknop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-rozenstruik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ruiken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=18"
-ruim,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-ruimen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-ruit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ruiter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-ruk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-rustig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=2, A2=54"
-ruzie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=31"
-salade,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-salamander,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-salontafel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-samen,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=24, A2=147"
-satijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schaak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-schaakbord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schaakspel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-schaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-schaap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-schaduw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-schaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-schaker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-schamen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-schande,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-schapenbout,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schapenvel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=30"
-schatrijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-schedel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-scheepsroeper,"A2分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=0, A2=4"
-scheepsruim,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schelden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-schelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=17"
-schep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-scherp,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=16"
-scheur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schijf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-schijnen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=21"
-schild,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-schildering,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schillen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-schip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=84"
-schitteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=14"
-schitterend,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=10"
-schoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=33"
-schok,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-schooi,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-school,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=60, A2=90"
-schooldeur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schoolmeester,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schooltas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-schoolvakantie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schoon,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=5, A2=11"
-schoonmaken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=9"
-schoot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-schor,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-schotel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-schouder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=35"
-schouwburg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-schreeuwen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=24, A2=55"
-schrift,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-schrijven,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=14, A2=111"
-schrikken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=59"
-schrikogen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-schudden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=70"
-schuifelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-schuilplaats,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-schuiven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=19"
-schurk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-schuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-scrooge,"A2分级词条；词性/标签：N(soort) / ADJ() / VZ(init)；NT2Lex频次：A1=0, A2=93"
-seconde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-sein,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-september,"A1分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=4, A2=11"
-serveren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-shilling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-sigaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-sinaasappel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=2"
-sissen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-sjaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-sla,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=3"
-slaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=80"
-slaap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=27"
-slaapkamer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=17, A2=33"
-slachten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-slag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-slagroom,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-slang,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-slank,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=2, A2=0"
-slap,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-slapen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=14, A2=122"
-slaperig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-slee,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-slepen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-sleutel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=40"
-sleutelbos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-slim,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=34"
-slimheid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-slinger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-sloep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=48"
-slootwater,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-slordig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-sluier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-sluipen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=16"
-smaak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-smakelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-smaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-smeken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=14"
-smeren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-smerig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-smijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-smoes,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-smullen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-snappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=20"
-snee,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-sneeuw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=16"
-sneeuwen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-snel,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=35, A2=175"
-snijden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=17"
-snik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-snor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-snuffelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-snuiven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-snurken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-soep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-soepel,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-soldaat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=66"
-somber,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=17"
-soms,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=18, A2=61"
-spannen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-spatten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-speelgoed,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-speer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-spek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-spel,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=6"
-spijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=17"
-spikkel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-spikkelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-spin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-spinnenweb,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-spion,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-spleet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-splijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-spliterwt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-spoken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-spons,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-spook,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-spoor,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=11"
-spoorlijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-sportief,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=8"
-sportschool,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=3"
-spray,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-spreekuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=7"
-springen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=57"
-sprong,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-sprookje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-spuit,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-spuiten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-spul,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-sst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-staan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=23, A2=499"
-staart,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-stad,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=5, A2=140"
-stadsgracht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-stadsmuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-stakker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-stal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-staljongen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-stampen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-stamppot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-stank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-stap voor stap,"A2分级词条；词性/标签：N(soort) VZ(init) N(soort)；NT2Lex频次：A1=0, A2=3"
-stapel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-stappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=7, A2=43"
-station,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=16"
-steeg,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-steek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-steel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-steen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-steenkool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-stek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-steken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=61"
-stel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-stelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=51"
-stem,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=58"
-stempel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-stenen,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=7"
-ster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-sterven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=57"
-stiefdochter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-stiefvader,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=24"
-stiekem,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=23"
-stil,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=3, A2=67"
-stilstaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-stinken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-stoel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=47"
-stok,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=16, A2=19"
-stoken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-stop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-stoppen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=75"
-stormen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-stoten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-stotteren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-straal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-straat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=52"
-straf,"A2分级词条；词性/标签：N(soort) / ADJ()；NT2Lex频次：A1=0, A2=15"
-straffen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-strafregel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-straks,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=7, A2=32"
-strand,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=39, A2=20"
-streekdracht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-strelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-stressen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-strijder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-strijdperk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-strijken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=10"
-strik,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-stromen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=14"
-strompelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-stroopwafel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=0"
-studentenflat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-studentenhuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=10"
-studeren,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=13"
-stumper,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-stuurman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=60"
-sufferd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-supermarkt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=5"
-t-shirt,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=3"
-taart,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=6"
-taartvorm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tabak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tablet,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=3"
-tachtig,"A2分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=0, A2=19"
-tafel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=55"
-tak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-tand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=22"
-tandem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-tap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-tas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-taxi,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=0"
-taxichauffeur,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=1"
-te dood,"A2分级词条；词性/标签：VZ(versm) N(soort)；NT2Lex频次：A1=0, A2=2"
-te hulp,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=2"
-te pakken,"A2分级词条；词性/标签：VZ(init) WW()；NT2Lex频次：A1=0, A2=18"
-te rusten,"A2分级词条；词性/标签：VZ(init) WW()；NT2Lex频次：A1=0, A2=3"
-te spreken,"A2分级词条；词性/标签：VZ(init) WW()；NT2Lex频次：A1=1, A2=10"
-te ver,"A2分级词条；词性/标签：BW() ADJ()；NT2Lex频次：A1=0, A2=3"
-te weten,"A2分级词条；词性/标签：VZ(init) WW()；NT2Lex频次：A1=0, A2=10"
-teen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-tegel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tegemoet,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=8"
-tegen,"A1分级词条；词性/标签：VZ(init) / VZ(fin)；NT2Lex频次：A1=43, A2=264"
-tegenkomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=13"
-tegenspreken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-tekeergaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-tekening,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=11"
-telefoon,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=15"
-telefoondienst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-telefoonnummer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=2"
-telegram,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-teleurstellen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-televisie,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=5"
-televisiekijken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-tennis,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-tennissen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-tent,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=5"
-terug,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=18, A2=160"
-terugbetalen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-teruggaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-terugkomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=24"
-terugzien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-testament,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tevoorschijn,"A2分级词条；词性/标签：BW() / ADJ()；NT2Lex频次：A1=0, A2=21"
-tevreden,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=27"
-thee,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=27"
-theeklant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-theelepel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-thuis,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=13, A2=67"
-thuiskomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=13"
-tien uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=2, A2=5"
-tijdzone,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tijger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-tillen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=13"
-timmerman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-toch,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=4, A2=366"
-tocht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-toe,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=11, A2=140"
-toen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=1, A2=162"
-toeschouwer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-toets,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-toeval,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-toilet,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=5, A2=7"
-tompouce,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-toneelstuk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=24"
-tong,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-toonbank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-topper,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-toren,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=43"
-torenkamer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tot en met,"A1分级词条；词性/标签：VZ(init) VG(neven) VZ(init)；NT2Lex频次：A1=3, A2=4"
-tot nu toe,"A2分级词条；词性/标签：VZ(init) BW() VZ(fin)；NT2Lex频次：A1=0, A2=4"
-totaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-totdat,"A2分级词条；词性/标签：VG(onder)；NT2Lex频次：A1=0, A2=11"
-touw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=46"
-tovenaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-toverdrank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-toverkruiden,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-tovermiddel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-traan,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=57"
-tram,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=5"
-trap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=45"
-trappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-trein,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=21, A2=53"
-trekken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=113"
-treuren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-trommel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-trompet,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-troon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-troop,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-troosten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-trots,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=15"
-trouw,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-trouwdag,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-trouwen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=6, A2=89"
-trouwerij,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-trouwjurk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-tuin,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=13, A2=48"
-tuinman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-tunnel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-turen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-turf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-twee,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=29, A2=193"
-twee uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=3, A2=11"
-tweeling,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-ui,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-uil,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-uit,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=10, A2=283"
-uithalen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-uitkijk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-uitkijkpost,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-uitkomen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-uitlachen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-uitlaten,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=1"
-uitleggen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-uitputten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-uitputting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-uitsnijden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-uitstappen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-uitsteken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-uitstekend,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-uitstellen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-uitzien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-uitzoeken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-uniform,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=3"
-urenlang,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-uw,"A2分级词条；词性/标签：VNW(bez,det)；NT2Lex频次：A1=3, A2=139"
-uzelf,"A2分级词条；词性/标签：VNW(pr,pron)；NT2Lex频次：A1=0, A2=2"
-vaart,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=13"
-vaas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-vacaturebank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vader,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=20, A2=225"
-vak,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=13"
-vakantie,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=11, A2=26"
-vakantiepark,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-valk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vampier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=50"
-van,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=2, A2=82"
-van hart,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=2"
-van plan,"A2分级词条；词性/标签：VZ(init) N(soort)；NT2Lex频次：A1=0, A2=15"
-vanaf,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=0, A2=2"
-vanavond,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=28"
-vanbinnen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-vandaag,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=6, A2=41"
-vandaan,"A2分级词条；词性/标签：VZ(fin)；NT2Lex频次：A1=1, A2=16"
-vangen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=27"
-vanmiddag,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=11"
-vanmorgen,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=8"
-vannacht,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=30"
-vanzelf,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=12"
-varen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=1, A2=41"
-variabel,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-vast,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=79"
-vastbinden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-vastmaken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-vastzitten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-vat,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vecht,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-vechten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=39"
-vechter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-veekoopman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-veel,"A1分级词条；词性/标签：VNW(onbep,grad) / N(soort)；NT2Lex频次：A1=142, A2=770"
-veer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-veertien,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=4, A2=2"
-vegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-veilig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=27"
-vel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-veld,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-veldmuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vensterbank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-vent,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-ver,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=6, A2=155"
-verbaasd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=6, A2=44"
-verbazen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=44"
-verbazing,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-verbergen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-verbranden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=6, A2=13"
-verdedigen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-verdieping,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=10"
-verdikkeme,"A2分级词条；词性/标签：TSW()；NT2Lex频次：A1=0, A2=2"
-verdrietig,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=17, A2=32"
-verdrinken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-verdwalen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-verdwijnen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=41"
-verf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-vergeten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=37"
-vergeven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-vergif,"A2分级词条；词性/标签：N(soort) / ADJ()；NT2Lex频次：A1=0, A2=7"
-vergissen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-vergrootglas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-verhaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=130"
-verheugd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-verkopen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=5, A2=33"
-verkrachten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-verlammen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-verlegen,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=14"
-verlichten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=6"
-verliefd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=36"
-verliezen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=35"
-vermoorden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=22"
-vernielen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-verpesten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-verraad,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-verraden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=7"
-verrader,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-verrassing,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-verrekken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-vers,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=10"
-verschrikkelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=17"
-verschrikken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-versieren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-verslapen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-verslijten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-verstand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-verstoppen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=24"
-verstopping,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vertaalbureau,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-verte,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=27"
-vertellen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=15, A2=279"
-vertrekken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=11, A2=32"
-vertrouwen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=14"
-verven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-vervoersbedrijf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-verwarmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-verwoesten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-verzinnen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-vestigingshoofd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vet,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=12"
-vetmesten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-vier,"A2分级词条；词性/标签：TW(rang)；NT2Lex频次：A1=0, A2=5"
-vier uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=2, A2=8"
-vierhonderd,"A2分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=0, A2=3"
-vies,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=2, A2=19"
-vijand,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=40"
-vijf uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=3, A2=8"
-vijfhonderd,"A2分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=1, A2=2"
-vijftien,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=9, A2=6"
-vijver,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-vinden,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=90, A2=378"
-vinger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=23"
-viool,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-vioolspeler,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-visman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vlak,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=6, A2=41"
-vlakbij,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=1, A2=15"
-vlam,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-vlecht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-vleermuis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-vlees,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=22"
-vleesvervanger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vlek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-vleugel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-vliegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=47"
-vliegtuig,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=9, A2=8"
-vliegveld,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=16, A2=0"
-vlinder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-vluchten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=18"
-vlug,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=26"
-vmbo,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-voelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=118"
-voet,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=33"
-voetbal,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=3"
-voetstap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vogel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=20"
-vol,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=90"
-volgen,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-volkslied,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vonk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-voor de deur,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=6"
-voor de gek,"A2分级词条；词性/标签：VZ(init) LID(bep) N(soort)；NT2Lex频次：A1=0, A2=3"
-voor het laat zien,"A2分级词条；词性/标签：VZ(init) LID(bep) ADJ() WW()；NT2Lex频次：A1=0, A2=2"
-voordat,"A2分级词条；词性/标签：VG(onder)；NT2Lex频次：A1=0, A2=34"
-voorhoofd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-voorjaar,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-voorlezer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-voorlichting,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-voorop,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=7"
-voorpoot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-voorschot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vooruit,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=22"
-voorwoord,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-voorzichtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=37"
-vork,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vorst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-vos,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=15"
-vouwen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-vragen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=42, A2=511"
-vredesmier,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vreemd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=8, A2=76"
-vreselijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=55"
-vreugde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-vriend,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=29, A2=128"
-vriendelijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=31"
-vriendin,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=34, A2=15"
-vriezen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-vrijdag,"A1分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=6, A2=17"
-vrijdagavond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=3"
-vrijheidsstrijder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vrijlaten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-vrijmarkt,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-vrijwilligerswerk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-vroedvrouw,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vroeg,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=16, A2=70"
-vrolijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=51"
-vrolijken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-vrouw,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=41, A2=269"
-vrouwe,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-vrouwenstem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-vuil,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=6"
-vuur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=29"
-vuurrood,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-vwo,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-waar,"A2分级词条；词性/标签：VNW(vb,adv-pron) / ADJ() / WW()；NT2Lex频次：A1=12, A2=279"
-waard,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=14"
-waarheid,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=34"
-waarom,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=9, A2=131"
-waarschuwen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=11"
-wacht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-wachten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=2, A2=114"
-wachter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-waken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-wakke,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=4, A2=61"
-walvis,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=73"
-walvisbot,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-walvisvaarder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-wang,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=36"
-wanhopig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=8"
-wankelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-wanneer,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=2, A2=15"
-want,"A2分级词条；词性/标签：VG(neven)；NT2Lex频次：A1=21, A2=277"
-wapen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=19"
-wapenen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-wapperen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-warm,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=58"
-warmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-warmte,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-was,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=6"
-wasdroger,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=7"
-wassen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=6, A2=13"
-wastafel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=4"
-wat,"A2分级词条；词性/标签：VNW(vb,pron) / VNW(excl,pron)；NT2Lex频次：A1=31, A2=680"
-water,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=101"
-waterkant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-waterkoker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-waterlander,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-waterlelie,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-waterskiën,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-we,"A1分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=90, A2=664"
-website,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=9"
-webwinkel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=0"
-wedden,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=9"
-weddenschap,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-wederhelft,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-weekend,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=7, A2=19"
-weer,"A2分级词条；词性/标签：BW() / N(soort)；NT2Lex频次：A1=26, A2=433"
-weetje,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-weg,"A2分级词条；词性/标签：BW() / N(soort)；NT2Lex频次：A1=11, A2=304"
-wegblijven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-weggaan,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=3, A2=23"
-wegjagen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-weglaten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-wegslepen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-wegsturen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=3"
-wegvliegen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-wekenlang,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=4"
-wel,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=28, A2=612"
-weleens,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=2, A2=6"
-welkom,"A1分级词条；词性/标签：ADJ() / N(soort)；NT2Lex频次：A1=3, A2=13"
-welterusten,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-welzijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-wenken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-wereldbeker,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-werk,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=24, A2=63"
-werken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=32, A2=100"
-werkman,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-werkplek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-west,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=2"
-weten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=11, A2=459"
-wezen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-wie weten,"A2分级词条；词性/标签：VNW(vb,pron) WW()；NT2Lex频次：A1=0, A2=4"
-wiel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=2, A2=0"
-wij,"A2分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=10, A2=145"
-wijd,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=7"
-wijf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-wijs,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=7"
-wijzen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=76"
-wild,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=21"
-willen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=69, A2=697"
-winde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-windekind,"A2分级词条；词性/标签：N(soort) / WW()；NT2Lex频次：A1=0, A2=39"
-winkel,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=15, A2=69"
-winkelcentrum,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=2"
-winkeldeur,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-winkelen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=8"
-winnen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=24"
-winter,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=19"
-wiskunde,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=3, A2=1"
-wit,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=7, A2=96"
-woedend,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=27"
-woensdag,"A2分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=1, A2=9"
-wolf,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-wolk,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-wond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=18"
-wonder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=14"
-wonderlijk,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-wonen,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=64, A2=96"
-woning,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=4"
-woonartikel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-woonkamer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=8, A2=11"
-woonschip,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-worm,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-worst,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=8"
-wrijven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=12"
-zaal,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=22"
-zaalschoen,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zacht,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=11, A2=82"
-zachter,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zadel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=13"
-zak,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=37"
-zakken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=22"
-zat,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=3"
-zaterdag,"A1分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=6, A2=15"
-zaterdagavond,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=3"
-ze,"A1分级词条；词性/标签：VNW(pers,pron)；NT2Lex频次：A1=370, A2=2206"
-zee,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=6, A2=54"
-zeehond,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-zeemeermin,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zegelring,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zegenen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=4"
-zeggen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=158, A2=2058"
-zemel,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-zenuwachtig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=9"
-zes,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=5, A2=12"
-zes uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=2, A2=4"
-zeshonderd,"A2分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=0, A2=2"
-zestien,"A1分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=3, A2=3"
-zeuren,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-zeven,"A2分级词条；词性/标签：TW(hoofd)；NT2Lex频次：A1=2, A2=18"
-zeven uur,"A1分级词条；词性/标签：TW(hoofd) N(soort)；NT2Lex频次：A1=2, A2=7"
-ziek,"A1分级词条；词性/标签：ADJ()；NT2Lex频次：A1=10, A2=52"
-zieke,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-zielsverwant,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-zien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=50, A2=771"
-ziens,"A1分级词条；词性/标签：BW()；NT2Lex频次：A1=5, A2=3"
-zigeuner,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=3"
-zij,"A1分级词条；词性/标签：VNW(pers,pron) / N(soort)；NT2Lex频次：A1=37, A2=196"
-zij het,"A2分级词条；词性/标签：VNW(pers,pron) VNW(pers,pron)；NT2Lex频次：A1=0, A2=2"
-zijn,"A1分级词条；词性/标签：WW() / VNW(bez,det)；NT2Lex频次：A1=661, A2=6606"
-zilver,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=11"
-zinken,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=5"
-zitten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=32, A2=444"
-zo,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=24, A2=669"
-zo gauw,"A2分级词条；词性/标签：BW() ADJ()；NT2Lex频次：A1=0, A2=2"
-zoek,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=10"
-zoeken,"A1分级词条；词性/标签：WW()；NT2Lex频次：A1=29, A2=136"
-zoiets,"A2分级词条；词性/标签：VNW(onbep,pron)；NT2Lex频次：A1=0, A2=11"
-zojuist,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=2"
-zolang,"A2分级词条；词性/标签：BW()；NT2Lex频次：A1=0, A2=10"
-zolder,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=1, A2=3"
-zomer,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=15, A2=8"
-zomertijd,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=5"
-zon,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=4, A2=46"
-zondag,"A1分级词条；词性/标签：SPEC(deeleigen)；NT2Lex频次：A1=6, A2=26"
-zonde,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
-zonlicht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-zonnebank,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=4"
-zonnebloem,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zonnig,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=0, A2=5"
-zucht,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=16"
-zuchten,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=34"
-zullen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=12, A2=765"
-zuring,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zus,"A1分级词条；词性/标签：N(soort)；NT2Lex频次：A1=16, A2=37"
-zuster,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=12"
-zuurpruim,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zwaaien,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=28"
-zwaard,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=46"
-zwart,"A2分级词条；词性/标签：ADJ()；NT2Lex频次：A1=1, A2=53"
-zweep,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=9"
-zwembadpas,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=10"
-zwemmen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=4, A2=35"
-zwemmer,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=2"
-zwerven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=2"
-zweven,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=10"
-zwijgen,"A2分级词条；词性/标签：WW()；NT2Lex频次：A1=0, A2=23"
-zwijn,"A2分级词条；词性/标签：N(soort)；NT2Lex频次：A1=0, A2=6"
+# Yulengua �ʿ� �� ������,
+# ��Դ��NT2Lex-CGN v01��ɸѡ��A1/A2���֣���һ��Ƶ�ʷ�ֵΪA1��A2��A1+A2ԭʼƵ��>=2��������Ϊ�ȼ�/����/Ƶ����Ϣ������˫��ʵ����塣,
+��,����
+'s,
+'s avond,
+'s middag,
+'s morgen,
+'s nacht,
+Karel de Grote,
+Kerstmis,
+Los Angeles,
+Meneer,
+Pasen,
+Pinksteren,
+Witte Donderdag,
+aaien,
+aan,
+aan de hand,
+aan de man,
+aanbetaling,
+aandachtig,
+aandoen,
+aangaan,
+aankijken,
+aankleden,
+aankloppen,
+aankomen,
+aanlopen,
+aanrijden,
+aanschuiven,
+aansteken,
+aanvallen,
+aanzien,
+aap,
+aardappel,
+aardbei,
+aarde,
+aardig,
+aardrijkskunde,
+aarzelen,
+accordeon,
+ach,
+achter,
+achteraan,
+achterblijven,
+achteren,
+achterkamer,
+achterkant,
+achterna,
+achterom,
+achterop,
+adel,
+adem,
+ademen,
+ademhalen,
+administratie,
+adres,
+af,
+afbijten,
+afdoen,
+afkomen,
+afkomst,
+aflopen,
+afmaken,
+afscheid,
+afschuw,
+afslaan,
+afsprakenlijn,
+afspreken,
+afspringen,
+afvallen,
+afwas,
+afwassen,
+afzuigkap,
+ah,
+akelig,
+al,
+alarm,
+aldoor,
+alkoof,
+allebei,
+alleen,
+allemaal,
+alles,
+als,
+alsjeblieft,
+alstublieft,
+altaar,
+altijd,
+alweer,
+amsterdammers,
+an,
+anders,
+andijviestamppot,
+angstig,
+antilliaans,
+antwoorden,
+apparatuur,
+appartement,
+appel,
+appelmoes,
+appelsap,
+appeltaart,
+arabier,
+arm,
+armband,
+armoe,
+armoedig,
+arrestatie,
+arrestatiebevel,
+arresteren,
+as,
+atlas,
+au,
+auto,
+autorijden,
+avondeten,
+avondschool,
+baas,
+badkamer,
+badpak,
+bakker,
+bakkersjongen,
+bal,
+balen,
+balie,
+baljurk,
+balkon,
+balzaal,
+bang,
+bank,
+barbier,
+barsten,
+barvrouw,
+basisonderwijs,
+basisschool,
+bastaardzoon,
+bazin,
+bed,
+bedanken,
+bedelaar,
+bedenken,
+bedgordijnen,
+bediende,
+bedienen,
+bedoelen,
+bedriegen,
+bedroeven,
+bedrog,
+beeldschoon,
+been,
+beer,
+beest,
+beet,
+beginnen,
+beginnerscursus,
+begraven,
+begrijpen,
+behalve,
+bek,
+beker,
+bel,
+beleefd,
+belkoord,
+bellen,
+belofte,
+belonen,
+beloven,
+bende,
+beneden,
+benieuwd,
+benzine,
+berging,
+beroven,
+beschuit,
+beschuldigen,
+beschuldiging,
+bespaartip,
+best,
+bestand,
+bestelling,
+bestormen,
+besturen,
+beuren,
+bevel,
+bevelen,
+beven,
+bevrijden,
+bewaker,
+bewondering,
+bewusteloos,
+bezetting,
+bezielen,
+bibberen,
+bidden,
+biechten,
+bierlip,
+bij,
+bij elkaar,
+bijbel,
+bijl,
+bijsluiter,
+bijten,
+bijwerking,
+binnen,
+binnenkomen,
+binnenlaten,
+binnenmens,
+binnenplaats,
+binnenzak,
+bisschop,
+bisschopskleren,
+blad,
+blaffen,
+blauw,
+blazen,
+bleek,
+blij,
+blijdschap,
+blijven,
+bliksem,
+blind,
+bloed,
+bloeden,
+bloem,
+bloemenmand,
+bloes,
+blond,
+bloot,
+blootje,
+bocht,
+bode,
+boef,
+boem,
+boer,
+boerenkool,
+bol,
+bonken,
+bons,
+boodschap,
+boodschapper,
+boog,
+boomstam,
+boord,
+boos,
+boot,
+bord,
+boren,
+bos,
+bot,
+boterham,
+boven,
+bovenaan,
+bovenin,
+bovenkant,
+bovenlip,
+bovenmeester,
+braden,
+brand,
+branden,
+brandkast,
+brandstapel,
+brandweerman,
+breekijzer,
+brief,
+broeder,
+broekzak,
+broer,
+brommen,
+brood,
+brug,
+brugwachter,
+bruid,
+bruidegom,
+bruidsjurk,
+bruiloft,
+bruin,
+brullen,
+brutaal,
+buigen,
+buiging,
+buik,
+buit,
+buiten,
+buitendeur,
+buitenkant,
+buitenlucht,
+buitenmens,
+burcht,
+burgerzaken,
+bus,
+buschauffeur,
+bushalte,
+buurt,
+buurvrouw,
+cadeau,
+caf��,
+calorie,
+cape,
+capulet,
+carnaval,
+cent,
+chocola,
+chocolademelk,
+citroensap,
+clarijs,
+clarisse,
+clarissenklooster,
+cola,
+combimagnetron,
+conducteur,
+consult,
+croissant,
+cr��mespoeling,
+cursusmanager,
+cursusseizoen,
+daar,
+daarheen,
+daarna,
+daarom,
+daaronder,
+daarop,
+dag,
+dagboek,
+dagen,
+dakgoot,
+dakraam,
+dan,
+dank,
+dankbaar,
+danken,
+dans,
+dansen,
+dansfeest,
+dapper,
+das,
+dat,
+dat wel,
+datje,
+de moeite waard,
+dealen,
+deeg,
+deftig,
+degene,
+deinen,
+dek,
+deken,
+deksel,
+denken,
+designhuis,
+detective,
+deur,
+deurpost,
+dicht,
+dicht bij,
+dichtbij,
+dichtdoen,
+dichter,
+dichterbij,
+dichtmaken,
+dichttrekken,
+dief,
+dienaar,
+dienares,
+dienstmeisje,
+dier,
+dierenverhaal,
+dik,
+ding,
+dinsdag,
+distel,
+dit,
+dochter,
+dode,
+doden,
+doen,
+dokter,
+dolk,
+dom,
+donder,
+donderdagavond,
+donderslag,
+donker,
+dood,
+doodgaan,
+doodmaken,
+doodmoe,
+doodsbang,
+doodsbed,
+doodskist,
+doodstil,
+doodtrappen,
+doordeweeks,
+doorheen,
+doorlopen,
+doorvaren,
+doorvertellen,
+doorzichtig,
+doorzoeken,
+dorp,
+dorst,
+dosering,
+douane,
+draad,
+draaien,
+draaikolk,
+draven,
+drempel,
+drie,
+drie uur,
+driftig,
+dringen,
+drinken,
+droevig,
+drogen,
+dromen,
+droog,
+droom,
+druif,
+druk,
+dubbeltje,
+duif,
+duin,
+duinroos,
+duintop,
+dun,
+duren,
+durven,
+duwen,
+dwaas,
+echt,
+edel,
+edele,
+edelman,
+edelsteen,
+een,
+een jaar of,
+een voor een,
+eenzaam,
+eerst,
+eetcaf��,
+eetlepel,
+eettafel,
+eetzaal,
+effe,
+eh,
+ei,
+eigenlijk,
+eigenwijs,
+eiland,
+eindelijk,
+elf,
+email,
+emir,
+emmer,
+eng,
+engel,
+engels,
+entree,
+entreeprijs,
+envelop,
+er,
+eraf,
+erasmusbeurs,
+erbij,
+erdoor,
+eren,
+erg,
+erheen,
+erin,
+ernaast,
+ernstig,
+eruit,
+ervoor,
+erwtensoep,
+eten,
+even,
+exclusief,
+ezel,
+fabriek,
+fakkel,
+familie,
+familiegraf,
+faust,
+feest,
+feestmaal,
+feestprogramma,
+fezziwig,
+fiets,
+fietsen,
+fijn,
+file,
+filevrij,
+flacon,
+fladderen,
+fles,
+flink,
+fluisteren,
+fluiten,
+fluittoon,
+fontein,
+fornuis,
+frisdrank,
+fruit,
+fulltime,
+gaan,
+gaar,
+gaat,
+galerij,
+galg,
+galmen,
+gang,
+gans,
+gapen,
+gasfornuis,
+gast,
+gat,
+gauw,
+gebaar,
+gebaren,
+gebed,
+gedaante,
+gedag,
+geen een,
+geest,
+gegil,
+gehakt,
+geheim,
+geheimzinnig,
+gehoorzamen,
+gek,
+gekreun,
+geliefd,
+geliefde,
+gelijk,
+geloven,
+geluid,
+geluidsoverlast,
+gelukken,
+gelukkig,
+gemeen,
+gemeentebestuur,
+gemeentehuis,
+genezen,
+geschiedenisles,
+geschreeuw,
+gespannen,
+gestalte,
+getuigschrift,
+geur,
+gevaarlijk,
+gevallen,
+gevangenis,
+gevangennemen,
+gevecht,
+geven,
+gevoelen,
+geweer,
+geweldig,
+gewond,
+geworden,
+gezelschapsdier,
+gezeur,
+gezicht,
+gids,
+gier,
+gieten,
+gif,
+gil,
+glad,
+glanzen,
+glijbaan,
+glijden,
+glimlachen,
+glimworm,
+glinsteren,
+gluren,
+godenzoon,
+godin,
+godsdienstles,
+goed,
+goedemiddag,
+goedemorgen,
+goedenavond,
+goedvinden,
+golf,
+gooien,
+gordel,
+gordijn,
+goud,
+gouden,
+goudstuk,
+graad,
+graaf,
+graag,
+gracht,
+graf,
+grafkelder,
+grafsteen,
+gram,
+grap,
+grappenmaker,
+gras,
+grasspriet,
+grauw,
+graven,
+gravin,
+griep,
+griezelig,
+griezelverhaal,
+griffel,
+grijns,
+grijnzen,
+grijpen,
+grijs,
+grimberen,
+grinniken,
+groente,
+groentewinkel,
+groepsreis,
+groet,
+grommen,
+grond,
+grondgebied,
+grootmoeder,
+grootouder,
+grootvader,
+gulden,
+gulzig,
+gut,
+gymnasium,
+gymnastiek,
+gymp,
+gymschoen,
+gymvereniging,
+ha,
+haai,
+haak,
+haan,
+haar,
+haarband,
+haard,
+haardvuur,
+haas,
+haast,
+haasten,
+haastig,
+hagelslag,
+hak,
+hakken,
+hal,
+halen,
+half een,
+half negen,
+half vijf,
+half zes,
+halfjaar,
+halftwaalf,
+halfuur,
+halfvol,
+hals,
+halsketting,
+ham,
+hamburger,
+hampstead,
+hand,
+handschoen,
+hangen,
+hard,
+hardlopen,
+hardop,
+haring,
+harnas,
+harpoen,
+harpoenier,
+hart,
+hartelijk,
+hartklopping,
+havo,
+hazenkop,
+hazenvel,
+hbo,
+he,
+hebben,
+heel,
+heen,
+heen en weer,
+heer,
+heerlijk,
+heffen,
+heg,
+heimwee,
+hek,
+heks,
+hel,
+helder,
+helemaal,
+helm,
+helpen,
+helper,
+hem,
+hemel,
+hemelbed,
+hemzelf,
+herberg,
+herbergen,
+herinneren,
+herkennen,
+hertog,
+het,
+het zwart,
+heten,
+hetzelfde,
+heuvel,
+hier,
+hierheen,
+hiernaartoe,
+hiernaast,
+hij,
+hijgen,
+hijzelf,
+hitte,
+hmm,
+ho,
+hobbelen,
+hobby,
+hoed,
+hoef,
+hoesten,
+hoeveel,
+hoeven,
+hoever,
+hoezo,
+hof,
+hofdag,
+hofdame,
+hofzaal,
+hok,
+hol,
+hollen,
+holmes,
+hond,
+hondenbezitter,
+hondenpoep,
+honderd,
+hongaars,
+honger,
+honing,
+hoofd,
+hoofdman,
+hoofdstuk,
+hoofdzuster,
+hooiberg,
+hoorn,
+hopelijk,
+hopen,
+horen,
+horloge,
+hotelkamer,
+houden,
+hout,
+houthakker,
+huid,
+huilen,
+huis,
+huisarts,
+huishouden,
+hulpeloos,
+hup,
+hut,
+hutspot,
+huwelijk,
+huwelijksnacht,
+huwelijksreis,
+h��,
+h��,
+ieder,
+iedereen,
+ier,
+iers,
+ij,
+ijs,
+ijskoud,
+ijzer,
+ik,
+in,
+in de hand,
+in de knoop,
+in de steek,
+in de wind,
+in hand,
+in het licht van,
+in orde,
+in principe,
+indeling,
+indiaas,
+indringer,
+ineens,
+influenzavirus,
+ingaan,
+ingang,
+ingredi?nt,
+inhalen,
+innemen,
+inspecteur,
+instemmen,
+intrekken,
+intussen,
+invoegen,
+inwonen,
+ivoor,
+ja,
+ja horen,
+jacht,
+jagen,
+jager,
+jaloers,
+jam,
+jammer,
+jammeren,
+jas,
+jawel,
+jazeker,
+je,
+jee,
+jezus,
+jij,
+jijzelf,
+joelen,
+johannes,
+jong,
+jongen,
+jongerencentrum,
+jonkvrouw,
+joos,
+jou,
+journaal,
+juffrouw,
+juichen,
+jullie,
+jurk,
+jus,
+kaal,
+kaars,
+kaarslicht,
+kaart,
+kabouter,
+kachel,
+kaft,
+kajuit,
+kalender,
+kali-gelovige,
+kalief,
+kalkoen,
+kam,
+kamer,
+kamerdeur,
+kamerheer,
+kamerjas,
+kamerscherm,
+kammen,
+kan,
+kantine,
+kantoor,
+kantoorbediende,
+kantoortuin,
+kap,
+kapitein,
+kapot,
+kapotmaken,
+kar,
+kartuizerklooster,
+karwei,
+kast,
+kastanje,
+kasteel,
+kasteelpoort,
+kat,
+kater,
+katholiek,
+keel,
+keer,
+kelder,
+kelner,
+kerel,
+kerkhof,
+kerkklok,
+kerst,
+kerstdag,
+kerstfeest,
+kerstnacht,
+kersttijd,
+ketting,
+keuken,
+keukenblok,
+keukenkast,
+keukenmeisje,
+keurig,
+keuzevak,
+kier,
+kijken,
+kikker,
+kil,
+kin,
+kinderachtig,
+kinderfeest,
+kip,
+kist,
+klaar,
+klaarmaken,
+klaarstaan,
+klagen,
+klant,
+klap,
+klappen,
+klas,
+klederdracht,
+kleed,
+klein,
+klemmen,
+kleuren,
+kleurkrijt,
+klimmen,
+klinken,
+klok,
+klooster,
+kloosterpoort,
+kloppen,
+klopper,
+klucht,
+kluizenaar,
+knecht,
+knie,
+knielen,
+knijpen,
+knik,
+knikken,
+knipogen,
+knoflook,
+knolselderie,
+knoop,
+knopen,
+knorren,
+koek,
+koel,
+koeren,
+koets,
+koetsier,
+koffie,
+kogel,
+kok,
+koken,
+kokkin,
+kolenkit,
+kom,
+komen,
+komisch,
+konijn,
+konijnenhol,
+koning,
+koningin,
+kool,
+koopavond,
+koopman,
+koopzondag,
+koor,
+koord,
+koorddansen,
+koorddanser,
+koorts,
+kop,
+kopen,
+kostbaarheid,
+kou,
+koude,
+kous,
+kozijn,
+krabben,
+krans,
+kreet,
+krekel,
+krekelschool,
+krentenbroodje,
+kreunen,
+kreupel,
+kring,
+kroegbaas,
+kronkelen,
+kroon,
+kruid,
+kruik,
+kruipen,
+kruis,
+kruisen,
+kruisspin,
+kruk,
+krul,
+kuil,
+kunstarm,
+kunstbeen,
+kus,
+kust,
+kuur,
+kwaad,
+kwart voor negen,
+kwartier,
+kwast,
+kwetteren,
+kwijt,
+laagopgeleid,
+laars,
+lach,
+lachen,
+lafaard,
+laken,
+lam,
+lamp,
+lang,
+langs,
+langzaam,
+lans,
+larf,
+last,
+laten,
+latijns,
+lawaai,
+ledenpas,
+leeg,
+leegdrinken,
+leegmaken,
+leerling,
+leeuw,
+leger,
+legerleider,
+leggen,
+lei,
+lekker,
+lente,
+lepel,
+leraar,
+lerares,
+les,
+letten,
+letter,
+leuk,
+leunen,
+leven,
+libel,
+lichaam,
+licht,
+lief,
+liefde,
+liefdesdrank,
+liefdesrelatie,
+liefdesverhaal,
+liegen,
+lieverd,
+ligbad,
+liggen,
+lijf,
+lijk,
+lijkbaar,
+likken,
+linkerhand,
+linkerkant,
+linkerschoen,
+links,
+lip,
+list,
+liter,
+litteken,
+lk,
+loffelijk,
+logeren,
+lokaal,
+loket,
+longontsteking,
+lopen,
+loslopen,
+losmaken,
+lucht,
+luchtrooster,
+luik,
+luipaard,
+luis,
+luisteren,
+lukken,
+lunchen,
+lunchpauze,
+lus,
+lusteloos,
+maag,
+maagd,
+maagpijn,
+maan,
+maand,
+maandag,
+maanlicht,
+maar,
+maar goed,
+maarschalk,
+machtig,
+mager,
+magnetron,
+majesteit,
+mal,
+maling,
+man,
+mand,
+mannenstem,
+mantel,
+marktplein,
+martelen,
+masker,
+mast,
+mat,
+matroos,
+mbo,
+me,
+medicijn,
+mee,
+meegeven,
+meekomen,
+meel,
+meelopen,
+meenemen,
+meester,
+meeuw,
+meevaren,
+meikever,
+meisje,
+melk,
+mens,
+merken,
+mes,
+met,
+meteen,
+metro,
+mevrouw,
+middag,
+middeleeuwer,
+midden,
+middenin,
+middernacht,
+mier,
+mierenvolk,
+mij,
+mijn,
+mijzelf,
+milt,
+min,
+minstreel,
+minuut,
+mis,
+misbruiken,
+miss,
+mist,
+mmm,
+mmmm,
+moe,
+moed,
+moeder,
+moeras,
+moerasmonster,
+moeten,
+mogen,
+mol,
+mollig,
+mompelen,
+mond,
+monnik,
+monster,
+mooi,
+moord,
+moordaanslag,
+moorden,
+moordenaar,
+mopperen,
+morgen,
+morgenavond,
+morgenochtend,
+morgenvroeg,
+mos,
+moslim,
+mug,
+muis,
+munt,
+muntstuk,
+musical,
+muts,
+muur,
+muziek,
+na,
+naaien,
+naaimachine,
+naaister,
+naaiwerk,
+naambord,
+naar,
+naar buiten,
+naar voren,
+naartoe,
+naast,
+nacht,
+nachtjapon,
+nachtslot,
+nar,
+natuurkunde,
+natuurlijk,
+nee,
+neef,
+neer,
+negen,
+negen uur,
+nek,
+nerveus,
+net,
+neus,
+neusgat,
+neusspray,
+nicht,
+niemand,
+niet,
+niet waar,
+niet-fietser,
+niets,
+nieuw,
+nieuwjaar,
+nieuwsgierig,
+nijdig,
+nodig,
+nodigen,
+nog,
+nog eens,
+non,
+non-stop,
+nooit,
+normaal,
+nos-journaal,
+nou,
+nou ja,
+nu,
+ober,
+och,
+ochtend,
+oerwoud,
+oever,
+olie,
+om,
+om zich heen,
+oma,
+omdat,
+omdraaien,
+omhoog,
+omkopen,
+omlaag,
+onder,
+onder de indruk,
+onderaan,
+onderbrengen,
+ondersteboven,
+onderweg,
+onderwijsinstelling,
+ondeugend,
+oneerlijk,
+ongeduldig,
+ongelukkig,
+ongemerkt,
+ongerust,
+onophoudelijk,
+onregelmatig,
+onrustig,
+ontbijt,
+ontbijten,
+onthoofden,
+onthouden,
+ontmoeting,
+ontroeren,
+ontslag,
+ontsnappen,
+ontsteking,
+ontstressen,
+ontvoeren,
+ontwaken,
+ontzetten,
+onzichtbaar,
+onzin,
+oog,
+oogmasker,
+ook,
+oor,
+oorpijn,
+oorwurm,
+oosten,
+op,
+op en neer,
+op slot,
+op tijd,
+op zichzelf,
+opa,
+opeen,
+open,
+opendoen,
+openen,
+openingstijd,
+openmaken,
+opeten,
+opgaan,
+opgelucht,
+ophangegen,
+ophangen,
+ophouden,
+opium,
+opiumkit,
+opiumpijp,
+opkamer,
+opknappen,
+oplichter,
+opluchten,
+opmaak,
+opmaken,
+opoe,
+oppas,
+oppassen,
+opscheplepel,
+opschieten,
+opschrijven,
+opsluiten,
+optillen,
+optocht,
+opvang,
+opvoeren,
+opwinden,
+opzetplaatje,
+oud,
+ouder,
+oven,
+overal,
+overdag,
+overeind,
+overgaan,
+overgeven,
+overkant,
+overkomen,
+overnachten,
+overstappen,
+pa,
+paard,
+paardrijden,
+paasdag,
+pakken,
+paleis,
+pan,
+pantoffel,
+pap,
+papiaments,
+papier,
+paracetamol,
+paraplu,
+parel,
+park,
+parttime,
+pas,
+passen,
+pastoor,
+pedagogisch,
+peinzen,
+pelgrim,
+pen,
+perfect,
+pet,
+petroleumlamp,
+peulvrucht,
+piepen,
+pijl,
+pijp,
+pikdonker,
+pikkedonker,
+pinksterdag,
+piraat,
+pistool,
+plafond,
+plak,
+plakken,
+plan,
+plank,
+planten,
+plattegrond,
+platzak,
+plein,
+plek,
+ploegijzer,
+plotseling,
+pluizer,
+plunderen,
+po,
+poep,
+poepen,
+poes,
+politiebureau,
+pond,
+pook,
+poort,
+poos,
+poot,
+portemonnee,
+portier,
+potlood,
+praat,
+prachtig,
+praten,
+precies,
+prei,
+priester,
+prikken,
+prima,
+prins,
+prinses,
+probleem,
+professor,
+programmeur,
+proost,
+pudding,
+puntig,
+raak,
+raam,
+raar,
+rail,
+ram,
+rammel,
+rammelen,
+rat,
+razen,
+recept,
+rechterhand,
+rechterhandschoen,
+rechterkant,
+rechtop,
+rechts,
+rechtszitting,
+reclameplaatje,
+redden,
+reddingsboei,
+rei,
+reis,
+rekensom,
+rennen,
+repareren,
+repetitor,
+rest,
+restaurantmedewerker,
+revolver,
+rib,
+ridder,
+ridderzaal,
+riem,
+riet,
+rietstengel,
+rij,
+rijdans,
+rijk,
+rijtjeshuis,
+rijtuig,
+rillen,
+rilling,
+ring,
+rivier,
+roddel,
+roei,
+roeispaan,
+roepen,
+roeping,
+roer,
+roeren,
+roerloos,
+roet,
+rolstoel,
+roltrap,
+rommelmarkt,
+rond,
+rondkijken,
+rondlopen,
+rondreizen,
+rondvliegen,
+rood,
+roodborstje,
+rooftocht,
+rook,
+rookworst,
+roos,
+rooster,
+rots,
+rotweer,
+routebeschrijving,
+roven,
+rover,
+rozenknop,
+rozenstruik,
+ruiken,
+ruim,
+ruimen,
+ruit,
+ruiter,
+ruk,
+rustig,
+ruzie,
+salade,
+salamander,
+salontafel,
+samen,
+satijn,
+schaak,
+schaakbord,
+schaakspel,
+schaal,
+schaap,
+schaduw,
+schaken,
+schaker,
+schamen,
+schande,
+schapenbout,
+schapenvel,
+schat,
+schatrijk,
+schedel,
+scheepsroeper,
+scheepsruim,
+schelden,
+schelen,
+schep,
+scherp,
+scheur,
+schijf,
+schijnen,
+schild,
+schildering,
+schillen,
+schip,
+schitteren,
+schitterend,
+schoen,
+schok,
+schooi,
+school,
+schooldeur,
+schoolmeester,
+schooltas,
+schoolvakantie,
+schoon,
+schoonmaken,
+schoot,
+schor,
+schotel,
+schouder,
+schouwburg,
+schreeuwen,
+schrift,
+schrijven,
+schrikken,
+schrikogen,
+schudden,
+schuifelen,
+schuilplaats,
+schuiven,
+schurk,
+schuur,
+scrooge,
+seconde,
+sein,
+september,
+serveren,
+shilling,
+sigaar,
+sinaasappel,
+sissen,
+sjaal,
+sla,
+slaan,
+slaap,
+slaapkamer,
+slachten,
+slag,
+slagroom,
+slang,
+slank,
+slap,
+slapen,
+slaperig,
+slee,
+slepen,
+sleutel,
+sleutelbos,
+slim,
+slimheid,
+slinger,
+sloep,
+slootwater,
+slordig,
+sluier,
+sluipen,
+smaak,
+smakelijk,
+smaken,
+smeken,
+smeren,
+smerig,
+smijten,
+smoes,
+smullen,
+snappen,
+snee,
+sneeuw,
+sneeuwen,
+snel,
+snijden,
+snik,
+snor,
+snuffelen,
+snuiven,
+snurken,
+soep,
+soepel,
+soldaat,
+somber,
+soms,
+spannen,
+spatten,
+speelgoed,
+speer,
+spek,
+spel,
+spijten,
+spikkel,
+spikkelen,
+spin,
+spinnenweb,
+spion,
+spleet,
+splijten,
+spliterwt,
+spoken,
+spons,
+spook,
+spoor,
+spoorlijn,
+sportief,
+sportschool,
+spray,
+spreekuur,
+springen,
+sprong,
+sprookje,
+spuit,
+spuiten,
+spul,
+sst,
+staan,
+staart,
+stad,
+stadsgracht,
+stadsmuur,
+stakker,
+stal,
+staljongen,
+stampen,
+stamppot,
+stank,
+stap voor stap,
+stapel,
+stappen,
+station,
+steeg,
+steek,
+steel,
+steen,
+steenkool,
+stek,
+steken,
+stel,
+stelen,
+stem,
+stempel,
+stenen,
+ster,
+sterven,
+stiefdochter,
+stiefvader,
+stiekem,
+stil,
+stilstaan,
+stinken,
+stoel,
+stok,
+stoken,
+stop,
+stoppen,
+stormen,
+stoten,
+stotteren,
+straal,
+straat,
+straf,
+straffen,
+strafregel,
+straks,
+strand,
+streekdracht,
+strelen,
+stressen,
+strijder,
+strijdperk,
+strijken,
+strik,
+stromen,
+strompelen,
+stroopwafel,
+studentenflat,
+studentenhuis,
+studeren,
+stumper,
+stuurman,
+sufferd,
+supermarkt,
+t-shirt,
+taart,
+taartvorm,
+tabak,
+tablet,
+tachtig,
+tafel,
+tak,
+tand,
+tandem,
+tap,
+tappen,
+tas,
+taxi,
+taxichauffeur,
+te dood,
+te hulp,
+te pakken,
+te rusten,
+te spreken,
+te ver,
+te weten,
+teen,
+tegel,
+tegemoet,
+tegen,
+tegenkomen,
+tegenspreken,
+tekeergaan,
+tekening,
+telefoon,
+telefoondienst,
+telefoonnummer,
+telegram,
+teleurstellen,
+televisie,
+televisiekijken,
+tennis,
+tennissen,
+tent,
+terug,
+terugbetalen,
+teruggaan,
+terugkomen,
+terugzien,
+testament,
+tevoorschijn,
+tevreden,
+thee,
+theeklant,
+theelepel,
+thuis,
+thuiskomen,
+tien uur,
+tijdzone,
+tijger,
+tillen,
+timmerman,
+toch,
+tocht,
+toe,
+toen,
+toeschouwer,
+toets,
+toeval,
+toilet,
+tompouce,
+toneelstuk,
+tong,
+toonbank,
+topper,
+toren,
+torenkamer,
+tot en met,
+tot nu toe,
+totaal,
+totdat,
+touw,
+tovenaar,
+toverdrank,
+toverkruiden,
+tovermiddel,
+traan,
+tram,
+trap,
+trappen,
+trein,
+trekken,
+treuren,
+trommel,
+trompet,
+troon,
+troop,
+troosten,
+trots,
+trouw,
+trouwdag,
+trouwen,
+trouwerij,
+trouwjurk,
+tuin,
+tuinman,
+tunnel,
+turen,
+turf,
+twee,
+twee uur,
+tweeling,
+ui,
+uil,
+uit,
+uithalen,
+uitkijk,
+uitkijkpost,
+uitkomen,
+uitlachen,
+uitlaten,
+uitleggen,
+uitputten,
+uitputting,
+uitsnijden,
+uitstappen,
+uitsteken,
+uitstekend,
+uitstellen,
+uitzien,
+uitzoeken,
+uniform,
+urenlang,
+uw,
+uzelf,
+vaart,
+vaas,
+vacaturebank,
+vader,
+vak,
+vakantie,
+vakantiepark,
+valk,
+vampier,
+van,
+van hart,
+van plan,
+vanaf,
+vanavond,
+vanbinnen,
+vandaag,
+vandaan,
+vangen,
+vanmiddag,
+vanmorgen,
+vannacht,
+vanzelf,
+varen,
+variabel,
+vast,
+vastbinden,
+vastmaken,
+vastzitten,
+vat,
+vecht,
+vechten,
+vechter,
+veekoopman,
+veel,
+veer,
+veertien,
+vegen,
+veilig,
+vel,
+veld,
+veldmuis,
+vensterbank,
+vent,
+ver,
+verbaasd,
+verbazen,
+verbazing,
+verbergen,
+verbranden,
+verdedigen,
+verdieping,
+verdikkeme,
+verdrietig,
+verdrinken,
+verdwalen,
+verdwijnen,
+verf,
+vergeten,
+vergeven,
+vergif,
+vergissen,
+vergrootglas,
+verhaal,
+verheugd,
+verkopen,
+verkrachten,
+verlammen,
+verlegen,
+verlichten,
+verliefd,
+verliezen,
+vermoorden,
+vernielen,
+verpesten,
+verraad,
+verraden,
+verrader,
+verrassing,
+verrekken,
+vers,
+verschrikkelijk,
+verschrikken,
+versieren,
+verslapen,
+verslijten,
+verstand,
+verstoppen,
+verstopping,
+vertaalbureau,
+verte,
+vertellen,
+vertrekken,
+vertrouwen,
+verven,
+vervoersbedrijf,
+verwarmen,
+verwoesten,
+verzinnen,
+vestigingshoofd,
+vet,
+vetmesten,
+vier,
+vier uur,
+vierhonderd,
+vies,
+vijand,
+vijf uur,
+vijfhonderd,
+vijftien,
+vijver,
+vinden,
+vinger,
+viool,
+vioolspeler,
+visman,
+vlak,
+vlakbij,
+vlam,
+vlecht,
+vleermuis,
+vlees,
+vleesvervanger,
+vlek,
+vleugel,
+vliegen,
+vliegtuig,
+vliegveld,
+vlinder,
+vluchten,
+vlug,
+vmbo,
+voelen,
+voet,
+voetbal,
+voetstap,
+vogel,
+vol,
+volgen,
+volkslied,
+vonk,
+voor de deur,
+voor de gek,
+voor het laat zien,
+voordat,
+voorhoofd,
+voorjaar,
+voorlezer,
+voorlichting,
+voorop,
+voorpoot,
+voorschot,
+vooruit,
+voorwoord,
+voorzichtig,
+vork,
+vorst,
+vos,
+vouwen,
+vragen,
+vredesmier,
+vreemd,
+vreselijk,
+vreugde,
+vriend,
+vriendelijk,
+vriendin,
+vriezen,
+vrijdag,
+vrijdagavond,
+vrijheidsstrijder,
+vrijlaten,
+vrijmarkt,
+vrijwilligerswerk,
+vroedvrouw,
+vroeg,
+vrolijk,
+vrolijken,
+vrouw,
+vrouwe,
+vrouwenstem,
+vuil,
+vuur,
+vuurrood,
+vwo,
+waar,
+waard,
+waarheid,
+waarom,
+waarschuwen,
+wacht,
+wachten,
+wachter,
+waken,
+wakke,
+walvis,
+walvisbot,
+walvisvaarder,
+wang,
+wanhopig,
+wankelen,
+wanneer,
+want,
+wapen,
+wapenen,
+wapperen,
+warm,
+warmen,
+warmte,
+was,
+wasdroger,
+wassen,
+wastafel,
+wat,
+water,
+waterkant,
+waterkoker,
+waterlander,
+waterlelie,
+waterski?n,
+we,
+website,
+webwinkel,
+wedden,
+weddenschap,
+wederhelft,
+weekend,
+weer,
+weetje,
+weg,
+wegblijven,
+weggaan,
+wegjagen,
+weglaten,
+wegslepen,
+wegsturen,
+wegvliegen,
+wekenlang,
+wel,
+weleens,
+welkom,
+welterusten,
+welzijn,
+wenken,
+wereldbeker,
+werk,
+werken,
+werkman,
+werkplek,
+west,
+weten,
+wezen,
+wie weten,
+wiel,
+wij,
+wijd,
+wijf,
+wijs,
+wijzen,
+wild,
+willen,
+winde,
+windekind,
+winkel,
+winkelcentrum,
+winkeldeur,
+winkelen,
+winnen,
+winter,
+wiskunde,
+wit,
+woedend,
+woensdag,
+wolf,
+wolk,
+wond,
+wonder,
+wonderlijk,
+wonen,
+woning,
+woonartikel,
+woonkamer,
+woonschip,
+worm,
+worst,
+wrijven,
+zaal,
+zaalschoen,
+zacht,
+zachter,
+zadel,
+zak,
+zakken,
+zat,
+zaterdag,
+zaterdagavond,
+ze,
+zee,
+zeehond,
+zeemeermin,
+zegelring,
+zegenen,
+zeggen,
+zemel,
+zenuwachtig,
+zes,
+zes uur,
+zeshonderd,
+zestien,
+zeuren,
+zeven,
+zeven uur,
+ziek,
+zieke,
+zielsverwant,
+zien,
+ziens,
+zigeuner,
+zij,
+zij het,
+zijn,
+zilver,
+zinken,
+zitten,
+zo,
+zo gauw,
+zoek,
+zoeken,
+zoiets,
+zojuist,
+zolang,
+zolder,
+zomer,
+zomertijd,
+zon,
+zondag,
+zonde,
+zonlicht,
+zonnebank,
+zonnebloem,
+zonnig,
+zucht,
+zuchten,
+zullen,
+zuring,
+zus,
+zuster,
+zuurpruim,
+zwaaien,
+zwaard,
+zwart,
+zweep,
+zwembadpas,
+zwemmen,
+zwemmer,
+zwerven,
+zweven,
+zwijgen,
+zwijn,
