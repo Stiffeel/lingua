@@ -328,6 +328,8 @@ const S = {
   cards: [],
   seen: {},         // 每种语言最近读过的句子（难度基准线）
   bo: {},           // 藏语发音库：归一化词 -> {w,p 注音,h 音频哈希,x 扩展名,ts}
+  del: {},          // 卡片删除墓碑：'lang|front' -> 删除时间戳。没有它，删掉的卡会被云端复活
+  pulse: {},        // Daily Pulse：{known:{lang:{词:ts}}, cur:{lang:[词]}, gl:{lang:{词:释义}}}
   trash: null,
   stack: [],
   store: 'ls'       // 'idb' | 'ls'
@@ -383,6 +385,8 @@ const idbSet = (k, v) => idb('readwrite', st => { st.put(v, k); });
 
 function lsWrite(key, val) {
   if (key === 'cards') LS.set('lg.cards', val);
+  else if (key === 'del') LS.set('lg.del', val);
+  else if (key === 'pulse') LS.set('lg.pulse', val);
   else if (key === 'cfg') LS.set('lg.cfg', val);
   else if (key === 'bo') LS.set('lg.bo', val);
   else if (key === 'seen') LK.forEach(k => LS.set('lg.seen.' + k, val[k] || []));
@@ -393,7 +397,7 @@ function persistKey(key, val) {
   } else lsWrite(key, val);
 }
 /* quiet = true 表示这次写入本身就是云端同步的结果，不要再触发一次回传 */
-const saveCards = q => { persistKey('cards', S.cards); if (!q) cloudTouch(); };
+const saveCards = q => { persistKey('cards', S.cards); persistKey('del', S.del); if (!q) cloudTouch(); };
 const saveSeen = q => { persistKey('seen', S.seen); if (!q) cloudTouch(); };
 const saveBo = q => { persistKey('bo', S.bo); if (!q) cloudTouch(); };
 /* cfg 很小，额外在 localStorage 留一份镜像，保证首屏不用等 IndexedDB 就能读到设置 */
@@ -439,7 +443,11 @@ async function loadAll() {
       const cards = await idbGet('cards');
       const seen = await idbGet('seen');
       const bo = await idbGet('bo');
+      const del = await idbGet('del');
+      const pulse = await idbGet('pulse');
       if (bo && typeof bo === 'object') S.bo = bo;
+      if (del && typeof del === 'object') S.del = del;
+      if (pulse && typeof pulse === 'object') S.pulse = pulse;
       if (cfg) S.cfg = Object.assign({}, CFG_DEFAULT, cfg);
       normCfg();
 
@@ -467,14 +475,32 @@ async function loadAll() {
   if (S.store === 'ls') {
     S.cards = LS.get('lg.cards', []);
     S.bo = LS.get('lg.bo', {}) || {};
+    S.del = LS.get('lg.del', {}) || {};
+    S.pulse = LS.get('lg.pulse', {}) || {};
     S.seen = {};
     LK.forEach(k => { S.seen[k] = LS.get('lg.seen.' + k, []); });
   }
   if (!Array.isArray(S.cards)) S.cards = [];
   if (!S.seen || typeof S.seen !== 'object') S.seen = {};
   if (!S.bo || typeof S.bo !== 'object') S.bo = {};
+  if (!S.del || typeof S.del !== 'object') S.del = {};
+  pruneDel();
+  pulseState();
   requestPersist();
 }
+
+/* ---------------- 删除墓碑 ----------------
+   「本地没有这张卡」有两种截然不同的含义：从来没有过，或者是我刚删掉的。
+   云端合并里分不清这两者，删掉的卡就会在下一次同步时原样长回来。
+   所以删除必须留痕：记下 'lang|front' 和删除时间，只有比墓碑更新的远端版本才准复活。 */
+const cardKey = c => (c.lang || '') + '|' + (c.front || '');
+const DEL_KEEP = 180 * 86400000;                // 墓碑保留 180 天，之后自然淡出
+function pruneDel() {
+  const cut = Date.now() - DEL_KEEP;
+  Object.keys(S.del).forEach(k => { if (!(S.del[k] > cut)) delete S.del[k]; });
+}
+function markDel(c) { S.del[cardKey(c)] = Date.now(); }
+function unmarkDel(c) { delete S.del[cardKey(c)]; }
 
 /* 卡片上限：只回收已勾选「已添加」的旧卡片，未添加的永远不动 */
 function trimCards() {
@@ -490,7 +516,7 @@ function trimCards() {
 function exportBackup() {
   /* 备份文件是「删掉图标后重装」的唯一退路，所以连同 Key 一起导出。
      文件里含密钥，别随手转发给别人。云端的 data.json 则永远不含 Key。 */
-  const data = { app: 'yulengua', v: 2, ts: Date.now(), cfg: S.cfg, cards: S.cards, seen: S.seen, bo: S.bo };
+  const data = { app: 'yulengua', v: 2, ts: Date.now(), cfg: S.cfg, cards: S.cards, seen: S.seen, bo: S.bo, del: S.del, pulse: S.pulse };
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -512,7 +538,13 @@ function importBackup(input) {
       if (!d || !Array.isArray(d.cards)) throw new Error('不是 Yulengua 备份文件');
       if (!confirm('导入 ' + d.cards.length + ' 张卡片？\n同一句子的卡片会被备份里的版本覆盖，其余保留。')) return;
       const m = new Map(S.cards.map(c => [c.lang + '|' + c.front, c]));
-      d.cards.forEach(c => { if (c && c.front) m.set(c.lang + '|' + c.front, c); });
+      /* 备份里明确带回来的卡，就是用户想要的，清掉它的删除墓碑 */
+      d.cards.forEach(c => { if (c && c.front) { m.set(c.lang + '|' + c.front, c); unmarkDel(c); } });
+      if (d.del && typeof d.del === 'object') {
+        Object.keys(d.del).forEach(k => {
+          if (!m.has(k) && (d.del[k] || 0) > (S.del[k] || 0)) S.del[k] = d.del[k];
+        });
+      }
       S.cards = Array.from(m.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
       if (d.seen && typeof d.seen === 'object') S.seen = Object.assign({}, S.seen, d.seen);
       if (d.bo && typeof d.bo === 'object') {
@@ -521,6 +553,7 @@ function importBackup(input) {
           if (r && (!mine || (r.ts || 0) > (mine.ts || 0))) S.bo[k] = r;
         });
       }
+      if (d.pulse && typeof d.pulse === 'object') { S.pulse = d.pulse; pulseState(); savePulse(true); }
       if (d.cfg) {
         /* 备份里若没带密钥（老版本或手工删过），保留本机现有的，别把它清空 */
         const keep = { key: S.cfg.key, azKey: S.cfg.azKey, oss: S.cfg.oss };
@@ -1506,7 +1539,7 @@ const CLOUD = { state: 'off', msg: '', last: 0, busy: false };
 function cloudSnapshot() {
   return {
     app: 'yulengua', v: 2, ts: Date.now(),
-    cards: S.cards, seen: S.seen, bo: S.bo,
+    cards: S.cards, seen: S.seen, bo: S.bo, del: S.del, pulse: S.pulse,
     cfg: {
       ts: S.cfg.cfgTs || 0,
       boPron: S.cfg.boPron, diff: S.cfg.diff, corpusBy: S.cfg.corpusBy,
@@ -1518,12 +1551,27 @@ function cloudSnapshot() {
 /* 合并：一律以时间戳新的一方为准，不会因为换设备而丢东西 */
 function cloudMerge(rm) {
   let changed = false;
+  /* 先并墓碑：远端删掉的，本地也要删掉 */
+  if (rm.del && typeof rm.del === 'object') {
+    Object.keys(rm.del).forEach(k => {
+      if ((rm.del[k] || 0) > (S.del[k] || 0)) { S.del[k] = rm.del[k]; changed = true; }
+    });
+  }
   if (Array.isArray(rm.cards)) {
     const m = new Map();
     S.cards.forEach(c => m.set(c.lang + '|' + c.front, c));
+    /* 本地这一侧：被墓碑判了死刑、且卡片本身不比墓碑新的，直接移除
+       （另一台设备删的，这台还留着的情况） */
+    Array.from(m.keys()).forEach(id => {
+      const d = S.del[id] || 0;
+      if (d && (m.get(id).ts || 0) <= d) { m.delete(id); changed = true; }
+    });
     rm.cards.forEach(c => {
       if (!c || !c.front) return;
-      const id = c.lang + '|' + c.front, mine = m.get(id);
+      const id = c.lang + '|' + c.front;
+      /* 墓碑比这张卡新 = 它是被删掉之后才传上来的旧副本，不准复活 */
+      if ((S.del[id] || 0) >= (c.ts || 0) && S.del[id]) return;
+      const mine = m.get(id);
       if (!mine) { m.set(id, c); changed = true; }
       else if ((c.ts || 0) > (mine.ts || 0)) { m.set(id, c); changed = true; }
     });
@@ -1535,6 +1583,27 @@ function cloudMerge(rm) {
       const r = rm.bo[k], mine = S.bo[k];
       if (!r) return;
       if (!mine || (r.ts || 0) > (mine.ts || 0)) { S.bo[k] = r; changed = true; }
+    });
+  }
+  /* Daily Pulse：「标记熟知」是单调的，两边求并集就对了；
+     当前这一批只在本地还没有的时候才从远端接过来，否则会把你正在看的列表换掉。 */
+  if (rm.pulse && typeof rm.pulse === 'object') {
+    const p = pulseState();
+    const rk = rm.pulse.known || {};
+    Object.keys(rk).forEach(k => {
+      const mine = p.known[k] || (p.known[k] = {});
+      Object.keys(rk[k] || {}).forEach(w => { if (!mine[w]) { mine[w] = rk[k][w]; changed = true; } });
+    });
+    const rg = rm.pulse.gl || {};
+    Object.keys(rg).forEach(k => {
+      const mine = p.gl[k] || (p.gl[k] = {});
+      Object.keys(rg[k] || {}).forEach(w => { if (!mine[w]) { mine[w] = rg[k][w]; changed = true; } });
+    });
+    const rc = rm.pulse.cur || {};
+    Object.keys(rc).forEach(k => {
+      if (Array.isArray(rc[k]) && rc[k].length && !(Array.isArray(p.cur[k]) && p.cur[k].length)) {
+        p.cur[k] = rc[k]; changed = true;
+      }
     });
   }
   if (rm.seen && typeof rm.seen === 'object') {
@@ -1557,7 +1626,7 @@ function cloudMerge(rm) {
     saveCfg(true);
     changed = true;
   }
-  if (changed) { saveCards(); saveSeen(); saveBo(true); }
+  if (changed) { saveCards(); saveSeen(); saveBo(true); savePulse(true); }
   return changed;
 }
 
@@ -1807,6 +1876,22 @@ function diffRule(k) {
     '严禁跨级跳跃（不要因为 +2 就直接写成高级文章，也不要因为 −2 就退化成单词罗列）。';
 }
 
+/* 场景对话的难度：和句子阅读共用同一组档位，但基准不是 L.level 而是 L.dialogue，
+   而且没有「最近读过的 40 句」这条基准线，所以要单独写一段以对话水平为锚的说明。 */
+function dlgDiffRule(k) {
+  const L = LANGS[k];
+  const n = (S.cfg.diff && S.cfg.diff[k]) || 0;
+  const base = '【难度校准】这段对话的基准水平是「' + L.dialogue + '」。';
+  if (!n) return base + '请严格按这个水平说话。';
+  const dir = n > 0 ? '略难' : '略简单';
+  const step = Math.abs(n);
+  return base + '用户把难度在这个基准上调整了 ' + (n > 0 ? '+' : '−') + step + ' 档，' +
+    '请把你说的每一句都控制在比基准【' + dir + ' ' + step + ' 档】的水平。' +
+    '\n一档是很小的一步，大致相当于：句子长 2–3 个词、或多一个从句、或多一个次常用词、或多一个新语法点。' +
+    '严禁跨级跳跃（不要因为 +2 就说成书面长句，也不要因为 −2 就退化成单词罗列）。' +
+    '批改用的 corrected 也按同一水平写。';
+}
+
 /* ---------------- 句子生成 ---------------- */
 function sentencePrompt(k, avoid) {
   const L = LANGS[k];
@@ -1980,6 +2065,24 @@ function askPrompt(k, sent, qa, q) {
   return msgs;
 }
 
+/* ---------------- Daily Pulse：批量补齐释义 ----------------
+   只在词库里那一列留空时才会用到，一次请求解决一批，结果缓存起来不重复花钱。 */
+function pulseGlossPrompt(k, words) {
+  const L = LANGS[k];
+  return [
+    { role: 'system', content: BASE },
+    {
+      role: 'user', content:
+        '下面是一组' + L.zh + '单词，请给每个词一个【极简中文释义】（2–12 个字，多个义项用；分隔，不要例句、不要词性说明）。\n' +
+        words.map(w => '· ' + w).join('\n') +
+        '\n\n输出 JSON：{"gloss":{"原词":"中文释义"}}\n' +
+        '键必须和上面列出的词【一字不差】，一个都不能漏，也不要多加别的词。' +
+        (k === 'kk' ? '\n' + KK_CYR_ONLY : '') +
+        (k === 'ru' ? '\n俄语的键写不带重音符号的原形。' : '')
+    }
+  ];
+}
+
 /* ---------------- 单词查询 ---------------- */
 function lookupPrompt(q) {
   return [
@@ -2097,7 +2200,7 @@ function dlgOpenPrompt(k, topic) {
       role: 'user', content:
         '设计一个' + L.zh + '（' + L.dialogue + '水平）的情景对话练习。用户给的提示是：「' + topic + '」\n' +
         '请据此设定一个具体、自然的场景，并说出对话的第一句（由你扮演的角色先开口）。\n' +
-        '语言难度必须严格控制在' + L.dialogue + '，句子简短自然，像真实口语。\n\n' +
+        dlgDiffRule(k) + '\n句子简短自然，像真实口语。\n\n' +
         '输出 JSON：{"scene":"用中文简述场景：地点、你扮演谁、用户扮演谁、对话目标","role":"你扮演的角色（中文）","line":"' + L.zh + '第一句话","zh":"中文翻译","en":"' + (L.en ? '英文翻译' : '留空') + '","tokens":["line 的逐词切分"],"gloss":["与 tokens 一一对应的极简中文词义"]}' +
         '\n' + TOKEN_RULE(k)
     }
@@ -2114,7 +2217,7 @@ function dlgTurnPrompt(k, scene, history, userLine) {
   const L = LANGS[k];
   const msgs = [{
     role: 'system', content: BASE + '\n\n你正在和一位' + L.zh + '学习者做情景对话练习。场景：' + scene +
-      '\n语言难度严格控制在' + L.dialogue + '。你每轮要做两件事：(1) 批改用户上一句的' + L.zh + '，(2) 用' + L.zh + '自然地接着对话。' +
+      '\n' + dlgDiffRule(k) + '\n你每轮要做两件事：(1) 批改用户上一句的' + L.zh + '，(2) 用' + L.zh + '自然地接着对话。' +
       '\n\n【关于 feedback.corrected 的硬性要求】' +
       '\ncorrected 必须是一个【可以直接朗读、直接背诵的最终正确版本】：完整的一句话，语法全对、用词地道、标点齐全、大小写正确。' +
       '\n· 不要在 corrected 里写解释、括号注释、"应改为"、箭头、删除线或任何标记，只写那一句正确的' + L.zh + '。' +
@@ -2156,7 +2259,8 @@ VIEWS.home = function () {
     ['01', '句子阅读', 'Sentence Reading', "go('langs','read')", ''],
     ['02', '场景对话', 'Scenario Dialogue', "go('langs','dlg')", ''],
     ['03', '单词查询', 'Word Lookup', "go('lookup')", ''],
-    ['04', '卡片批量生成', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : '']
+    ['04', '卡片批量生成', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : ''],
+    ['05', 'Daily Pulse', 'Daily Vocabulary', "go('langs','pulse')", '']
   ];
   app().innerHTML = '<div class="screen on"><div class="body">' +
     '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>六语学习</p></div>' +
@@ -2172,24 +2276,33 @@ VIEWS.home = function () {
     '</div></div>';
 };
 
+const LANG_MODS = {
+  read:  { title: '句子阅读', view: 'read' },
+  dlg:   { title: '场景对话', view: 'dlg' },
+  pulse: { title: 'Daily Pulse', view: 'pulse' }
+};
 VIEWS.langs = function (mod) {
-  const isDlg = mod === 'dlg';
-  const title = isDlg ? '场景对话' : '句子阅读';
+  const m = LANG_MODS[mod] || LANG_MODS.read;
+  const isDlg = mod === 'dlg', isPulse = mod === 'pulse';
   const rows = LK.map(k => {
     const L = LANGS[k];
     const off = isDlg && !L.dialogue;
-    const lvl = isDlg ? L.dialogue : (L.level + diffTag(k));
+    const sub = isPulse
+      ? (pulseKnownCount(k) ? '已熟 ' + pulseKnownCount(k) + ' 词' : '每次 10 个新词')
+      : (isDlg ? L.dialogue : L.level) + diffTag(k);
     return '<button class="item"' + (off ? ' disabled' : '') +
-      (off ? '' : ' onclick="go(\'' + (isDlg ? 'dlg' : 'read') + '\',\'' + k + '\')"') + '>' +
+      (off ? '' : ' onclick="go(\'' + m.view + '\',\'' + k + '\')"') + '>' +
       '<span class="n">' + L.code + '</span>' +
       '<span class="t"><b>' + L.zh + (off ? '<span class="badge">未开放</span>' : '') + '</b>' +
       '<s class="' + scriptCls(k) + '" style="font-size:' + (k === 'bo' ? '15px' : '12px') + '">' + L.native +
-      (off ? '' : ' · ' + lvl) +
-      (!off && S.cfg.modelBy && S.cfg.modelBy[k] ? ' · ' + esc(S.cfg.modelBy[k]) : '') + '</s></span>' +
+      (off ? '' : ' · ' + sub) +
+      (!off && !isPulse && S.cfg.modelBy && S.cfg.modelBy[k] ? ' · ' + esc(S.cfg.modelBy[k]) : '') + '</s></span>' +
       '<span class="chev">' + (off ? '' : '&#8250;') + '</span></button>';
   }).join('');
-  shell(title, '<div class="sec">选择语言</div><div class="menu" style="border-top:1px solid var(--line)">' + rows + '</div>' +
-    (isDlg ? '<p class="note" style="margin-top:20px">场景对话目前开放荷兰语、西班牙语、日语。藏语、哈萨克语、俄语入口已预留。</p>' : ''));
+  shell(m.title, '<div class="sec">选择语言</div><div class="menu" style="border-top:1px solid var(--line)">' + rows + '</div>' +
+    (isDlg ? '<p class="note" style="margin-top:20px">场景对话目前开放荷兰语、西班牙语、日语。藏语、哈萨克语、俄语入口已预留。</p>' : '') +
+    (isPulse ? '<p class="note" style="margin-top:20px">词库是仓库里的 <b>words/&lt;语言&gt;.csv</b>，用 Excel 或 GitHub 网页都能直接改。' +
+      '勾「熟」的词永久退出；没勾的在「换一批」之后回到词库。</p>' : ''));
 };
 
 /* ---------------- 难度 ---------------- */
@@ -2261,9 +2374,11 @@ VIEWS.set = function () {
     '</button></div>' +
 
     '<div class="sec" style="margin-top:36px">句子难度</div>' +
-    '<p class="note" style="margin-top:0;margin-bottom:6px">每按一次是很小的一步。生成新句子时，AI 会拿你最近读过的 40 句作为难度基准线，再按这里的档位微调，不会跨级跳跃。</p>' +
+    '<p class="note" style="margin-top:0;margin-bottom:6px">每按一次是很小的一步。生成新句子时，AI 会拿你最近读过的 40 句作为难度基准线，再按这里的档位微调，不会跨级跳跃。' +
+    '<br><b>场景对话共用这一组档位</b>，只是基准换成该语言的对话水平（对话没有「最近读过的句子」可参照）。</p>' +
     '<div style="border-top:1px solid var(--line);margin-top:14px">' +
-    LK.map(k => '<div class="stp"><div class="nm"><b>' + LANGS[k].zh + '</b><s>基准：' + LANGS[k].level + '</s></div>' +
+    LK.map(k => '<div class="stp"><div class="nm"><b>' + LANGS[k].zh + '</b><s>基准：' + LANGS[k].level +
+      (LANGS[k].dialogue ? ' · 对话 ' + LANGS[k].dialogue : '') + '</s></div>' +
       '<div class="ct"><button onclick="bumpDiff(\'' + k + '\',-1)">−</button>' +
       '<span class="v" data-dv="' + k + '">' + diffText(k) + '</span>' +
       '<button onclick="bumpDiff(\'' + k + '\',1)">+</button></div></div>').join('') +
@@ -2521,10 +2636,10 @@ function clearSeen() {
 }
 function wipe() {
   if (!confirm('确定清空所有卡片和设置？此操作不可撤销。建议先导出一份备份文件。')) return;
-  S.cards = []; S.seen = {}; S.bo = {}; S.trash = null;
+  S.cards = []; S.seen = {}; S.bo = {}; S.del = {}; S.pulse = {}; S.trash = null;
   S.cfg = Object.assign({}, CFG_DEFAULT);
   normCfg();
-  saveCards(true); saveSeen(true); saveBo(true); saveCfg(true);
+  saveCards(true); saveSeen(true); saveBo(true); saveCfg(true); savePulse(true);
   try { LK.forEach(k => localStorage.removeItem('lg.seen.' + k)); localStorage.removeItem('lg.cards'); localStorage.removeItem('lg.bo'); } catch (e) {}
   home(); toast('已清空');
 }
@@ -3084,17 +3199,19 @@ function saveDetail() {
   const old = existingCard(cu);
   if (old) {
     const changed = old.detail !== text;
-    old.detail = text; old.ts = Date.now();
+    old.detail = text; old.ts = Date.now(); unmarkDel(old);
     if (changed) old.added = false;
     S.cards = [old].concat(S.cards.filter(x => x !== old));
     saveCards(); back();
     toast(changed ? '已更新卡片库中的这一条' : '内容无变化，已保留原卡片');
     return;
   }
-  S.cards.unshift({
+  const fresh = {
     id: 'c' + Date.now() + Math.random().toString(36).slice(2, 6),
     lang: cu.lang, front: cu.front, detail: text, added: false, ts: Date.now()
-  });
+  };
+  S.cards.unshift(fresh);
+  unmarkDel(fresh);                 // 删过又重新存的，墓碑要撤掉
   const dropped = trimCards();
   saveCards(); back();
   toast('已存入卡片库（共 ' + S.cards.length + ' 张）' + (dropped ? ' · 已回收 ' + dropped + ' 张旧的已添加卡片' : ''));
@@ -3946,6 +4063,258 @@ async function askRev() {
   W.busy = false; paintLookup();
   window.scrollTo(0, document.body.scrollHeight);
 }
+/* ================= Yulengua · Daily Pulse =================
+   每种语言一份固定词库（仓库里的 words/<lang>.csv），每次随机抽 10 个新词。
+   勾「熟」的词永久退出；「换一批」之前列表不变，刷新页面也不变。
+
+   词库故意放在应用外面：CSV 用 Excel / Numbers 双击就能编辑，
+   在 GitHub 网页上（包括手机）也能直接点铅笔改，而且解析零依赖。
+   缺文件时这个模块自己降级提示，不影响 App 的其它部分。 */
+
+const PULSE_N = 10;
+
+/* ---------------- CSV ----------------
+   容错优先：分隔符自动判定，表头可有可无、列序随意，# 开头是注释。 */
+function csvSplit(text) {
+  const t = String(text || '').replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+  /* 分隔符只判一次：中文释义里常有全角逗号，但半角逗号也可能出现，
+     所以按首行出现次数定死一个，不要逐字符混判。 */
+  const head = t.split('\n').find(l => l.trim() && l.trim()[0] !== '#') || '';
+  const cand = [',', '\t', ';', '|'];
+  let sep = ',', best = -1;
+  cand.forEach(c => { const n = head.split(c).length; if (n > best) { best = n; sep = c; } });
+
+  const rows = [];
+  let row = [], cell = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) {
+      if (c === '"') { if (t[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === sep) { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  row.push(cell); rows.push(row);
+  return rows.map(r => r.map(x => x.trim()))
+    .filter(r => r.some(x => x) && r[0][0] !== '#');
+}
+
+const H_WORD = ['词', '单词', '词条', '生词', 'word', 'words', 'term', 'vocab', '外语', '原文'];
+const H_GLOSS = ['释义', '中文', '中文释义', '意思', '翻译', '解释', 'gloss', 'meaning', 'zh', 'definition', 'cn'];
+const hIdx = (row, names) => row.findIndex(c => names.indexOf(c.toLowerCase()) > -1);
+
+function parseBank(text) {
+  const rows = csvSplit(text);
+  if (!rows.length) return [];
+  let wi = 0, gi = 1, start = 0;
+  const h = rows[0].map(c => c.toLowerCase());
+  const w = hIdx(h, H_WORD), g = hIdx(h, H_GLOSS);
+  if (w > -1) { wi = w; gi = g > -1 ? g : (w === 0 ? 1 : 0); start = 1; }
+  const seen = new Set(), out = [];
+  for (let i = start; i < rows.length; i++) {
+    const r = rows[i];
+    const word = (r[wi] || '').trim();
+    if (!word || seen.has(word)) continue;
+    seen.add(word);
+    out.push({ w: word, g: (r[gi] || '').trim() });
+  }
+  return out;
+}
+
+/* ---------------- 词库加载 ----------------
+   先走网络拿最新的，成功就顺手缓存进 IndexedDB；
+   离线（主屏图标启动时很常见）就用缓存那一份。 */
+const BANK = {};
+const bankUrl = k => new URL('words/' + k + '.csv', location.href).href;
+
+/* Excel 在中文 Windows 上存 CSV 默认不是 UTF-8。硬按 UTF-8 解会得到一片 U+FFFD，
+   词库看着像坏了。这里按「哪种编码解出来没有替换字符」来选，用户不用管编码。 */
+const BANK_ENC = ['utf-8', 'gbk', 'windows-1252'];
+function decodeBank(buf) {
+  for (const enc of BANK_ENC) {
+    let t;
+    try { t = new TextDecoder(enc).decode(buf); } catch (e) { continue; }
+    if (t.indexOf('\uFFFD') === -1) return t;
+  }
+  return new TextDecoder('utf-8').decode(buf);
+}
+
+async function bankLoad(k, force) {
+  if (BANK[k] && !force) return BANK[k];
+  let text = null, from = 'net', err = '';
+  try {
+    const r = await fetch(bankUrl(k), { cache: 'no-cache' });
+    if (r.ok) text = decodeBank(await r.arrayBuffer());
+    else err = 'HTTP ' + r.status;
+  } catch (e) { err = e.message || '网络错误'; }
+  if (text != null) { try { await idbSet('bank.' + k, text); } catch (e) {} }
+  else {
+    from = 'cache';
+    try { const c = await idbGet('bank.' + k); if (typeof c === 'string') { text = c; err = ''; } } catch (e) {}
+  }
+  BANK[k] = text == null
+    ? { words: [], from: from, err: err || '没找到词库文件' }
+    : { words: parseBank(text), from: from, err: '' };
+  return BANK[k];
+}
+
+/* ---------------- 状态 ---------------- */
+function pulseState() {
+  if (!S.pulse || typeof S.pulse !== 'object') S.pulse = {};
+  if (!S.pulse.known || typeof S.pulse.known !== 'object') S.pulse.known = {};
+  if (!S.pulse.cur || typeof S.pulse.cur !== 'object') S.pulse.cur = {};
+  if (!S.pulse.gl || typeof S.pulse.gl !== 'object') S.pulse.gl = {};
+  return S.pulse;
+}
+const pKnown = k => { const p = pulseState(); return p.known[k] || (p.known[k] = {}); };
+const pCur = k => { const p = pulseState(); return Array.isArray(p.cur[k]) ? p.cur[k] : []; };
+const pGl = k => { const p = pulseState(); return p.gl[k] || (p.gl[k] = {}); };
+const pulseKnownCount = k => Object.keys(pKnown(k)).length;
+
+/* 抽一批。已熟知的永久排除；刚看过的这一批虽然「回到词库」，
+   但只要池子还够大就避开它们，免得点了换一批还是同样几个词。 */
+function pulseDraw(k, words) {
+  const known = pKnown(k), prev = new Set(pCur(k));
+  const pool = words.filter(x => !known[x.w]);
+  let src = pool.filter(x => !prev.has(x.w));
+  if (src.length < PULSE_N) src = pool;                 // 池子见底了就允许重复出现
+  const a = src.slice();
+  /* Fisher–Yates，只洗前 N 个就够 */
+  const n = Math.min(PULSE_N, a.length);
+  for (let i = 0; i < n; i++) {
+    const j = i + Math.floor(Math.random() * (a.length - i));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a.slice(0, n).map(x => x.w);
+}
+
+const savePulse = q => { persistKey('pulse', pulseState()); if (!q) cloudTouch(); };
+
+/* ---------------- 视图 ---------------- */
+const P = { lang: null, busy: false, err: '' };
+
+VIEWS.pulse = async function (k) {
+  P.lang = k; P.err = '';
+  paintPulse();
+  const b = await bankLoad(k);
+  if (!b.words.length) { paintPulse(); return; }
+  if (!pCur(k).length) { pulseState().cur[k] = pulseDraw(k, b.words); savePulse(); }
+  paintPulse();
+  pulseFillGloss(k);
+};
+
+function pulseWordsNow(k) {
+  const b = BANK[k];
+  const map = new Map((b ? b.words : []).map(x => [x.w, x.g]));
+  const gl = pGl(k);
+  return pCur(k).map(w => ({ w: w, g: map.get(w) || gl[w] || '', known: !!pKnown(k)[w] }));
+}
+
+function paintPulse() {
+  const k = P.lang, L = LANGS[k], b = BANK[k];
+  let body = '';
+
+  if (!b) { shell(L.zh, '<div style="margin-top:22px">' + LOADER + ' 正在读取词库</div>'); return; }
+
+  if (!b.words.length) {
+    shell(L.zh,
+      '<div class="empty"><span class="big">&#9633;</span>还没有' + L.zh + '的词库</div>' +
+      '<p class="note">把 <b>words/' + k + '.csv</b> 放进你的 GitHub 仓库就能用。' +
+      '两列：第一列写词，第二列写中文释义，第一行可以是表头。' +
+      (b.err ? '<br>读取失败：' + esc(b.err) : '') + '</p>' +
+      '<button class="btn wide" onclick="pulseReload()">重新读取</button>');
+    return;
+  }
+
+  const items = pulseWordsNow(k);
+  const total = b.words.length, kn = pulseKnownCount(k);
+  const left = total - kn;
+
+  body += '<div class="row" style="margin-bottom:4px">' +
+    '<button class="btn sm" onclick="pulseNext(this)">&#8635; 换一批</button>' +
+    '<span class="hint" style="margin-left:auto">词库 ' + total + ' · 已熟 ' + kn + ' · 剩 ' + left + '</span>' +
+    '</div>' +
+    '<p class="note" style="margin-bottom:14px">勾「熟」的词以后不会再出现。没勾的在「换一批」之后会回到词库里，' +
+    '以后还有机会再遇到。点词看释义，点「详解」调 AI 做完整解析。</p>';
+
+  if (P.busy) body += '<div style="margin-bottom:12px">' + LOADER + ' 正在补齐释义</div>';
+  if (P.err) body += '<div class="err">' + esc(P.err) + '</div>';
+
+  body += '<div class="lib">';
+  items.forEach((it, i) => {
+    body += '<div class="lc' + (it.known ? ' done' : '') + '">' +
+      '<div class="top">' +
+      '<button class="cb" data-pk="' + i + '" title="标记熟知">' + (it.known ? '&#10003;' : '') + '</button>' +
+      '<div class="fr"><span class="' + scriptCls(k) + '" data-pw="' + i + '" style="font-size:20px">' + esc(it.w) + '</span>' +
+      '<div class="mt">' + (it.g ? esc(it.g) : '（词库里没写释义）') + '</div></div>' +
+      '</div>' +
+      (k === 'kk' ? '<div class="ar" style="font-size:18px;margin-top:6px">' + esc(kkArab(it.w)) + '</div>' : '') +
+      (k === 'ru' ? '<div class="translit" style="margin-top:4px">' + esc(ruLat(it.w)) + '</div>' : '') +
+      handHtml(k, it.w, true) +
+      '<div class="acts">' +
+      (L.tts ? '<button class="btn sm" data-ps="' + i + '">&#9654; 发音</button>' : '') +
+      '<button class="btn sm pri" data-pd="' + i + '">详解</button>' +
+      '<button class="btn sm" data-pc="' + i + '">生成卡片</button>' +
+      '</div></div>';
+  });
+  body += '</div>';
+
+  shell(L.zh, body, { right: NAV_LIB });
+
+  const at = i => pulseWordsNow(k)[i];
+  document.querySelectorAll('[data-pk]').forEach(el => el.onclick = () => {
+    const it = at(+el.dataset.pk);
+    if (pKnown(k)[it.w]) delete pKnown(k)[it.w]; else pKnown(k)[it.w] = Date.now();
+    savePulse(); paintPulse();
+  });
+  const open = i => { const it = at(i); showWord(k, it.w, it.g, it.w); };
+  document.querySelectorAll('[data-pw]').forEach(el => el.onclick = () => open(+el.dataset.pw));
+  document.querySelectorAll('[data-pd]').forEach(el => el.onclick = () => open(+el.dataset.pd));
+  document.querySelectorAll('[data-ps]').forEach(el => el.onclick = () => say(k, at(+el.dataset.ps).w, el));
+  document.querySelectorAll('[data-pc]').forEach(el => el.onclick = () => {
+    const it = at(+el.dataset.pc);
+    genWordCard({ lang: k, word: it.w, zh: it.g, pos: '', gender: '' }, [], el);
+  });
+}
+
+function pulseNext(btn) {
+  const k = P.lang, b = BANK[k];
+  if (!b || !b.words.length) return;
+  if (!b.words.some(x => !pKnown(k)[x.w])) { toast('这门语言的词库已经全部标记为熟知了'); return; }
+  if (btn) { btn.disabled = true; }
+  pulseState().cur[k] = pulseDraw(k, b.words);
+  savePulse();
+  paintPulse();
+  pulseFillGloss(k);
+}
+
+async function pulseReload() {
+  const k = P.lang;
+  BANK[k] = null;
+  paintPulse();
+  await bankLoad(k, true);
+  if (BANK[k].words.length && !pCur(k).length) { pulseState().cur[k] = pulseDraw(k, BANK[k].words); savePulse(); }
+  paintPulse();
+}
+
+/* 词库里释义留空的词，用一次请求把这一批一起补齐，补完缓存起来不再重复花钱 */
+async function pulseFillGloss(k) {
+  const miss = pulseWordsNow(k).filter(x => !x.g).map(x => x.w);
+  if (!miss.length || P.busy) return;
+  if (!S.cfg.key || !S.cfg.key.trim()) return;          // 没填 Key 就静默跳过，不弹提示
+  P.busy = true; P.err = ''; paintPulse();
+  try {
+    const j = await aiJson(pulseGlossPrompt(k, miss), k);
+    const g = j && j.gloss;
+    if (g && typeof g === 'object') {
+      Object.keys(g).forEach(w => { const v = String(g[w] || '').trim(); if (v) pGl(k)[w] = unmark(v); });
+      savePulse();
+    }
+  } catch (e) { P.err = '补齐释义失败 · ' + e.message; }
+  P.busy = false; paintPulse();
+}
 /* ================= Yulengua · 卡片库 ================= */
 
 const LIB = { open: {} };
@@ -3990,7 +4359,12 @@ function paintLib() {
   shell('卡片批量生成', body);
 
   document.querySelectorAll('[data-chk]').forEach(b => b.onclick = () => {
-    const c = S.cards.find(x => x.id === b.dataset.chk); c.added = !c.added; saveCards(); paintLib();
+    const c = S.cards.find(x => x.id === b.dataset.chk);
+    c.added = !c.added;
+    /* ts 必须跟着动：云端合并是「时间戳新的赢」，不更新的话
+       另一台设备上那份旧的 added 值会在下一次同步时把你刚勾的又翻回去。 */
+    c.ts = Date.now();
+    saveCards(); paintLib();
   });
   document.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
     copyText(S.cards.find(x => x.id === b.dataset.copy).detail);
@@ -4015,6 +4389,7 @@ function delCards(ids) {
   });
   if (!items.length) return;
   items.sort((a, b) => b.i - a.i).forEach(o => S.cards.splice(o.i, 1));
+  items.forEach(o => markDel(o.c));           // 留墓碑，否则下一次云端同步会把它们原样长回来
   S.trash = { items: items.slice().sort((a, b) => a.i - b.i) };
   saveCards(); paintLib();
   toast('已删除 ' + items.length + ' 张', '撤销', undoDel);
@@ -4026,7 +4401,10 @@ function delAdded() {
 }
 function undoDel() {
   if (!S.trash) { toast('没有可撤销的删除'); return; }
-  S.trash.items.forEach(o => S.cards.splice(Math.min(o.i, S.cards.length), 0, o.c));
+  S.trash.items.forEach(o => {
+    S.cards.splice(Math.min(o.i, S.cards.length), 0, o.c);
+    unmarkDel(o.c);
+  });
   S.trash = null; saveCards(); paintLib(); toast('已恢复');
 }
 

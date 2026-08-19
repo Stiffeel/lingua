@@ -1,0 +1,35 @@
+# Yulengua 词库 · 荷兰语
+# 样例文件，请整个替换成你自己的词库。格式说明见同目录 README.md
+词,释义
+boete,罚款；罚金
+weekend,周末
+vertrekken,出发；离开
+spoor,站台；铁轨
+verwachten,预计；期待
+onderzoek,调查；研究
+bedrijf,公司；企业
+regering,政府
+maatregel,措施
+volgens,根据；按照
+ondanks,尽管
+voorlopig,暂时的；暂且
+toenemen,增加；上升
+afnemen,减少；下降
+gevolg,后果；结果
+oorzaak,原因
+beslissen,决定
+voorstel,提议；方案
+gebeuren,发生
+veranderen,改变
+verschil,区别；差异
+mogelijkheid,可能性
+noodzakelijk,必要的
+duidelijk,清楚的；明显的
+ongeveer,大约
+tegelijk,同时
+bovendien,此外
+hoewel,虽然
+terwijl,当……的时候；然而
+# 下面两行故意留空释义：App 会用一次请求把这一批缺的一起补齐
+nauwelijks,
+desondanks,
