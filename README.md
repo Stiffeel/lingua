@@ -1,23 +1,21 @@
 <div align="center">
-# Yulengua🌐
+# Yulengua
 
-**A personal multilingual learning PWA · AI-powered · local-first**
+A personal multilingual learning PWA · AI-powered · local-first
 
-**Yulengua是一个多语言学习App，适合汉语母语、有一定语言学基础的业余爱好者。**
+Yulengua是一个多语言学习App，适合汉语母语、有一定语言学基础的业余爱好者。
 
-**其设计初衷是充分利用AI在外语学习中的价值，简化流程，省去管理chat、打磨提示词的时间。**
+其设计初衷是充分利用AI在外语学习中的价值，简化流程，省去管理chat、打磨提示词的时间。
 
-> **支持语言**
->
-> **🇳🇱 荷兰语　·　🏔️ 标准安多藏语　·　🇰🇿 哈萨克语　·　🇷🇺 俄语　·　🇪🇸 西班牙语　·　🇯🇵 日语**
+**支持语言**
 
-> [!IMPORTANT]
->
-> **Yulengua** 是一个可直接部署到 **GitHub Pages** 的单文件 PWA，  
-> 安装到 iPhone 主屏幕后即可全屏运行，核心学习数据默认保存在本机。
-> 详细配置方法请看[初始配置](#🚀 初始配置)
->
-> **版本更新时，请不要删除桌面图标！**
+**🇳🇱 荷兰语　·　🏔️ 标准安多藏语　·　🇰🇿 哈萨克语　·　🇷🇺 俄语　·　🇪🇸 西班牙语　·　🇯🇵 日语**
+
+**Yulengua** 是一个可直接部署到 **GitHub Pages** 的单文件 PWA，  
+安装到 iPhone 主屏幕后即可全屏运行，核心学习数据默认保存在本机。
+详细配置方法请看[初始配置](#🚀 初始配置)
+
+**版本更新时，请不要删除桌面图标！**
 
 ![PWA](https://img.shields.io/badge/PWA-Single--file-black?style=flat-square)
 ![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222?style=flat-square&logo=github)
@@ -25,29 +23,33 @@
 
 
 
+
+
+
+
 ## ✨ 功能
 
 ### 📖 **句子阅读**：分语言按难度生成句子，逐词释义、深度解析、追问、卡片保存。
 
-![0e923b3033f0f3bea3e07c50e76e0d75_raw.mp4 [video-to-gif output image]](https://s1.ezgif.com/tmp/ezgif-1e5298680e76a1d6.gif)
+![0e923b3033f0f3bea3e07c50e76e0d75_raw.mp4 [video-to-gif output image]](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/ezgif-837262d3e3a492d9.gif)
 
 
 
 ### 💬 **场景对话**：用模糊关键词指定主题对话，听力优先练习，纠错和追问。
 
-![image-20260820115228478](C:\Users\HY189\AppData\Roaming\Typora\typora-user-images\image-20260820115228478.png)
+![image-20260820115228478](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/image-20260820115228478.png)
 
 
 
 ### 🔎 查词 / 整句翻译：六语对照，支持单词详解和追问。
 
-![70ad8246156fd6ccfa48354e9c3c449b.mp4 [video-to-gif output image]](https://s2.ezgif.com/tmp/ezgif-2ac69ad43853e0fa.gif)
+![70ad8246156fd6ccfa48354e9c3c449b.mp4 [video-to-gif output image]](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/ezgif-8d09bf35cf253663.gif)
 
 
 
 ### ⚡ **Daily Pulse**：每日生词、熟词淘汰、勾词造句与复习。
 
-![image-20260820112619883](C:\Users\HY189\AppData\Roaming\Typora\typora-user-images\image-20260820112619883.png)
+![image-20260820112619883](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/image-20260820112619883.png)
 
 - #### 🗂️ **卡片库**：生成适配[墨墨记忆卡制卡语法](https://tutuji333.github.io/markji-faq/questions/content/card-syntax-guide/)的内容，支持语法检查、编辑、复制与批量管理。
 
