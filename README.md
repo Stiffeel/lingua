@@ -1,5 +1,10 @@
 # Yulengua
 
+![PWA](https://img.shields.io/badge/PWA-Single--file-black?style=flat-square)
+![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222?style=flat-square&logo=github)
+![iPhone](https://img.shields.io/badge/iPhone-Home%20Screen-000?style=flat-square&logo=apple)
+
+
 A personal multilingual learning PWA · AI-powered · local-first
 Yulengua是一个多语言学习App，适合汉语母语、有一定语言学基础的业余爱好者。
 其设计初衷是充分利用AI在外语学习中的价值，简化流程，省去管理chat、打磨提示词的时间。
@@ -11,10 +16,6 @@ Yulengua是一个多语言学习App，适合汉语母语、有一定语言学基
 > 详细配置方法请看[初始配置](#🚀 初始配置)
 
 **版本更新时，请不要删除桌面图标！**
-
-![PWA](https://img.shields.io/badge/PWA-Single--file-black?style=flat-square)
-![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222?style=flat-square&logo=github)
-![iPhone](https://img.shields.io/badge/iPhone-Home%20Screen-000?style=flat-square&logo=apple)
 
 
 <p>
