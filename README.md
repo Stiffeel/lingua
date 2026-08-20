@@ -4,6 +4,7 @@
 ![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222?style=flat-square&logo=github)
 ![iPhone](https://img.shields.io/badge/iPhone-Home%20Screen-000?style=flat-square&logo=apple)
 
+Iphone Safari直接打开：[https://stiffeel.github.io/lingua](https://stiffeel.github.io/lingua/)
 
 A personal multilingual learning PWA · AI-powered · local-first
 Yulengua是一个多语言学习App，适合汉语母语、有一定语言学基础的业余爱好者。
