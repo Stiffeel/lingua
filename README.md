@@ -1,4 +1,3 @@
-<div align="center">
 # Yulengua
 
 A personal multilingual learning PWA · AI-powered · local-first
