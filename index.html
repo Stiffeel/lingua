@@ -4215,6 +4215,15 @@ async function bankLoad(k, force) {
   return BANK[k];
 }
 
+/* 词库里到底有哪些词，惰性建一次 Set 缓存在词库对象上；
+   bankLoad 每次都造新对象，所以换了词库这份缓存自然作废。 */
+function bankSet(k) {
+  const b = BANK[k];
+  if (!b) return null;
+  if (!b._set) b._set = new Set(b.words.map(x => x.w));
+  return b._set;
+}
+
 /* ---------------- 状态 ---------------- */
 function pulseState() {
   if (!S.pulse || typeof S.pulse !== 'object') S.pulse = {};
@@ -4241,7 +4250,13 @@ const pIsKnown = (k, w) => (pKnown(k)[w] || 0) > 0;
 function pSetKnown(k, w, on) { pKnown(k)[w] = on ? Date.now() : -Date.now(); }
 const pCur = k => { const p = pulseState(); return Array.isArray(p.cur[k]) ? p.cur[k] : []; };
 const pGl = k => { const p = pulseState(); return p.gl[k] || (p.gl[k] = {}); };
-const pulseKnownCount = k => { const m = pKnown(k); return Object.keys(m).filter(w => m[w] > 0).length; };
+/* 「已熟」只统计【当前词库里还存在】的词。换过词库之后，历史记录里那些
+   已经被你从 CSV 删掉的词不该再算进来——否则「剩」会算少，词库缩小时还会算成负数。
+   记录本身不删：万一你又把那个词加回词库，它仍然是熟的。 */
+function pulseKnownCount(k) {
+  const m = pKnown(k), set = bankSet(k);
+  return Object.keys(m).filter(w => m[w] > 0 && (!set || set.has(w))).length;
+}
 /* 勾选 = 标记熟知，同时也是造句的选词。两件事共用一个勾。 */
 const pulseSel = k => pCur(k).filter(w => pIsKnown(k, w));
 const pSent = k => { const p = pulseState(); return p.sent[k] || null; };
@@ -4253,14 +4268,32 @@ function pulseDraw(k, words) {
   const pool = words.filter(x => !((known[x.w] || 0) > 0));
   let src = pool.filter(x => !prev.has(x.w));
   if (src.length < PULSE_N) src = pool;                 // 池子见底了就允许重复出现
-  const a = src.slice();
-  /* Fisher–Yates，只洗前 N 个就够 */
-  const n = Math.min(PULSE_N, a.length);
-  for (let i = 0; i < n; i++) {
+  return pickN(src, PULSE_N).map(x => x.w);
+}
+
+/* Fisher–Yates，只洗前 n 个就够 */
+function pickN(arr, n) {
+  const a = arr.slice(), m = Math.min(n, a.length);
+  for (let i = 0; i < m; i++) {
     const j = i + Math.floor(Math.random() * (a.length - i));
     const t = a[i]; a[i] = a[j]; a[j] = t;
   }
-  return a.slice(0, n).map(x => x.w);
+  return a.slice(0, m);
+}
+
+/* 换过词库之后，当前这一批里可能混着你已经从 CSV 里删掉的词。
+   删掉的就该消失，但没删的要留在原位（「换一批之前列表不变」只对还存在的词成立），
+   所以只剔除失效的那几个，再从池子里补满到 10 个。 */
+function pulseSyncCur(k, b) {
+  const set = bankSet(k);
+  if (!set) return false;
+  const old = pCur(k);
+  const keep = old.filter(w => set.has(w));
+  if (keep.length === old.length) return false;
+  const have = new Set(keep);
+  const pool = b.words.filter(x => !pIsKnown(k, x.w) && !have.has(x.w));
+  pulseState().cur[k] = keep.concat(pickN(pool, PULSE_N - keep.length).map(x => x.w));
+  return true;
 }
 
 const savePulse = q => { persistKey('pulse', pulseState()); if (!q) cloudTouch(); };
@@ -4274,6 +4307,7 @@ VIEWS.pulse = async function (k) {
   const b = await bankLoad(k);
   if (!b.words.length) { paintPulse(); return; }
   if (!pCur(k).length) { pulseState().cur[k] = pulseDraw(k, b.words); savePulse(); }
+  else if (pulseSyncCur(k, b)) savePulse();
   paintPulse();
   pulseFillGloss(k);
 };
@@ -4392,8 +4426,11 @@ async function pulseReload() {
   const k = P.lang;
   BANK[k] = null;
   paintPulse();
-  await bankLoad(k, true);
-  if (BANK[k].words.length && !pCur(k).length) { pulseState().cur[k] = pulseDraw(k, BANK[k].words); savePulse(); }
+  const b = await bankLoad(k, true);
+  if (b.words.length) {
+    if (!pCur(k).length) { pulseState().cur[k] = pulseDraw(k, b.words); savePulse(); }
+    else if (pulseSyncCur(k, b)) savePulse();
+  }
   paintPulse();
 }
 
