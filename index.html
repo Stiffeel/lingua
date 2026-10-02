@@ -278,6 +278,10 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .rend{white-space:pre-wrap;font-size:14.5px;line-height:1.8;margin-top:11px;border:1px solid var(--line);
   border-radius:10px;padding:15px}
 .rend hr{border:none;border-top:1px solid var(--fg3);margin:14px 0}
+/* 卡片库里展开的渲染视图：要整张看完，所以不限高 */
+.lrend{font-size:15px;margin-top:12px;background:var(--bg)}
+.lrend.tb{font-size:19px;line-height:2}
+.mjf{border-bottom:2px solid var(--fg2);padding:0 4px;background:rgba(128,128,128,.12)}
 
 /* ---------- misc ---------- */
 .empty{text-align:center;color:var(--fg3);padding:16vh 20px;font-size:14px;line-height:1.9}
@@ -315,6 +319,7 @@ const CFG_DEFAULT = {
   key: '', model: 'gpt-4.1', azKey: '', azReg: 'westeurope',
   modelBy: {},      // 按语言覆盖模型，留空则跟随全局；用来只给藏语这类语言上强模型
   corpusBy: {},     // 按语言覆盖「选材规则」提示词，留空则用内置的那一段
+  voiceBy: {},      // 按语言指定朗读音色（存 voiceURI）；留空 = 交给系统。音色是设备相关的，不上云
   diff: {},         // 每种语言的难度微调，整数，0 = 基准
   boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
   autoSpeak: false, // 场景对话自动朗读
@@ -340,7 +345,7 @@ const S = {
    不复制的话，没存过设置时它们直接引用 CFG_DEFAULT 里的那个对象，
    一改就把默认值本身污染了，清空数据时反而恢复不回去。 */
 function normCfg() {
-  ['diff', 'modelBy', 'corpusBy'].forEach(k => {
+  ['diff', 'modelBy', 'corpusBy', 'voiceBy'].forEach(k => {
     const v = S.cfg[k];
     S.cfg[k] = (v && typeof v === 'object' && !Array.isArray(v)) ? Object.assign({}, v) : {};
   });
@@ -488,6 +493,7 @@ async function loadAll() {
   if (!S.del || typeof S.del !== 'object') S.del = {};
   pruneDel();
   prunePulse();
+  if (normCards()) saveCards(true);
   requestPersist();
 }
 
@@ -503,6 +509,31 @@ function pruneDel() {
 }
 function markDel(c) { S.del[cardKey(c)] = Date.now(); }
 function unmarkDel(c) { delete S.del[cardKey(c)]; }
+
+/* ---------------- 卡片排序 ----------------
+   排列顺序用单独的 pos（越大越靠前），不能拿 ts 排：ts 是云端合并用的「最后修改时间」，
+   勾一下「已添加」、移一下位置都会变；拿它排序的话，勾一下就会跳到最前面。
+   新卡 pos = 创建时刻；重新保存同一句 pos = 现在（回到最前）；「移到最后」压到全库最小值以下。 */
+const cardPos = c => (c && c.pos != null) ? c.pos : ((c && c.ts) || 0);
+const byPos = (a, b) => cardPos(b) - cardPos(a);
+/* 创建时间：新卡存在 ct 里；老卡没有，就从 id（'c' + 毫秒时间戳 + 随机串）里还原 */
+function cardCreated(c) {
+  if (c.ct) return c.ct;
+  const m = /^c(\d{13})/.exec(c.id || '');
+  return m ? +m[1] : (c.ts || 0);
+}
+/* 老卡没有 pos：按【现在的显示顺序】补上，一张都不挪位置 */
+function normCards() {
+  if (!S.cards.some(c => c.pos == null)) return false;
+  if (S.cards.every(c => c.pos == null)) {
+    const top = Math.max(Date.now() - 1000, ...S.cards.map(c => c.ts || 0));
+    S.cards.forEach((c, i) => { c.pos = top - i; });
+  } else {
+    S.cards.forEach(c => { if (c.pos == null) c.pos = c.ts || cardCreated(c); });
+    S.cards.sort(byPos);
+  }
+  return true;
+}
 
 /* 卡片上限：只回收已勾选「已添加」的旧卡片，未添加的永远不动 */
 function trimCards() {
@@ -547,7 +578,8 @@ function importBackup(input) {
           if (!m.has(k) && (d.del[k] || 0) > (S.del[k] || 0)) S.del[k] = d.del[k];
         });
       }
-      S.cards = Array.from(m.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      S.cards = Array.from(m.values()).sort(byPos);
+      normCards();
       if (d.seen && typeof d.seen === 'object') S.seen = Object.assign({}, S.seen, d.seen);
       if (d.bo && typeof d.bo === 'object') {
         Object.keys(d.bo).forEach(k => {
@@ -1087,7 +1119,12 @@ function shell(title, bodyHtml, opts) {
 
 /* ---------------- speech ---------------- */
 let voicesReady = false;
-function loadVoices() { try { speechSynthesis.getVoices(); voicesReady = true; } catch (e) {} }
+/* iOS 上音色列表是异步加载的，第一次 getVoices() 常常是空的。
+   列表到了以后，如果设置页开着，就把音色下拉框重新填一遍。 */
+function loadVoices() {
+  try { speechSynthesis.getVoices(); voicesReady = true; } catch (e) {}
+  if (typeof paintVoiceSels === 'function') paintVoiceSels();
+}
 if (window.speechSynthesis) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
 
 /* 合成好的音频只留在内存里，上限 30 条，超出就回收最早的，不占设备存储 */
@@ -1101,19 +1138,39 @@ function cacheAudio(ck, url) {
   }
 }
 
-function pickVoice(code) {
-  const vs = speechSynthesis.getVoices() || [];
-  const base = code.split('-')[0];
-  return vs.find(v => v.lang && v.lang.replace('_', '-') === code)
-      || vs.find(v => v.lang && v.lang.toLowerCase().indexOf(base) === 0)
-      || null;
+/* ---------------- 朗读音色 ----------------
+   以前这里会从音色列表里挑「第一个语言对得上的」硬塞给朗读——在 iPhone 上那通常是
+   系统默认的荷兰语男声，于是你在「设置 → 辅助功能 → 朗读内容 → 声音」里选的女声被盖掉了。
+   现在：设置里按语言指定了音色就用那一个；没指定就【只设语言、不指定音色】，交给系统挑。
+   注意 iOS 26 有个已知回归：系统不再把「朗读内容」里选的音色告诉第三方（包括网页），
+   所以想要确定用上那个女声，最可靠的是在 App 设置里直接点名它。 */
+const voiceList = () => { try { return speechSynthesis.getVoices() || []; } catch (e) { return []; } };
+const vLang = v => String((v && v.lang) || '').replace('_', '-');
+const langOfCode = code => LK.find(k => LANGS[k].tts === code) || '';
+function voicesFor(k) {
+  const base = String((LANGS[k] && LANGS[k].tts) || '').split('-')[0].toLowerCase();
+  if (!base) return [];
+  return voiceList().filter(v => vLang(v).toLowerCase().split('-')[0] === base);
+}
+function chosenVoice(k) {
+  const want = S.cfg.voiceBy && S.cfg.voiceBy[k];
+  if (!want) return null;
+  const vs = voiceList();
+  return vs.find(v => v.voiceURI === want) || vs.find(v => v.name === want) || null;
+}
+/* 音色的显示名：名字 · 语言 · 质量。iOS 的 voiceURI 里带 premium / enhanced 字样 */
+function voiceLabel(v) {
+  const u = String(v.voiceURI || '').toLowerCase();
+  const q = u.indexOf('premium') > -1 ? ' · 高级' : (u.indexOf('enhanced') > -1 ? ' · 增强' : '');
+  return v.name + ' · ' + vLang(v) + q + (v.localService === false ? ' · 联网' : '');
 }
 function nativeSpeak(text, code, rate) {
   if (!window.speechSynthesis) { toast('本设备不支持语音'); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = code; u.rate = rate || 0.92;
-  const v = pickVoice(code); if (v) u.voice = v;
+  const v = chosenVoice(langOfCode(code));
+  if (v) { u.voice = v; u.lang = vLang(v) || code; }
   speechSynthesis.speak(u);
 }
 
@@ -1242,16 +1299,55 @@ function say(lang, text, btn) {
 }
 window.say = say;
 
-/* ---------------- highlight-code rendering ---------------- */
-/* [T#!色#文字] 字体高亮   [T#!!色#文字] 背景高亮   --- 答案线 */
+/* ---------------- 墨墨标记渲染 ----------------
+   卡片库里要能直接复习，所以得把墨墨语法完整画出来，而不只是两种高亮：
+   [T#样式#文字]  样式可组合（逗号分隔）：B 粗 / U 下划线 / I 斜 / D 删除线 /
+                  up 上标 / down 下标 / !色值 字色 / !!色值 背景
+   [P#样式#文字]  段落：H1 / H2 / H3 / center / right，也可带上面的文字样式
+   [F##文字]      挖空
+   [Pic#…] [Audio#…] [Card#…] 这类引用在 App 里没法还原，直接去掉
+   ---            答案线
+   墨墨规定标记内容里不能有 ]，所以不存在嵌套，一遍替换就够。 */
+const hex6 = h => h.length === 3 ? h[0] + h[0] + h[1] + h[1] + h[2] + h[2] : h.slice(0, 6);
+function mjStyle(style) {
+  const css = [], deco = [];
+  let tag = '';
+  String(style || '').split(',').map(x => x.trim()).filter(Boolean).forEach(t => {
+    let m;
+    if (t === 'B') css.push('font-weight:700');
+    else if (t === 'I') css.push('font-style:italic');
+    else if (t === 'U') deco.push('underline');
+    else if (t === 'D') deco.push('line-through');
+    else if (t === 'up') tag = 'sup';
+    else if (t === 'down') tag = 'sub';
+    else if ((m = /^!!([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.exec(t)))
+      css.push('background:#' + hex6(m[1]) + ';color:#111;padding:0 3px;border-radius:2px');
+    else if ((m = /^!([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.exec(t)))
+      css.push('color:#' + hex6(m[1]) + ';font-weight:600');
+    else if (t === 'H1') css.push('font-size:1.45em;font-weight:700');
+    else if (t === 'H2') css.push('font-size:1.25em;font-weight:700');
+    else if (t === 'H3') css.push('font-size:1.1em;font-weight:700');
+    else if (t === 'center') css.push('display:block;text-align:center');
+    else if (t === 'right') css.push('display:block;text-align:right');
+  });
+  if (deco.length) css.push('text-decoration:' + deco.join(' '));
+  return { css: css.join(';'), tag: tag };
+}
 function renderCodes(raw) {
   let s = esc(raw);
-  s = s.replace(/\[T#!!([0-9a-fA-F]{3,8})#([\s\S]*?)\]/g,
-    (m, c, t) => '<span style="background:#' + c + ';color:#111;padding:0 3px;border-radius:2px">' + t + '</span>');
-  s = s.replace(/\[T#!([0-9a-fA-F]{3,8})#([\s\S]*?)\]/g,
-    (m, c, t) => '<span style="color:#' + c + ';font-weight:600">' + t + '</span>');
-  s = s.replace(/\[F##([\s\S]*?)\]/g,
-    (m, t) => '<span style="border-bottom:2px solid var(--fg2);padding:0 4px;background:rgba(128,128,128,.12)">' + t + '</span>');
+  /* 独占一行的引用连同那一行一起去掉，免得留下空行 */
+  s = s.replace(/^[ \t]*\[(?:Pic|Audio|Card)#[^\]\n]*\][ \t]*\n?/gm, '');
+  s = s.replace(/\[(?:Pic|Audio|Card)#[^\]\n]*\]/g, '');
+  s = s.replace(/\[F##([^\]\n]*)\]/g,
+    (m, t) => '<span class="mjf">' + t + '</span>');
+  /* 段落本身已经是块，紧跟的换行要吃掉，否则 pre-wrap 下会多出一行空白 */
+  s = s.replace(/\[(T|P)#([^#\]\n]*)#([^\]\n]*)\](\n?)/g, (m, kind, style, t, nl) => {
+    const st = mjStyle(style);
+    const inner = st.tag ? '<' + st.tag + '>' + t + '</' + st.tag + '>' : t;
+    return kind === 'P'
+      ? '<span style="display:block;' + st.css + '">' + inner + '</span>'
+      : '<span style="' + st.css + '">' + inner + '</span>' + nl;
+  });
   s = s.replace(/^---\s*$/gm, '<hr>');
   return s;
 }
@@ -1577,8 +1673,9 @@ function cloudMerge(rm) {
       if (!mine) { m.set(id, c); changed = true; }
       else if ((c.ts || 0) > (mine.ts || 0)) { m.set(id, c); changed = true; }
     });
-    const merged = Array.from(m.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
-    if (merged.length !== S.cards.length || changed) { S.cards = merged; changed = true; }
+    /* 按 pos 排，不按 ts：否则「移到最后」一同步就被打回原位 */
+    const merged = Array.from(m.values()).sort(byPos);
+    if (merged.length !== S.cards.length || changed) { S.cards = merged; normCards(); changed = true; }
   }
   if (rm.bo && typeof rm.bo === 'object') {
     Object.keys(rm.bo).forEach(k => {
@@ -1748,7 +1845,24 @@ function needKey() {
 /* ---------------- 模型选择 ----------------
    全局一个模型，另外可以按语言单独指定。这样藏语、哈萨克语这类语料稀少、
    弱模型容易出错的语言可以单独上强模型，其余语言继续走便宜的那个。 */
-const MODELS = ['gpt-4.1', 'gpt-4.1-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-5', 'gpt-5-mini'];
+/* 2026 年 10 月时点 OpenAI 的文本模型（新到旧）。都能走 Chat Completions；
+   GPT-6 / 5.x 系列是推理模型，会比 4.1 慢一些。列表外的模型仍可「自定义…」手输。 */
+const MODEL_INFO = [
+  { id: 'gpt-6.1-sol', note: '均衡 · 官方推荐' },
+  { id: 'gpt-6-astra', note: '最强 · 最贵' },
+  { id: 'gpt-6-sol', note: '均衡 · 上一版' },
+  { id: 'gpt-6-luna', note: '最便宜 · 最快' },
+  { id: 'gpt-5.6-sol', note: '上一代 · 均衡' },
+  { id: 'gpt-5.6-terra', note: '上一代 · 中档' },
+  { id: 'gpt-5.6-luna', note: '上一代 · 便宜' },
+  { id: 'gpt-5.5', note: '' },
+  { id: 'gpt-5.4-mini', note: '便宜' },
+  { id: 'gpt-5.4-nano', note: '极便宜' },
+  { id: 'gpt-4.1', note: '旧 · 非推理，快' },
+  { id: 'gpt-4.1-mini', note: '旧 · 非推理，便宜' }
+];
+const MODELS = MODEL_INFO.map(m => m.id);
+const modelLabel = id => { const m = MODEL_INFO.find(x => x.id === id); return m && m.note ? id + ' · ' + m.note : id; };
 const globalModel = () => (S.cfg.model || 'gpt-4.1').trim();
 function modelFor(k) {
   const m = k && S.cfg.modelBy && S.cfg.modelBy[k];
@@ -1767,23 +1881,54 @@ function guessLang(t) {
   return '';
 }
 
+const oaPost = (path, b) => fetch('https://api.openai.com/v1/' + path, {
+  method: 'POST',
+  headers: { 'Authorization': 'Bearer ' + S.cfg.key.trim(), 'Content-Type': 'application/json' },
+  body: JSON.stringify(b)
+});
+async function oaErr(r) {
+  try { const j = await r.json(); return (j.error && j.error.message) || ''; } catch (e) { return ''; }
+}
+/* 有些模型（尤其是 pro 一类）只开放 Responses 接口，走 Chat Completions 会被拒，
+   报错里会点名 v1/responses。遇到这种情况自动改走 Responses，并记住这个模型，
+   以后直接走对的那条路。这样以后手输一个新模型名也不怕。 */
+const RESP_ONLY = new Set();
+const isRespOnlyErr = m => /v1\/responses|Responses API|not supported in the v1\/chat\/completions/i.test(m || '');
+
 async function ai(messages, wantJson, lang) {
-  const body = { model: modelFor(lang), messages: messages };
+  const model = modelFor(lang);
+  if (RESP_ONLY.has(model)) return aiResp(model, messages, wantJson);
+  const body = { model: model, messages: messages };
   if (wantJson) body.response_format = { type: 'json_object' };
-  const call = b => fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + S.cfg.key.trim(), 'Content-Type': 'application/json' },
-    body: JSON.stringify(b)
-  });
-  let r = await call(body);
-  if (!r.ok && wantJson && r.status === 400) { delete body.response_format; r = await call(body); }
+  let r = await oaPost('chat/completions', body);
   if (!r.ok) {
-    let m = '';
-    try { const j = await r.json(); m = (j.error && j.error.message) || ''; } catch (e) {}
-    throw new Error('HTTP ' + r.status + (m ? ' · ' + m : ''));
+    let m = await oaErr(r);
+    if (isRespOnlyErr(m)) { RESP_ONLY.add(model); return aiResp(model, messages, wantJson); }
+    if (wantJson && r.status === 400) {             // 少数模型不认强制 JSON，去掉再试一次
+      delete body.response_format;
+      r = await oaPost('chat/completions', body);
+      if (!r.ok) m = await oaErr(r);
+    }
+    if (!r.ok) throw new Error('HTTP ' + r.status + (m ? ' · ' + m : ''));
   }
   const j = await r.json();
   return ((j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '').trim();
+}
+
+async function aiResp(model, messages, wantJson) {
+  const body = { model: model, input: messages.map(m => ({ role: m.role, content: m.content })) };
+  if (wantJson) body.text = { format: { type: 'json_object' } };
+  let r = await oaPost('responses', body);
+  let m = '';
+  if (!r.ok) {
+    m = await oaErr(r);
+    if (wantJson && r.status === 400) { delete body.text; r = await oaPost('responses', body); if (!r.ok) m = await oaErr(r); }
+    if (!r.ok) throw new Error('HTTP ' + r.status + (m ? ' · ' + m : ''));
+  }
+  const j = await r.json();
+  if (typeof j.output_text === 'string' && j.output_text) return j.output_text.trim();
+  return (j.output || []).map(o => (o.content || []).filter(c => c && c.type === 'output_text').map(c => c.text || '').join(''))
+    .join('').trim();
 }
 
 async function aiJson(messages, lang) {
@@ -2398,8 +2543,9 @@ VIEWS.set = function () {
 
     '<label class="lb">模型</label>' +
     '<input class="fld" id="fModel" list="mlist" autocapitalize="off" spellcheck="false" placeholder="gpt-4.1" value="' + esc(c.model) + '">' +
-    '<datalist id="mlist"><option value="gpt-4.1"><option value="gpt-4.1-mini"><option value="gpt-4o"><option value="gpt-4o-mini"><option value="gpt-5"><option value="gpt-5-mini"></datalist>' +
-    '<p class="note">解析质量优先建议 gpt-4.1 或 gpt-5；追求便宜可用 mini 系列。这是<b>默认</b>模型，可以在下面按语言单独覆盖。</p>' +
+    '<datalist id="mlist">' + MODEL_INFO.map(m => '<option value="' + m.id + '" label="' + esc(m.note) + '">').join('') + '</datalist>' +
+    '<p class="note">均衡之选是 gpt-6.1-sol；想省钱用 gpt-6-luna。GPT-6 / 5.x 都是推理模型，比 gpt-4.1 慢一些，但解析更准。' +
+    '这是<b>默认</b>模型，可以在下面按语言单独覆盖——比如只给藏语换强模型。</p>' +
 
     '<div class="sec" style="margin-top:36px">按语言指定模型</div>' +
     '<p class="note" style="margin-top:0;margin-bottom:6px">藏语、哈萨克语这类训练语料稀少的语言，弱模型经常出错；而荷兰语、西班牙语用便宜的模型就够。' +
@@ -2413,7 +2559,7 @@ VIEWS.set = function () {
         (cur ? '已指定 ' + esc(cur) : '跟随默认 · ' + esc(c.model || 'gpt-4.1')) + '</s></div>' +
         '<select class="msel" onchange="setModelFor(\'' + k + '\',this.value)">' +
         '<option value=""' + (cur ? '' : ' selected') + '>跟随默认</option>' +
-        opts.map(m => '<option value="' + esc(m) + '"' + (cur === m ? ' selected' : '') + '>' + esc(m) + '</option>').join('') +
+        opts.map(m => '<option value="' + esc(m) + '"' + (cur === m ? ' selected' : '') + '>' + esc(modelLabel(m)) + '</option>').join('') +
         '<option value="__custom">自定义…</option></select></div>';
     }).join('') +
     '</div>' +
@@ -2452,7 +2598,13 @@ VIEWS.set = function () {
     '<p class="note">在句子阅读里点开任意藏语词，就能手写它的注音、录下自己的发音。你手改过的注音会自动反哺给 AI（最多取 15 条、按覆盖新音节挑选，不会把 prompt 撑大）。</p>' +
 
     '<div class="sec" style="margin-top:36px">语音</div>' +
-    '<p class="note" style="margin-top:0">荷兰语、西班牙语、日语直接调用 iOS 内置语音，无需配置。<br>安多藏语目前没有可用的语音合成，改为显示注音。<br>哈萨克语 iOS 无内置音色：填了 Azure Key 就用真人音色 ' + AZ_VOICE + '（免费额度每月 50 万字符），不填则用 OpenAI 语音近似朗读。<br>第一次播放哈萨克语时会从 CDN 加载一次约 370 KB 的语音组件，之后不再重复加载。</p>' +
+    '<p class="note" style="margin-top:0">荷兰语、西班牙语、日语、俄语直接调用 iOS 内置语音。<br>安多藏语目前没有可用的语音合成，改为显示注音。<br>哈萨克语 iOS 无内置音色：填了 Azure Key 就用真人音色 ' + AZ_VOICE + '（免费额度每月 50 万字符），不填则用 OpenAI 语音近似朗读。<br>第一次播放哈萨克语时会从 CDN 加载一次约 370 KB 的语音组件，之后不再重复加载。</p>' +
+
+    '<label class="lb">朗读音色</label>' +
+    '<p class="note" style="margin-top:0;margin-bottom:6px">默认「跟随系统」。如果听到的不是你在 iPhone「设置 → 辅助功能 → 朗读内容 → 声音」里选的那个，' +
+    '就在这里直接点名——iOS 26 起系统不再把那里的选择告诉网页，点名是最可靠的办法。' +
+    'Siri 音色苹果不开放给第三方，列表里不会有。</p>' +
+    '<div id="vsels" style="border-top:1px solid var(--line)">' + voiceSelsHtml() + '</div>' +
 
     '<label class="lb">Azure Speech Key（可选 · 哈萨克语）</label>' +
     '<input class="fld" id="fAz" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="留空则使用 OpenAI 语音" value="' + esc(c.azKey) + '">' +
@@ -2573,6 +2725,45 @@ async function cloudNow(btn) {
   const ok = await cloudSync(true);
   btn.innerHTML = old; btn.disabled = false;
   toast(ok ? '已同步' : '同步失败，看下面的说明');
+}
+
+/* ---------------- 朗读音色 ---------------- */
+const VOICE_LANGS = ['nl', 'ru', 'es', 'ja'];
+const VOICE_SAMPLE = {
+  nl: 'Goedemorgen! Hoe gaat het met je vandaag?',
+  ru: 'Доброе утро! Как у вас дела?',
+  es: '¡Buenos días! ¿Cómo estás hoy?',
+  ja: 'おはようございます。今日は元気ですか。'
+};
+function voiceSelsHtml() {
+  const any = voiceList().length > 0;
+  return VOICE_LANGS.map(k => {
+    const cur = (S.cfg.voiceBy && S.cfg.voiceBy[k]) || '';
+    const vs = voicesFor(k);
+    const found = !cur || vs.some(v => v.voiceURI === cur || v.name === cur);
+    return '<div class="stp"><div class="nm"><b>' + LANGS[k].zh + '</b><s>' +
+      (cur ? (found ? '已指定' : '已指定的音色这台设备上没有，暂用系统默认') : '跟随系统') +
+      (any ? ' · 可选 ' + vs.length + ' 个' : '') + '</s></div>' +
+      '<select class="msel" id="vsel_' + k + '" onchange="setVoiceFor(\'' + k + '\',this.value)">' +
+      '<option value=""' + (cur ? '' : ' selected') + '>跟随系统</option>' +
+      vs.map(v => '<option value="' + esc(v.voiceURI || v.name) + '"' +
+        ((v.voiceURI === cur || v.name === cur) ? ' selected' : '') + '>' + esc(voiceLabel(v)) + '</option>').join('') +
+      '</select>' +
+      '<button class="btn sm" style="flex:none" onclick="testVoice(\'' + k + '\')">试听</button></div>';
+  }).join('') +
+    (any ? '' : '<p class="note">音色列表还没加载出来（iOS 常见）。点一下任意「试听」，或稍等几秒，列表会自己出现。</p>');
+}
+function paintVoiceSels() { const el = $('vsels'); if (el) el.innerHTML = voiceSelsHtml(); }
+function setVoiceFor(k, v) {
+  if (!S.cfg.voiceBy || typeof S.cfg.voiceBy !== 'object') S.cfg.voiceBy = {};
+  if (v) S.cfg.voiceBy[k] = v; else delete S.cfg.voiceBy[k];
+  saveCfg(true);                                  // 音色是设备相关的，不触发云端同步
+  paintVoiceSels();
+  testVoice(k);
+}
+function testVoice(k) {
+  nativeSpeak(VOICE_SAMPLE[k], LANGS[k].tts);
+  setTimeout(paintVoiceSels, 600);                // iOS 有时要先说一次话，音色列表才会出来
 }
 
 function toggleHand() {
@@ -3254,7 +3445,7 @@ function saveDetail() {
   const old = existingCard(cu);
   if (old) {
     const changed = old.detail !== text;
-    old.detail = text; old.ts = Date.now(); unmarkDel(old);
+    old.detail = text; old.ts = Date.now(); old.pos = Date.now(); old.ct = cardCreated(old); unmarkDel(old);
     if (changed) old.added = false;
     S.cards = [old].concat(S.cards.filter(x => x !== old));
     saveCards(); back();
@@ -3263,7 +3454,8 @@ function saveDetail() {
   }
   const fresh = {
     id: 'c' + Date.now() + Math.random().toString(36).slice(2, 6),
-    lang: cu.lang, front: cu.front, detail: text, added: false, ts: Date.now()
+    lang: cu.lang, front: cu.front, detail: text, added: false,
+    ts: Date.now(), pos: Date.now(), ct: Date.now()
   };
   S.cards.unshift(fresh);
   unmarkDel(fresh);                 // 删过又重新存的，墓碑要撤掉
@@ -4605,7 +4797,8 @@ function paintLib() {
     '<button class="btn sm" onclick="delAdded()"' + (done ? '' : ' disabled') + '>删除已添加（' + done + '）</button>' +
     (S.trash ? '<button class="btn sm" onclick="undoDel()">撤销删除</button>' : '') +
     '</div>' +
-    '<p class="note" style="margin-bottom:14px">共 ' + S.cards.length + ' 张。复制后到你的卡片工具里粘贴，再勾选「已添加」批量清理。</p>' +
+    '<p class="note" style="margin-bottom:14px">共 ' + S.cards.length + ' 张。复制后到你的卡片工具里粘贴，再勾选「已添加」批量清理。' +
+    '也可以不导出、直接在这里复习：点「查看详解」展开，还不熟的点「移到最后」，下一轮还会轮到它。</p>' +
     '<div class="lib">';
 
   S.cards.forEach(c => {
@@ -4615,15 +4808,18 @@ function paintLib() {
       '<div class="top">' +
       '<button class="cb" data-chk="' + c.id + '">' + (c.added ? '&#10003;' : '') + '</button>' +
       '<div class="fr"><span class="' + scriptCls(c.lang) + '">' + esc(c.front) + '</span>' +
-      '<div class="mt">' + esc(L.code || '') + ' · ' + new Date(c.ts).toLocaleDateString('zh-CN') + '</div></div>' +
+      '<div class="mt">' + esc(L.code || '') + ' · ' + new Date(cardCreated(c)).toLocaleDateString('zh-CN') + '</div></div>' +
       '</div>' +
       '<div class="acts">' +
       '<button class="btn sm pri" data-copy="' + c.id + '">复制</button>' +
       '<button class="btn sm" data-open="' + c.id + '">' + (op ? '收起' : '查看详解') + '</button>' +
+      '<button class="btn sm" data-last="' + c.id + '">移到最后</button>' +
       '<button class="btn sm" data-edit="' + c.id + '">编辑</button>' +
       '<button class="btn sm" data-del="' + c.id + '">删除</button>' +
       '</div>' +
-      (op ? '<div class="pre">' + esc(c.detail) + '</div>' : '') +
+      /* 展开显示的是渲染后的样子（高亮、加粗、挖空、答案线），不是带标记的原文；
+         原文在「编辑」里 */
+      (op ? '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(c.detail) + '</div>' : '') +
       '</div>';
   });
   body += '</div>';
@@ -4648,6 +4844,34 @@ function paintLib() {
     go('cedit', { id: c.id, text: c.detail, lang: c.lang });
   });
   document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => delCards([b.dataset.del]));
+  document.querySelectorAll('[data-last]').forEach(b => b.onclick = () => moveToEnd(b.dataset.last));
+}
+
+/* 移到最后：在卡片库里直接复习时，没记住的往后放，下一轮还会轮到。
+   pos 压到全库最小值以下；ts 必须一起更新，否则云端合并会拿另一台设备上的旧位置把它打回去。 */
+function moveToEnd(id) {
+  const i = S.cards.findIndex(x => x.id === id);
+  if (i < 0) return;
+  const c = S.cards[i];
+  const prev = { id: id, i: i, pos: cardPos(c) };
+  c.ct = cardCreated(c);
+  c.pos = Math.min.apply(null, S.cards.map(cardPos)) - 1;
+  c.ts = Date.now();
+  S.cards.splice(i, 1);
+  S.cards.push(c);
+  LIB.open[id] = false;
+  saveCards(); paintLib();
+  toast('已移到最后', '撤销', () => undoMove(prev));
+}
+function undoMove(prev) {
+  const i = S.cards.findIndex(x => x.id === prev.id);
+  if (i < 0) return;
+  const c = S.cards[i];
+  c.pos = prev.pos;
+  c.ts = Date.now();                  // 撤销也是一次新的修改，同样要能同步出去
+  S.cards.splice(i, 1);
+  S.cards.splice(Math.min(prev.i, S.cards.length), 0, c);
+  saveCards(); paintLib();
 }
 
 function copyAll() { copyText(S.cards.map(c => c.detail).join('\n\n========\n\n')); }
