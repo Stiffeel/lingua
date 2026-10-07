@@ -31,25 +31,25 @@ Yulengua是一个多语言学习App，适合汉语母语、有一定语言学基
 
 ### 📖 **句子阅读**：分语言按难度生成句子，逐词释义、深度解析、追问、卡片保存。
 
-![0e923b3033f0f3bea3e07c50e76e0d75_raw.mp4 [video-to-gif output image]](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/ezgif-837262d3e3a492d9.gif)
+![0e923b3033f0f3bea3e07c50e76e0d75_raw.mp4 [video-to-gif output image]](docs/images/ezgif-837262d3e3a492d9.gif)
 
 
 
 ### 💬 **场景对话**：用模糊关键词指定主题对话，听力优先练习，纠错和追问。
 
-![image-20260820115228478](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/image-20260820115228478.png)
+![image-20260820115228478](docs/images/image-20260820115228478.png)
 
 
 
 ### 🔎 查词 / 整句翻译：六语对照，支持单词详解和追问。
 
-![70ad8246156fd6ccfa48354e9c3c449b.mp4 [video-to-gif output image]](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/ezgif-8d09bf35cf253663.gif)
+![70ad8246156fd6ccfa48354e9c3c449b.mp4 [video-to-gif output image]](docs/images/ezgif-8d09bf35cf253663.gif)
 
 
 
 ### ⚡ **Daily Pulse**：每日生词、熟词淘汰、勾词造句与复习。
 
-![image-20260820112619883](https://picgobucketshihy.oss-cn-shanghai.aliyuncs.com/image-20260820112619883.png)
+![image-20260820112619883](docs/images/image-20260820112619883.png)
 
 - #### 🗂️ **卡片库**：生成适配[墨墨记忆卡制卡语法](https://tutuji333.github.io/markji-faq/questions/content/card-syntax-guide/)的内容，支持语法检查、编辑、复制与批量管理。
 
