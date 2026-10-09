@@ -267,6 +267,22 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .lc .fr{flex:1;font-size:16px;line-height:1.55;font-weight:500;word-break:break-word}
 .lc .mt{font-size:11px;color:var(--fg3);margin-top:5px;letter-spacing:.06em}
 .lc .acts{display:flex;gap:8px;margin-top:12px;padding-left:33px;flex-wrap:wrap}
+/* 卡片库（.lcd）：整行可点展开，右边两个图标按钮；Pulse / 藏语发音库共用 .lc，别动上面那些 */
+.lcd .top{align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lcd .mt{font-size:11.5px;margin-top:12px;letter-spacing:.04em}
+.lcd .acts{padding-left:0}
+.lcd .side{display:flex;gap:6px;flex:none}
+.lcd .ib{width:40px;height:40px;border:1px solid var(--line2);border-radius:10px;background:var(--bg);color:var(--fg);
+  display:flex;align-items:center;justify-content:center;padding:0}
+.lcd .ib:active{background:var(--soft)}
+.lcd .ib:disabled{opacity:.5}
+.lsec{font-size:12px;letter-spacing:.08em;color:var(--fg3);margin:16px 0 0}
+.ltabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding:2px;-webkit-overflow-scrolling:touch}
+.ltabs button{flex:none;border:1px solid var(--line2);border-radius:999px;background:var(--bg);color:var(--fg2);
+  padding:7px 13px;font-size:13px;white-space:nowrap}
+.ltabs button i{font-style:normal;font-size:11px;margin-left:6px;color:var(--fg3)}
+.ltabs button.on{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
+.ltabs button.on i{color:var(--inv-fg);opacity:.75}
 .pre{white-space:pre-wrap;font-size:13px;line-height:1.7;color:var(--fg2);background:var(--soft);
   border-radius:10px;padding:13px;margin-top:11px;max-height:220px;overflow:auto;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
@@ -324,7 +340,6 @@ const CFG_DEFAULT = {
   boPron: '',       // 用户自定义的安多话注音标准（样例对照表）
   autoSpeak: false, // 场景对话自动朗读
   hand: true,       // 俄语/哈萨克语是否显示西里尔手写体那一行
-  cardCap: 0,       // 卡片上限，0 = 不限；超出时只回收已勾选「已添加」的旧卡片
   lastBackup: 0,    // 上次导出备份的时间戳
   cfgTs: 0,         // 设置最后一次修改的时间戳（云端合并用）
   lastCloud: 0,     // 上次云端同步成功的时间戳
@@ -394,6 +409,7 @@ function lsWrite(key, val) {
   if (key === 'cards') LS.set('lg.cards', val);
   else if (key === 'del') LS.set('lg.del', val);
   else if (key === 'pulse') LS.set('lg.pulse', val);
+  else if (key === 'cbmeta') LS.set('lg.cbmeta', val);
   else if (key === 'cfg') LS.set('lg.cfg', val);
   else if (key === 'bo') LS.set('lg.bo', val);
   else if (key === 'seen') LK.forEach(k => LS.set('lg.seen.' + k, val[k] || []));
@@ -452,6 +468,8 @@ async function loadAll() {
       const bo = await idbGet('bo');
       const del = await idbGet('del');
       const pulse = await idbGet('pulse');
+      const cbm = await idbGet('cbmeta');
+      if (cbm && typeof cbm === 'object') CB.meta = cbm;
       if (bo && typeof bo === 'object') S.bo = bo;
       if (del && typeof del === 'object') S.del = del;
       if (pulse && typeof pulse === 'object') S.pulse = pulse;
@@ -484,6 +502,7 @@ async function loadAll() {
     S.bo = LS.get('lg.bo', {}) || {};
     S.del = LS.get('lg.del', {}) || {};
     S.pulse = LS.get('lg.pulse', {}) || {};
+    CB.meta = LS.get('lg.cbmeta', {}) || {};
     S.seen = {};
     LK.forEach(k => { S.seen[k] = LS.get('lg.seen.' + k, []); });
   }
@@ -493,7 +512,13 @@ async function loadAll() {
   if (!S.del || typeof S.del !== 'object') S.del = {};
   pruneDel();
   prunePulse();
-  if (normCards()) saveCards(true);
+  /* 老卡片的内联详解搬进正文存储；下一次云端同步会把它们传上去 */
+  const legacy = S.cards.some(c => typeof c.detail === 'string' || 'added' in c);
+  S.cards.forEach(cardSlim);
+  /* 索引里已经没有的卡，本机的正文缓存也不用留了 */
+  const live = new Set(S.cards.map(c => c.id));
+  Object.keys(CB.meta).forEach(id => { if (!live.has(id)) cbDrop(id); });
+  if (normCards() || legacy) saveCards(legacy ? false : true);
   requestPersist();
 }
 
@@ -535,21 +560,94 @@ function normCards() {
   return true;
 }
 
-/* 卡片上限：只回收已勾选「已添加」的旧卡片，未添加的永远不动 */
-function trimCards() {
-  const cap = S.cfg.cardCap | 0;
-  if (!cap || S.cards.length <= cap) return 0;
-  let over = S.cards.length - cap, removed = 0;
-  for (let i = S.cards.length - 1; i >= 0 && over > 0; i--) {
-    if (S.cards[i].added) { S.cards.splice(i, 1); over--; removed++; }
-  }
-  return removed;
+/* ---------------- 卡片正文：云端为准，本机只留一小撮缓存 ----------------
+   S.cards 只是索引（原文、语言、时间、排序、正文版本 bv），每张几十字节，随 data.json 同步；
+   翻译 + 详解 + 追问（正文 {d, n, bv}）单独存成云端 cards/<id>.json，展开卡片时才取。
+   本机缓存只留最近用过的 CB_KEEP 张【已确认传上云端】的；还没传上去的（或没开云端的）
+   本机这份就是唯一的一份，永远不回收。
+   bv = 正文最后一次被编辑的时间。不能拿 ts 比：ts 还会因为「移到最后」而变，
+   那会让本机缓存白白失效。缓存的 bv 和索引的 bv 不一致 = 缓存是旧的。 */
+const CB_KEEP = 30;
+const CB = { meta: {}, busy: new Map() };          // meta: id -> {bv, at 最近使用, up 云端是否已有这一版}
+const cbKey = id => 'cards/' + id + '.json';
+const cbRawGet = id => S.store === 'idb' ? idbGet('cb:' + id).catch(() => null) : Promise.resolve(LS.get('lg.cb.' + id, null));
+const cbRawSet = (id, b) => S.store === 'idb' ? idbSet('cb:' + id, b).catch(() => {}) : Promise.resolve(LS.set('lg.cb.' + id, b));
+const cbRawDel = id => S.store === 'idb'
+  ? idb('readwrite', st => { st.delete('cb:' + id); }).catch(() => {})
+  : Promise.resolve((() => { try { localStorage.removeItem('lg.cb.' + id); } catch (e) {} })());
+const saveCbMeta = () => persistKey('cbmeta', CB.meta);
+
+/* 同步登记 meta，落盘是异步的（IndexedDB 按事务顺序执行，紧跟着读也读得到） */
+function cbPut(id, b, up) {
+  CB.meta[id] = { bv: b.bv, at: Date.now(), up: !!up };
+  cbRawSet(id, { d: b.d || '', n: b.n || '', bv: b.bv });
+  cbEvict();
+  saveCbMeta();
+}
+function cbDrop(id) { delete CB.meta[id]; cbRawDel(id); saveCbMeta(); }
+function cbEvict() {
+  const ids = Object.keys(CB.meta).filter(id => CB.meta[id].up);
+  if (ids.length <= CB_KEEP) return;
+  ids.sort((a, b) => CB.meta[a].at - CB.meta[b].at).slice(0, ids.length - CB_KEEP).forEach(id => {
+    delete CB.meta[id]; cbRawDel(id);
+  });
 }
 
-function exportBackup() {
+/* 取一张卡的正文：本机缓存版本对得上就用，否则去云端拿 */
+async function cbLoad(c) {
+  const m = CB.meta[c.id];
+  if (m && m.bv === c.bv) {
+    const b = await cbRawGet(c.id);
+    if (b) { m.at = Date.now(); return b; }
+  }
+  if (CB.busy.has(c.id)) return CB.busy.get(c.id);
+  const p = (async () => {
+    if (!ossReady()) throw new Error('云端没有启用，本机也没有这张卡的详解');
+    let j;
+    try { j = JSON.parse(await ossGetText(cbKey(c.id))); }
+    catch (e) {
+      if (e.code === 'NoSuchKey') throw new Error('云端还没有这张卡的详解（另一台设备可能还没传完，稍后再试）');
+      throw new Error(ossHint(e));
+    }
+    const b = { d: String(j.d || ''), n: String(j.n || ''), bv: j.bv || c.bv };
+    cbPut(c.id, b, true);
+    return b;
+  })();
+  CB.busy.set(c.id, p);
+  try { return await p; } finally { CB.busy.delete(c.id); }
+}
+
+/* 老版本把正文直接内联在卡片的 detail 里（连同「已添加」勾选）：搬进正文存储，
+   索引里只留轻量字段。本机老数据、云端老 data.json、老备份文件都走这里。 */
+function cardSlim(c) {
+  if (typeof c.detail === 'string') {
+    c.bv = c.bv || c.ts || cardCreated(c) || Date.now();
+    cbPut(c.id, { d: c.detail, n: c.notes || '', bv: c.bv }, false);
+  }
+  delete c.detail; delete c.notes; delete c.added;
+  return c;
+}
+/* 本机缓存里已经过期的那一份（远端换了一版正文）要扔掉，除非它还没传上去 */
+function cbStale(mine, next) {
+  const m = CB.meta[mine.id];
+  if (m && m.up && (mine.id !== next.id || m.bv !== next.bv)) cbDrop(mine.id);
+}
+
+async function exportBackup() {
   /* 备份文件是「删掉图标后重装」的唯一退路，所以连同 Key 一起导出。
-     文件里含密钥，别随手转发给别人。云端的 data.json 则永远不含 Key。 */
-  const data = { app: 'yulengua', v: 2, ts: Date.now(), cfg: S.cfg, cards: S.cards, seen: S.seen, bo: S.bo, del: S.del, pulse: S.pulse };
+     文件里含密钥，别随手转发给别人。云端的 data.json 则永远不含 Key。
+     卡片正文大多不在本机，要先逐张取回来（6 路并发），否则备份里只有一个空壳索引。 */
+  const bodies = {}, miss = [];
+  if (S.cards.length) toast('正在收集卡片详解…');
+  let next = 0;
+  await Promise.all(Array.from({ length: 6 }, async () => {
+    while (next < S.cards.length) {
+      const c = S.cards[next++];
+      try { bodies[c.id] = await cbLoad(c); } catch (e) { miss.push(c.front); }
+    }
+  }));
+  if (miss.length && !confirm(miss.length + ' 张卡片的详解没取到（云端未连通？），备份里这些卡只有原文。\n仍要导出吗？')) return;
+  const data = { app: 'yulengua', v: 3, ts: Date.now(), cfg: S.cfg, cards: S.cards, bodies: bodies, seen: S.seen, bo: S.bo, del: S.del, pulse: S.pulse };
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -572,7 +670,18 @@ function importBackup(input) {
       if (!confirm('导入 ' + d.cards.length + ' 张卡片？\n同一句子的卡片会被备份里的版本覆盖，其余保留。')) return;
       const m = new Map(S.cards.map(c => [c.lang + '|' + c.front, c]));
       /* 备份里明确带回来的卡，就是用户想要的，清掉它的删除墓碑 */
-      d.cards.forEach(c => { if (c && c.front) { m.set(c.lang + '|' + c.front, c); unmarkDel(c); } });
+      d.cards.forEach(c => {
+        if (!c || !c.front) return;
+        /* 新备份把正文放在 bodies 里，老备份内联在 detail 里（cardSlim 处理） */
+        const bd = d.bodies && d.bodies[c.id];
+        if (bd && typeof c.detail !== 'string') {
+          c.bv = c.bv || bd.bv || c.ts || Date.now();
+          cbPut(c.id, { d: bd.d, n: bd.n, bv: c.bv }, false);
+        }
+        cardSlim(c);
+        if (!c.bv) c.bv = c.ts || Date.now();
+        m.set(c.lang + '|' + c.front, c); unmarkDel(c);
+      });
       if (d.del && typeof d.del === 'object') {
         Object.keys(d.del).forEach(k => {
           if (!m.has(k) && (d.del[k] || 0) > (S.del[k] || 0)) S.del[k] = d.del[k];
@@ -1641,7 +1750,7 @@ function cloudSnapshot() {
     cfg: {
       ts: S.cfg.cfgTs || 0,
       boPron: S.cfg.boPron, diff: S.cfg.diff, corpusBy: S.cfg.corpusBy,
-      cardCap: S.cfg.cardCap, autoSpeak: S.cfg.autoSpeak
+      autoSpeak: S.cfg.autoSpeak
     }
   };
 }
@@ -1670,8 +1779,14 @@ function cloudMerge(rm) {
       /* 墓碑比这张卡新 = 它是被删掉之后才传上来的旧副本，不准复活 */
       if ((S.del[id] || 0) >= (c.ts || 0) && S.del[id]) return;
       const mine = m.get(id);
-      if (!mine) { m.set(id, c); changed = true; }
-      else if ((c.ts || 0) > (mine.ts || 0)) { m.set(id, c); changed = true; }
+      if (!mine) { cardSlim(c); if (!c.bv) c.bv = c.ts; m.set(id, c); changed = true; }
+      else if ((c.ts || 0) > (mine.ts || 0)) {
+        /* 远端是旧版本 Yulengua 传的：正文内联在 detail 里，搬进正文存储，之后会重新传成 cards/<id>.json */
+        cardSlim(c);
+        if (!c.bv) c.bv = c.ts;
+        cbStale(mine, c);
+        m.set(id, c); changed = true;
+      }
     });
     /* 按 pos 排，不按 ts：否则「移到最后」一同步就被打回原位 */
     const merged = Array.from(m.values()).sort(byPos);
@@ -1724,7 +1839,6 @@ function cloudMerge(rm) {
     if (typeof rm.cfg.boPron === 'string') S.cfg.boPron = rm.cfg.boPron;
     if (rm.cfg.diff && typeof rm.cfg.diff === 'object') S.cfg.diff = rm.cfg.diff;
     if (rm.cfg.corpusBy && typeof rm.cfg.corpusBy === 'object') S.cfg.corpusBy = rm.cfg.corpusBy;
-    if (typeof rm.cfg.cardCap === 'number') S.cfg.cardCap = rm.cfg.cardCap;
     if (typeof rm.cfg.autoSpeak === 'boolean') S.cfg.autoSpeak = rm.cfg.autoSpeak;
     S.cfg.cfgTs = rm.cfg.ts;
     saveCfg(true);
@@ -1732,6 +1846,22 @@ function cloudMerge(rm) {
   }
   if (changed) { saveCards(); saveSeen(); saveBo(true); savePulse(true); }
   return changed;
+}
+
+/* 卡片正文先传，再传索引：否则另一台设备看到了索引却取不到正文。
+   传输期间用户可能又改了这张卡，所以传完要对一下 bv，没变才标记「云端已有」。
+   传不上去就让这次同步整体失败、下次重试，不能带着缺正文的索引往上推。 */
+async function cloudPushBodies() {
+  const live = new Set(S.cards.map(c => c.id));
+  const pend = Object.keys(CB.meta).filter(id => CB.meta[id].up === false && live.has(id));
+  for (const id of pend) {
+    const sent = CB.meta[id].bv;
+    const b = await cbRawGet(id);
+    if (!b) { delete CB.meta[id]; continue; }      // 本机也没有了，别再重试
+    await ossPutText(cbKey(id), JSON.stringify({ id: id, d: b.d, n: b.n, bv: b.bv }));
+    if (CB.meta[id] && CB.meta[id].bv === sent) CB.meta[id].up = true;
+  }
+  if (pend.length) { cbEvict(); saveCbMeta(); }
 }
 
 /* 断网时录的音会先躺在本机，等下一次同步补传 */
@@ -1756,6 +1886,7 @@ async function cloudSync(force) {
     catch (e) { if (e.code !== 'NoSuchKey') throw e; }
     if (remote && remote.app === 'yulengua') cloudMerge(remote);
     await cloudPushPending();
+    await cloudPushBodies();
     await ossPutText(CLOUD_KEY, JSON.stringify(cloudSnapshot()));
     CLOUD.state = 'ok'; CLOUD.last = Date.now(); CLOUD.msg = '';
     S.cfg.lastCloud = CLOUD.last; saveCfg(true);
@@ -2454,7 +2585,7 @@ VIEWS.home = function () {
     ['01', '句子阅读', 'Sentence Reading', "go('langs','read')", ''],
     ['02', '场景对话', 'Scenario Dialogue', "go('langs','dlg')", ''],
     ['03', '单词查询', 'Word Lookup', "go('lookup')", ''],
-    ['04', '卡片批量生成', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : ''],
+    ['04', '卡片库', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : ''],
     ['05', 'Daily Pulse', 'Daily Vocabulary', "go('langs','pulse')", '']
   ];
   app().innerHTML = '<div class="screen on"><div class="body">' +
@@ -2627,12 +2758,6 @@ VIEWS.set = function () {
     '<div class="sec" style="margin-top:40px">本地存储</div>' +
     '<div id="stinfo" class="note" style="margin-top:0">' + LOADER + '</div>' +
 
-    '<label class="lb">卡片上限</label>' +
-    '<div class="row">' + CAPS.map(n =>
-      '<button class="btn sm' + ((S.cfg.cardCap | 0) === n ? ' on' : '') + '" onclick="setCap(' + n + ')">' +
-      (n ? n + ' 张' : '不限') + '</button>').join('') + '</div>' +
-    '<p class="note">超出上限时，只回收最早的、你已经勾选「已添加」的卡片；没勾的永远不会被删。设成「不限」也没关系——卡片是纯文本，一千张也才几 MB。</p>' +
-
     '<label class="lb">备份</label>' +
     '<div class="row">' +
     '<button class="btn sm" onclick="exportBackup()">导出备份文件</button>' +
@@ -2647,8 +2772,7 @@ VIEWS.set = function () {
       : '重装前务必先导出一次，或者打开上面的云端同步。') + '</p>' +
 
     '<label class="lb">其他</label>' +
-    '<div class="row"><button class="btn sm" onclick="exportAll()">复制全部详解</button>' +
-    '<button class="btn sm" onclick="clearSeen()">清空难度基准记录</button>' +
+    '<div class="row"><button class="btn sm" onclick="clearSeen()">清空难度基准记录</button>' +
     '<button class="btn sm" onclick="wipe()">清空全部数据</button></div>';
   shell('设置', h);
   paintStorage();
@@ -2786,9 +2910,6 @@ function setModelFor(k, v) {
   toast(v ? LANGS[k].zh + ' 改用 ' + v : LANGS[k].zh + ' 恢复跟随默认模型');
 }
 
-const CAPS = [0, 200, 500, 1000];
-function setCap(n) { S.cfg.cardCap = n; saveCfg(); const d = trimCards(); if (d) { saveCards(); toast('已回收 ' + d + ' 张旧的已添加卡片'); } render(); }
-
 async function paintStorage() {
   const el = $('stinfo'); if (!el) return;
   const i = await storageInfo();
@@ -2866,10 +2987,6 @@ async function testKey(btn) {
     m.innerHTML = '<div class="err">连接失败 · ' + esc(e.message) + '</div>';
   }
 }
-function exportAll() {
-  if (!S.cards.length) { toast('卡片库是空的'); return; }
-  copyText(S.cards.map(c => c.detail).join('\n\n========\n\n'));
-}
 function clearSeen() {
   if (!confirm('清空所有语言「最近读过的句子」记录？难度基准会重新从基准水平开始，卡片库不受影响。')) return;
   S.seen = {}; saveSeen();
@@ -2877,6 +2994,8 @@ function clearSeen() {
 }
 function wipe() {
   if (!confirm('确定清空所有卡片和设置？此操作不可撤销。建议先导出一份备份文件。')) return;
+  Object.keys(CB.meta).forEach(cbDrop);
+  LIB.open = {}; LIB.cache.clear();
   S.cards = []; S.seen = {}; S.bo = {}; S.del = {}; S.pulse = {}; S.trash = null;
   S.cfg = Object.assign({}, CFG_DEFAULT);
   normCfg();
@@ -3362,14 +3481,17 @@ async function detailFor(k, sent, qa, btn, extraCtx) {
   const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在生成详解'; btn.disabled = true;
   try {
     const allQa = (qa || []).concat(wordQaFor(k, [sent.text].concat(extraCtx || [])));
-    let txt = await ai(detailPrompt(k, sent, allQa), false, k);
+    /* 追问不再喂给模型去「整合」进详解：它们原样放进卡片的「追问详解」一栏（保存前可编辑），
+       既不丢，也不会和正文重复讲一遍。 */
+    const notes = allQa.map(x => '问：' + x.q + '\n答：' + x.a).join('\n\n');
+    let txt = await ai(detailPrompt(k, sent, []), false, k);
     if (k === 'kk') txt = kkDual(txt);
     if (k === 'ru') txt = ruDual(txt);
     const lint = markjiLint(txt);
     txt = lint.text;
     if (lint.fixed.length) toast('已自动整理墨墨语法：' + lint.fixed[0] + (lint.fixed.length > 1 ? ' 等 ' + lint.fixed.length + ' 处' : ''));
     DE.mode = 'raw';
-    go('dedit', { lang: k, front: sent.text, text: txt.trim() });
+    go('dedit', { lang: k, front: sent.text, text: txt.trim(), notes: notes });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
@@ -3415,6 +3537,25 @@ function deditBody(d, id) {
 }
 function bindDedit(id) {
   if (DE.mode === 'raw' && $(id)) $(id).oninput = () => { S.stack[S.stack.length - 1].arg.text = $(id).value; };
+  if (DE.mode === 'raw' && $('ntext')) $('ntext').oninput = () => { S.stack[S.stack.length - 1].arg.notes = $('ntext').value; };
+}
+/* 追问详解：你在阅读里追问得到的解答，和详解正文分开存。保存前可以随便删改，留空也行 */
+function notesBody(d) {
+  return '<div class="sec" style="margin-top:26px">追问详解</div>' +
+    (DE.mode === 'raw'
+      ? '<textarea class="fld" id="ntext" placeholder="你追问得到的解答会放在这里，可以删改；没有就留空。" style="min-height:22vh;font-size:14px;line-height:1.75">' + esc(d.notes || '') + '</textarea>'
+      : '<div class="rend">' + (d.notes ? renderCodes(d.notes) : '<span class="hint">（空）</span>') + '</div>');
+}
+function notesText() {
+  const cu = S.stack[S.stack.length - 1].arg;
+  return ((DE.mode === 'raw' && $('ntext')) ? $('ntext').value : (cu.notes || '')).trim();
+}
+/* 导出给墨墨的整张卡：详解在前，追问详解接在答案面末尾 */
+function mjCard(detail, notes) {
+  let t = String(detail || '').trim();
+  const n = String(notes || '').trim();
+  if (n) t += '\n\n[T#B#追问详解]\n' + n;
+  return markjiLint(t).text;
 }
 function deText(id) {
   const cu = S.stack[S.stack.length - 1].arg;
@@ -3425,8 +3566,9 @@ function existingCard(d) {
 }
 
 VIEWS.dedit = function (d) {
-  const h = '<div class="sec">预览与编辑</div>' + deditBody(d, 'dtext') +
-    '<p class="note">高亮指令 [T#!色#字] / [T#!!色#字] 与答案线 --- 会原样保留。发音标记 [Audio#…] 需你自己后加。</p>' +
+  const h = '<div class="sec">预览与编辑</div>' + deditBody(d, 'dtext') + notesBody(d) +
+    '<p class="note">高亮指令 [T#!色#字] / [T#!!色#字] 与答案线 --- 会原样保留。发音标记 [Audio#…] 需你自己后加。' +
+    '复制墨墨格式时，追问详解会接在答案面末尾。</p>' +
     '<div class="spacer"></div>' +
     '<div class="split">' +
     '<button class="btn" onclick="copyDetail()">复制</button>' +
@@ -3437,31 +3579,34 @@ VIEWS.dedit = function (d) {
   bindDedit('dtext');
 };
 
-function copyDetail() { copyText(deText('dtext')); }
+function copyDetail() { copyText(mjCard(deText('dtext'), notesText())); }
 
-function saveDetail() {
+async function saveDetail() {
   const cu = S.stack[S.stack.length - 1].arg;
-  const text = deText('dtext');
+  const text = deText('dtext'), notes = notesText();
   const old = existingCard(cu);
+  const now = Date.now();
   if (old) {
-    const changed = old.detail !== text;
-    old.detail = text; old.ts = Date.now(); old.pos = Date.now(); old.ct = cardCreated(old); unmarkDel(old);
-    if (changed) old.added = false;
+    /* 取不到旧正文（离线且没缓存）就当作变了，宁可多覆盖一次也别把新内容丢掉 */
+    const ob = await cbLoad(old).catch(() => null);
+    const changed = !ob || ob.d !== text || ob.n !== notes;
+    if (changed) { old.bv = now; cbPut(old.id, { d: text, n: notes, bv: now }, false); }
+    old.ts = now; old.pos = now; old.ct = cardCreated(old); unmarkDel(old);
     S.cards = [old].concat(S.cards.filter(x => x !== old));
     saveCards(); back();
     toast(changed ? '已更新卡片库中的这一条' : '内容无变化，已保留原卡片');
     return;
   }
   const fresh = {
-    id: 'c' + Date.now() + Math.random().toString(36).slice(2, 6),
-    lang: cu.lang, front: cu.front, detail: text, added: false,
-    ts: Date.now(), pos: Date.now(), ct: Date.now()
+    id: 'c' + now + Math.random().toString(36).slice(2, 6),
+    lang: cu.lang, front: cu.front,
+    ts: now, pos: now, ct: now, bv: now
   };
+  cbPut(fresh.id, { d: text, n: notes, bv: now }, false);
   S.cards.unshift(fresh);
   unmarkDel(fresh);                 // 删过又重新存的，墓碑要撤掉
-  const dropped = trimCards();
   saveCards(); back();
-  toast('已存入卡片库（共 ' + S.cards.length + ' 张）' + (dropped ? ' · 已回收 ' + dropped + ' 张旧的已添加卡片' : ''));
+  toast('已存入卡片库（共 ' + S.cards.length + ' 张）');
 }
 /* ================= Yulengua · 藏语发音（手改注音 + 自己录音）=================
    只在藏语（bo）出现。注音和录音都按「归一化词形」存储，所以同一个词
@@ -4778,73 +4923,149 @@ function pulseSentCard(btn) {
     Array.isArray(s.qa) ? s.qa.filter(x => x && x.a && x.a !== '…') : [],
     btn, s.words || []);
 }
-/* ================= Yulengua · 卡片库 ================= */
+/* ================= Yulengua · 卡片库（App 内复习）=================
+   列表只用索引（S.cards：原文 + 语言 + 时间），详解（翻译、解析、追问）展开时才从
+   本机缓存 / 云端取。点卡片本体展开；右边两个按钮：发音、移到最后。
+   墨墨格式不再是主功能，只在展开后留一个「复制墨墨格式」。 */
 
-const LIB = { open: {} };
+const LIB = { open: {}, lang: null, cache: new Map() };   // cache: 展开中的卡片正文，id -> {bv, b}
 
 VIEWS.lib = function () { paintLib(); };
 
+/* 当前标签页：没选过就落在第一个有卡片的语言 */
+function libLang() {
+  if (!LIB.lang || !LANGS[LIB.lang]) LIB.lang = LK.find(k => S.cards.some(c => c.lang === k)) || LK[0];
+  return LIB.lang;
+}
+const libTabName = k => k === 'bo' ? '藏语' : LANGS[k].zh;
+
+/* 从添加到现在过了多久 */
+function agoText(ts) {
+  const s = Math.max(0, Date.now() - ts) / 1000;
+  if (s < 60) return '刚刚添加';
+  if (s < 3600) return '已添加 ' + Math.floor(s / 60) + ' 分钟';
+  if (s < 86400) return '已添加 ' + Math.floor(s / 3600) + ' 小时';
+  const d = Math.floor(s / 86400);
+  if (d < 30) return '已添加 ' + d + ' 天';
+  if (d < 365) return '已添加 ' + Math.floor(d / 30) + ' 个月';
+  const y = Math.floor(d / 365), mo = Math.floor((d - y * 365) / 30);
+  return '已添加 ' + y + ' 年' + (mo ? ' ' + mo + ' 个月' : '');
+}
+
+const ICON_SPK = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 010 7"/></svg>';
+const ICON_END = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l5 5 5-5M7 10l5 5 5-5M5 20h14"/></svg>';
+
 function paintLib() {
   if (!S.cards.length) {
-    shell('卡片批量生成',
-      '<div class="empty"><span class="big">&#9634;</span>卡片库是空的<br>在句子阅读或单词查询中生成的卡片会出现在这里</div>' +
+    shell('卡片库',
+      '<div class="empty"><span class="big">&#9634;</span>卡片库是空的<br>在句子阅读里生成详解、点「保存到卡片库」后，卡片会出现在这里</div>' +
       (S.trash ? '<button class="btn wide" onclick="undoDel()">撤销上一次删除（' + S.trash.items.length + ' 张）</button>' : ''));
     return;
   }
-  const done = S.cards.filter(c => c.added).length;
-  let body = '<div class="row" style="margin-bottom:4px">' +
-    '<button class="btn sm" onclick="copyAll()">复制全部</button>' +
-    '<button class="btn sm" onclick="delAdded()"' + (done ? '' : ' disabled') + '>删除已添加（' + done + '）</button>' +
-    (S.trash ? '<button class="btn sm" onclick="undoDel()">撤销删除</button>' : '') +
-    '</div>' +
-    '<p class="note" style="margin-bottom:14px">共 ' + S.cards.length + ' 张。复制后到你的卡片工具里粘贴，再勾选「已添加」批量清理。' +
-    '也可以不导出、直接在这里复习：点「查看详解」展开，还不熟的点「移到最后」，下一轮还会轮到它。</p>' +
-    '<div class="lib">';
+  const k = libLang();
+  const list = S.cards.filter(c => c.lang === k);          // S.cards 本来就按 pos 排好了
+  let body = '<div class="ltabs">' + LK.map(x => {
+    const n = S.cards.filter(c => c.lang === x).length;
+    return '<button class="' + (x === k ? 'on' : '') + '" data-tab="' + x + '">' + libTabName(x) +
+      (n ? '<i>' + n + '</i>' : '') + '</button>';
+  }).join('') + '</div>';
 
-  S.cards.forEach(c => {
+  if (!ossReady()) {
+    body += '<p class="note" style="margin-top:0">云端没有启用：卡片详解目前只存在这台设备上，换设备或重装会丢。到「设置 → 云端同步」打开后会自动上传。</p>';
+  }
+  if (S.trash) body += '<div class="row" style="margin-bottom:6px"><button class="btn sm" onclick="undoDel()">撤销删除（' + S.trash.items.length + ' 张）</button></div>';
+
+  if (!list.length) {
+    body += '<div class="empty" style="padding:10vh 20px">还没有' + esc(LANGS[k].zh) + '卡片</div>';
+    shell('卡片库', body); bindLib(); return;
+  }
+
+  body += '<p class="note" style="margin:6px 0 12px">共 ' + list.length + ' 张。点卡片展开详解；还不熟的点右侧「移到最后」，下一轮还会轮到它。</p>' +
+    '<div class="lib">';
+  list.forEach(c => {
     const L = LANGS[c.lang] || {};
     const op = !!LIB.open[c.id];
-    body += '<div class="lc' + (c.added ? ' done' : '') + '">' +
-      '<div class="top">' +
-      '<button class="cb" data-chk="' + c.id + '">' + (c.added ? '&#10003;' : '') + '</button>' +
-      '<div class="fr"><span class="' + scriptCls(c.lang) + '">' + esc(c.front) + '</span>' +
-      '<div class="mt">' + esc(L.code || '') + ' · ' + new Date(cardCreated(c)).toLocaleDateString('zh-CN') + '</div></div>' +
-      '</div>' +
-      '<div class="acts">' +
-      '<button class="btn sm pri" data-copy="' + c.id + '">复制</button>' +
-      '<button class="btn sm" data-open="' + c.id + '">' + (op ? '收起' : '查看详解') + '</button>' +
-      '<button class="btn sm" data-last="' + c.id + '">移到最后</button>' +
-      '<button class="btn sm" data-edit="' + c.id + '">编辑</button>' +
-      '<button class="btn sm" data-del="' + c.id + '">删除</button>' +
-      '</div>' +
-      /* 展开显示的是渲染后的样子（高亮、加粗、挖空、答案线），不是带标记的原文；
-         原文在「编辑」里 */
-      (op ? '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(c.detail) + '</div>' : '') +
+    body += '<div class="lc lcd' + (op ? ' open' : '') + '">' +
+      '<div class="top" data-tog="' + c.id + '">' +
+      '<div class="fr ' + scriptCls(c.lang) + '">' + esc(c.front) + '</div>' +
+      '<div class="side">' +
+      (L.tts ? '<button class="ib" data-spk="' + c.id + '" title="发音" aria-label="发音">' + ICON_SPK + '</button>' : '') +
+      '<button class="ib" data-last="' + c.id + '" title="移到最后" aria-label="移到最后">' + ICON_END + '</button>' +
+      '</div></div>' +
+      (op ? '<div class="lbody" data-body="' + c.id + '">' + libBodyHtml(c) + '</div>' : '') +
       '</div>';
   });
   body += '</div>';
-  shell('卡片批量生成', body);
+  shell('卡片库', body);
+  bindLib();
+  list.forEach(c => { if (LIB.open[c.id]) libFill(c); });
+}
 
-  document.querySelectorAll('[data-chk]').forEach(b => b.onclick = () => {
-    const c = S.cards.find(x => x.id === b.dataset.chk);
-    c.added = !c.added;
-    /* ts 必须跟着动：云端合并是「时间戳新的赢」，不更新的话
-       另一台设备上那份旧的 added 值会在下一次同步时把你刚勾的又翻回去。 */
-    c.ts = Date.now();
-    saveCards(); paintLib();
-  });
-  document.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
-    copyText(S.cards.find(x => x.id === b.dataset.copy).detail);
-  });
-  document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => {
-    LIB.open[b.dataset.open] = !LIB.open[b.dataset.open]; paintLib();
-  });
-  document.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => {
-    const c = S.cards.find(x => x.id === b.dataset.edit);
-    go('cedit', { id: c.id, text: c.detail, lang: c.lang });
-  });
-  document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => delCards([b.dataset.del]));
-  document.querySelectorAll('[data-last]').forEach(b => b.onclick = () => moveToEnd(b.dataset.last));
+/* 展开区：正文已在内存里就直接画；否则先放占位，再异步取 */
+function libBodyHtml(c) {
+  const hit = LIB.cache.get(c.id);
+  if (hit && hit.bv === c.bv) return libDetailHtml(c, hit.b);
+  return '<div class="note" style="margin:12px 0">' + LOADER + ' 正在取详解</div>';
+}
+function libDetailHtml(c, b) {
+  return '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(b.d) + '</div>' +
+    (b.n ? '<div class="lsec">追问详解</div><div class="rend lrend">' + renderCodes(b.n) + '</div>' : '') +
+    '<div class="mt">' + esc(agoText(cardCreated(c))) + ' · ' + new Date(cardCreated(c)).toLocaleDateString('zh-CN') + '</div>' +
+    '<div class="acts">' +
+    '<button class="btn sm pri" data-copy="' + c.id + '">复制墨墨格式</button>' +
+    '<button class="btn sm" data-edit="' + c.id + '">编辑</button>' +
+    '<button class="btn sm" data-del="' + c.id + '">删除</button>' +
+    '</div>';
+}
+async function libFill(c) {
+  const hit = LIB.cache.get(c.id);
+  if (hit && hit.bv === c.bv) return;
+  let html;
+  try {
+    const b = await cbLoad(c);
+    LIB.cache.set(c.id, { bv: c.bv, b: b });
+    html = libDetailHtml(c, b);
+  } catch (e) {
+    html = '<div class="err" style="margin:12px 0">' + esc(e.message) + '</div>' +
+      '<div class="acts"><button class="btn sm" data-retry="' + c.id + '">重试</button>' +
+      '<button class="btn sm" data-del="' + c.id + '">删除</button></div>';
+  }
+  /* 等的这会儿用户可能已经收起了这张卡、切了标签页，或者整页重画过：只填还在的那个格子 */
+  const el = document.querySelector('[data-body="' + c.id + '"]');
+  if (el && LIB.open[c.id]) el.innerHTML = html;
+}
+
+function bindLib() {
+  const root = document.querySelector('.body');
+  if (!root) return;
+  /* 整个页面只挂一个点击处理：按钮各管各的，点卡片其他位置才展开/收起 */
+  root.onclick = e => {
+    const t = e.target;
+    const tab = t.closest('[data-tab]');
+    if (tab) { LIB.lang = tab.dataset.tab; paintLib(); return; }
+    const b = t.closest('[data-spk],[data-last],[data-copy],[data-edit],[data-del],[data-retry]');
+    if (b) {
+      const d = b.dataset, id = d.spk || d.last || d.copy || d.edit || d.del || d.retry;
+      const c = S.cards.find(x => x.id === id);
+      if (!c) return;
+      if (d.spk) { say(c.lang, c.front, b); return; }
+      if (d.last) { moveToEnd(id); return; }
+      if (d.del) { delCards([id]); return; }
+      if (d.retry) { libFill(c); return; }
+      const hit = LIB.cache.get(id);
+      if (!hit) return;
+      if (d.copy) copyText(mjCard(hit.b.d, hit.b.n));
+      if (d.edit) go('cedit', { id: id, lang: c.lang, text: hit.b.d, notes: hit.b.n });
+      return;
+    }
+    const tog = t.closest('[data-tog]');
+    if (tog) {
+      const id = tog.dataset.tog;
+      LIB.open[id] = !LIB.open[id];
+      if (!LIB.open[id]) LIB.cache.delete(id);               // 收起就把正文放掉，不在内存里攒
+      paintLib();
+    }
+  };
 }
 
 /* 移到最后：在卡片库里直接复习时，没记住的往后放，下一轮还会轮到。
@@ -4859,7 +5080,7 @@ function moveToEnd(id) {
   c.ts = Date.now();
   S.cards.splice(i, 1);
   S.cards.push(c);
-  LIB.open[id] = false;
+  LIB.open[id] = false; LIB.cache.delete(id);
   saveCards(); paintLib();
   toast('已移到最后', '撤销', () => undoMove(prev));
 }
@@ -4874,8 +5095,6 @@ function undoMove(prev) {
   saveCards(); paintLib();
 }
 
-function copyAll() { copyText(S.cards.map(c => c.detail).join('\n\n========\n\n')); }
-
 function delCards(ids) {
   const items = [];
   ids.forEach(id => {
@@ -4884,16 +5103,12 @@ function delCards(ids) {
   });
   if (!items.length) return;
   items.sort((a, b) => b.i - a.i).forEach(o => S.cards.splice(o.i, 1));
-  items.forEach(o => markDel(o.c));           // 留墓碑，否则下一次云端同步会把它们原样长回来
+  items.forEach(o => { markDel(o.c); LIB.open[o.c.id] = false; LIB.cache.delete(o.c.id); });   // 留墓碑，否则下一次云端同步会把它们原样长回来
   S.trash = { items: items.slice().sort((a, b) => a.i - b.i) };
   saveCards(); paintLib();
   toast('已删除 ' + items.length + ' 张', '撤销', undoDel);
 }
-function delAdded() {
-  const ids = S.cards.filter(c => c.added).map(c => c.id);
-  if (!ids.length) return;
-  delCards(ids);
-}
+/* 撤销只恢复索引：正文要么还在本机缓存，要么一直在云端（删卡不删云端正文，就是为了能撤销） */
 function undoDel() {
   if (!S.trash) { toast('没有可撤销的删除'); return; }
   S.trash.items.forEach(o => {
@@ -4905,10 +5120,10 @@ function undoDel() {
 
 /* edit an existing card's detail */
 VIEWS.cedit = function (d) {
-  const h = deditBody({ text: d.text, lang: d.lang }, 'ctext') +
+  const h = deditBody({ text: d.text, lang: d.lang }, 'ctext') + notesBody(d) +
     '<div class="spacer"></div>' +
     '<div class="split">' +
-    '<button class="btn" onclick="copyText(deText(\'ctext\'))">复制</button>' +
+    '<button class="btn" onclick="copyText(mjCard(deText(\'ctext\'), notesText()))">复制墨墨格式</button>' +
     '<button class="btn pri" onclick="saveEdit()">保存修改</button>' +
     '<button class="btn" onclick="back()">取消</button>' +
     '</div>';
@@ -4918,7 +5133,13 @@ VIEWS.cedit = function (d) {
 function saveEdit() {
   const cu = S.stack[S.stack.length - 1].arg;
   const c = S.cards.find(x => x.id === cu.id);
-  if (c) { c.detail = deText('ctext'); saveCards(); }
+  if (c) {
+    const now = Date.now();
+    c.bv = now; c.ts = now;                     // 正文变了：bv 让别的设备的缓存失效，ts 让索引合并认这一版
+    cbPut(c.id, { d: deText('ctext'), n: notesText(), bv: now }, false);
+    LIB.cache.delete(c.id);
+    saveCards();
+  }
   back(); toast('已保存');
 }
 /* ================= boot ================= */

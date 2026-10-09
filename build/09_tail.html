@@ -1,0 +1,23 @@
+/* ================= boot ================= */
+$('mask').onclick = closeSheet;
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+window.addEventListener('error', e => { try { toast('脚本错误：' + e.message); } catch (x) {} });
+
+app().innerHTML = '<div class="screen on"><div class="body">' +
+  '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>六语学习</p></div></div></div>';
+
+loadAll().catch(() => {}).then(() => {
+  S.stack = [{ view: 'home' }];
+  render();
+  if (ossReady()) {
+    CLOUD.last = S.cfg.lastCloud || 0;
+    cloudSync(false).then(ok => { if (ok) render(); });
+  }
+});
+/* 切回前台时补一次同步，换设备读同一份数据时不至于看到旧内容 */
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && ossReady() && Date.now() - (CLOUD.last || 0) > 120000) cloudSync(false);
+});
+</script>
+</body>
+</html>
