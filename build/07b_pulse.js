@@ -364,7 +364,10 @@ async function pulseMakeSent(btn) {
   if (!words.length) { toast('先勾几个词'); return; }
   P.gen = true; P.serr = ''; paintPulse();
   try {
-    const j = await aiJson(pulseSentPrompt(k, words), k);
+    /* 把词库/补齐的释义一起交给模型：不然它只能靠猜词义，多义词最容易造出说不通的句子 */
+    const glossOf = {};
+    pulseWordsNow(k).forEach(x => { if (x.g) glossOf[x.w] = x.g; });
+    const j = await aiJson(pulseSentPrompt(k, words, glossOf), k);
     const sent = buildSent(j, k);
     if (!sent.text) throw new Error('模型返回了空句子');
     const v = pulseVerify(sent.text, words, j.used);
