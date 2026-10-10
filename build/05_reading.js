@@ -384,17 +384,18 @@ async function askSent() {
 /* ---------- 生成详解 -> 预览页 ---------- */
 /* 你在词卡里就某个词追问过的东西，属于这句话的一部分，生成整句卡片时
    必须一并带上——否则问明白的那些点不会出现在卡片里，等于白问。 */
-/* ctx 可以是一句话，也可以是一组上下文——Daily Pulse 里，你可能是在词表上
+/* ctx 可以是一句话，也可以是一组上下文——背单词 里，你可能是在词表上
    点开某个词问的（上下文就是那个词本身），也可能是在造出来的句子里点开问的。
    两种都属于这句话的一部分，生成卡片时都得带上。 */
-function wordQaFor(k, ctx) {
+function wordQaFor(k, ctx, bare) {
   const set = new Set((Array.isArray(ctx) ? ctx : [ctx]).filter(Boolean));
   const out = [];
   wordCache.forEach(j => {
     if (!j || j._lang !== k || !set.has(j._ctx)) return;
     (j._qa || []).forEach(x => {
       if (!x || !x.q || !x.a || x.a === '…') return;
-      out.push({ q: '（关于句中的「' + (j._w || j.word || '') + '」）' + x.q, a: x.a });
+      /* bare：单词卡片本身就是在讲这个词，不需要「句中的」前缀 */
+      out.push({ q: bare ? x.q : '（关于句中的「' + (j._w || j.word || '') + '」）' + x.q, a: x.a });
     });
   });
   return out;

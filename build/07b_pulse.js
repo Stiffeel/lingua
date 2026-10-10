@@ -1,4 +1,4 @@
-/* ================= Yulengua · Daily Pulse =================
+/* ================= Yulengua · 背单词 =================
    每种语言一份固定词库（仓库里的 words/<lang>.csv），每次随机抽 10 个新词。
    勾「熟」的词永久退出；「换一批」之前列表不变，刷新页面也不变。
 
@@ -277,7 +277,10 @@ function paintPulse() {
   document.querySelectorAll('[data-ps]').forEach(el => el.onclick = () => say(k, at(+el.dataset.ps).w, el));
   document.querySelectorAll('[data-pc]').forEach(el => el.onclick = () => {
     const it = at(+el.dataset.pc);
-    genWordCard({ lang: k, word: it.w, zh: it.g, pos: '', gender: '' }, [], el);
+    /* 在这个词的词卡里追问的内容（上下文就是词本身）原样进「追问详解」，
+       否则问明白的点生成卡片时就丢了 */
+    const notes = wordQaFor(k, [it.w], true).map(x => '问：' + x.q + '\n答：' + x.a).join('\n\n');
+    genWordCard({ lang: k, word: it.w, zh: it.g, pos: '', gender: '' }, [], el, notes);
   });
 }
 

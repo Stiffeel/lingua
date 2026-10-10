@@ -137,7 +137,7 @@ async function askWord() {
 }
 
 /* 词汇卡片生成：查词结果和反向翻译结果共用 */
-async function genWordCard(item, qa, btn) {
+async function genWordCard(item, qa, btn, notes) {
   if (needKey()) return;
   const old = btn.innerHTML; btn.innerHTML = '生成中…'; btn.disabled = true;
   try {
@@ -146,7 +146,7 @@ async function genWordCard(item, qa, btn) {
     if (item.lang === 'ru') txt = ruDual(txt);
     txt = markjiLint(txt).text;
     DE.mode = 'raw';
-    go('dedit', { lang: item.lang, front: item.word, text: txt.trim() });
+    go('dedit', { lang: item.lang, front: item.word, text: txt.trim(), notes: notes || '' });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);

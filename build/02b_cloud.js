@@ -337,7 +337,7 @@ function cloudMerge(rm) {
       if (!mine || (r.ts || 0) > (mine.ts || 0)) { S.bo[k] = r; changed = true; }
     });
   }
-  /* Daily Pulse：「标记熟知」是单调的，两边求并集就对了；
+  /* 背单词：「标记熟知」是单调的，两边求并集就对了；
      当前这一批只在本地还没有的时候才从远端接过来，否则会把你正在看的列表换掉。 */
   if (rm.pulse && typeof rm.pulse === 'object') {
     const p = pulseState();

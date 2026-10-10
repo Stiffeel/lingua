@@ -4,3 +4,5 @@ node_modules/
 recovered.html
 *.zip
 .DS_Store
+
+CLAUDE.md

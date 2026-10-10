@@ -7,7 +7,7 @@ VIEWS.home = function () {
     ['02', '场景对话', 'Scenario Dialogue', "go('langs','dlg')", ''],
     ['03', '单词查询', 'Word Lookup', "go('lookup')", ''],
     ['04', '卡片库', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : ''],
-    ['05', 'Daily Pulse', 'Daily Vocabulary', "go('langs','pulse')", '']
+    ['05', '背单词', 'Vocabulary', "go('langs','pulse')", '']
   ];
   app().innerHTML = '<div class="screen on"><div class="body">' +
     '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>六语学习</p></div>' +
@@ -26,7 +26,7 @@ VIEWS.home = function () {
 const LANG_MODS = {
   read:  { title: '句子阅读', view: 'read' },
   dlg:   { title: '场景对话', view: 'dlg' },
-  pulse: { title: 'Daily Pulse', view: 'pulse' }
+  pulse: { title: '背单词', view: 'pulse' }
 };
 VIEWS.langs = function (mod) {
   const m = LANG_MODS[mod] || LANG_MODS.read;

@@ -26,7 +26,7 @@ const S = {
   seen: {},         // 每种语言最近读过的句子（难度基准线）
   bo: {},           // 藏语发音库：归一化词 -> {w,p 注音,h 音频哈希,x 扩展名,ts}
   del: {},          // 卡片删除墓碑：'lang|front' -> 删除时间戳。没有它，删掉的卡会被云端复活
-  pulse: {},        // Daily Pulse：{known:{lang:{词:ts}}, cur:{lang:[词]}, gl:{lang:{词:释义}}}
+  pulse: {},        // 背单词：{known:{lang:{词:ts}}, cur:{lang:[词]}, gl:{lang:{词:释义}}}
   trash: null,
   stack: [],
   store: 'ls'       // 'idb' | 'ls'

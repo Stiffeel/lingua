@@ -262,7 +262,7 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
   display:flex;align-items:center;justify-content:center;font-size:12px}
 .lc.done .cb{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
 .lc.done .fr{text-decoration:line-through;color:var(--fg3)}
-/* Daily Pulse 的勾选只表示「选中」，还没到划掉那一步，所以不加删除线 */
+/* 背单词 的勾选只表示「选中」，还没到划掉那一步，所以不加删除线 */
 .lc.sel .cb{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
 .lc .fr{flex:1;font-size:16px;line-height:1.55;font-weight:500;word-break:break-word}
 .lc .mt{font-size:11px;color:var(--fg3);margin-top:5px;letter-spacing:.06em}
@@ -351,7 +351,7 @@ const S = {
   seen: {},         // 每种语言最近读过的句子（难度基准线）
   bo: {},           // 藏语发音库：归一化词 -> {w,p 注音,h 音频哈希,x 扩展名,ts}
   del: {},          // 卡片删除墓碑：'lang|front' -> 删除时间戳。没有它，删掉的卡会被云端复活
-  pulse: {},        // Daily Pulse：{known:{lang:{词:ts}}, cur:{lang:[词]}, gl:{lang:{词:释义}}}
+  pulse: {},        // 背单词：{known:{lang:{词:ts}}, cur:{lang:[词]}, gl:{lang:{词:释义}}}
   trash: null,
   stack: [],
   store: 'ls'       // 'idb' | 'ls'
@@ -1799,7 +1799,7 @@ function cloudMerge(rm) {
       if (!mine || (r.ts || 0) > (mine.ts || 0)) { S.bo[k] = r; changed = true; }
     });
   }
-  /* Daily Pulse：「标记熟知」是单调的，两边求并集就对了；
+  /* 背单词：「标记熟知」是单调的，两边求并集就对了；
      当前这一批只在本地还没有的时候才从远端接过来，否则会把你正在看的列表换掉。 */
   if (rm.pulse && typeof rm.pulse === 'object') {
     const p = pulseState();
@@ -2348,7 +2348,7 @@ function askPrompt(k, sent, qa, q) {
   return msgs;
 }
 
-/* ---------------- Daily Pulse：批量补齐释义 ----------------
+/* ---------------- 背单词：批量补齐释义 ----------------
    只在词库里那一列留空时才会用到，一次请求解决一批，结果缓存起来不重复花钱。 */
 function pulseGlossPrompt(k, words) {
   const L = LANGS[k];
@@ -2366,7 +2366,7 @@ function pulseGlossPrompt(k, words) {
   ];
 }
 
-/* ---------------- Daily Pulse：用选中的词造句 ----------------
+/* ---------------- 背单词：用选中的词造句 ----------------
    难点在「既要塞进 N 个指定的词，又不能因此把难度顶上去」。
    所以把两件事拆开说死：句子【可以长】，但语法和词汇的难度必须停在设定档位；
    宁可用并列和简单从句把词串起来，也不要为了凑词上高级句式。 */
@@ -2586,7 +2586,7 @@ VIEWS.home = function () {
     ['02', '场景对话', 'Scenario Dialogue', "go('langs','dlg')", ''],
     ['03', '单词查询', 'Word Lookup', "go('lookup')", ''],
     ['04', '卡片库', 'Card Library', "go('lib')", n ? '<span class="badge">' + n + '</span>' : ''],
-    ['05', 'Daily Pulse', 'Daily Vocabulary', "go('langs','pulse')", '']
+    ['05', '背单词', 'Vocabulary', "go('langs','pulse')", '']
   ];
   app().innerHTML = '<div class="screen on"><div class="body">' +
     '<div class="brand"><h1>Yulengua</h1><div class="rule"></div><p>六语学习</p></div>' +
@@ -2605,7 +2605,7 @@ VIEWS.home = function () {
 const LANG_MODS = {
   read:  { title: '句子阅读', view: 'read' },
   dlg:   { title: '场景对话', view: 'dlg' },
-  pulse: { title: 'Daily Pulse', view: 'pulse' }
+  pulse: { title: '背单词', view: 'pulse' }
 };
 VIEWS.langs = function (mod) {
   const m = LANG_MODS[mod] || LANG_MODS.read;
@@ -3460,17 +3460,18 @@ async function askSent() {
 /* ---------- 生成详解 -> 预览页 ---------- */
 /* 你在词卡里就某个词追问过的东西，属于这句话的一部分，生成整句卡片时
    必须一并带上——否则问明白的那些点不会出现在卡片里，等于白问。 */
-/* ctx 可以是一句话，也可以是一组上下文——Daily Pulse 里，你可能是在词表上
+/* ctx 可以是一句话，也可以是一组上下文——背单词 里，你可能是在词表上
    点开某个词问的（上下文就是那个词本身），也可能是在造出来的句子里点开问的。
    两种都属于这句话的一部分，生成卡片时都得带上。 */
-function wordQaFor(k, ctx) {
+function wordQaFor(k, ctx, bare) {
   const set = new Set((Array.isArray(ctx) ? ctx : [ctx]).filter(Boolean));
   const out = [];
   wordCache.forEach(j => {
     if (!j || j._lang !== k || !set.has(j._ctx)) return;
     (j._qa || []).forEach(x => {
       if (!x || !x.q || !x.a || x.a === '…') return;
-      out.push({ q: '（关于句中的「' + (j._w || j.word || '') + '」）' + x.q, a: x.a });
+      /* bare：单词卡片本身就是在讲这个词，不需要「句中的」前缀 */
+      out.push({ q: bare ? x.q : '（关于句中的「' + (j._w || j.word || '') + '」）' + x.q, a: x.a });
     });
   });
   return out;
@@ -4208,7 +4209,7 @@ async function askWord() {
 }
 
 /* 词汇卡片生成：查词结果和反向翻译结果共用 */
-async function genWordCard(item, qa, btn) {
+async function genWordCard(item, qa, btn, notes) {
   if (needKey()) return;
   const old = btn.innerHTML; btn.innerHTML = '生成中…'; btn.disabled = true;
   try {
@@ -4217,7 +4218,7 @@ async function genWordCard(item, qa, btn) {
     if (item.lang === 'ru') txt = ruDual(txt);
     txt = markjiLint(txt).text;
     DE.mode = 'raw';
-    go('dedit', { lang: item.lang, front: item.word, text: txt.trim() });
+    go('dedit', { lang: item.lang, front: item.word, text: txt.trim(), notes: notes || '' });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
@@ -4455,7 +4456,7 @@ async function askRev() {
   W.busy = false; paintLookup();
   window.scrollTo(0, document.body.scrollHeight);
 }
-/* ================= Yulengua · Daily Pulse =================
+/* ================= Yulengua · 背单词 =================
    每种语言一份固定词库（仓库里的 words/<lang>.csv），每次随机抽 10 个新词。
    勾「熟」的词永久退出；「换一批」之前列表不变，刷新页面也不变。
 
@@ -4734,7 +4735,10 @@ function paintPulse() {
   document.querySelectorAll('[data-ps]').forEach(el => el.onclick = () => say(k, at(+el.dataset.ps).w, el));
   document.querySelectorAll('[data-pc]').forEach(el => el.onclick = () => {
     const it = at(+el.dataset.pc);
-    genWordCard({ lang: k, word: it.w, zh: it.g, pos: '', gender: '' }, [], el);
+    /* 在这个词的词卡里追问的内容（上下文就是词本身）原样进「追问详解」，
+       否则问明白的点生成卡片时就丢了 */
+    const notes = wordQaFor(k, [it.w], true).map(x => '问：' + x.q + '\n答：' + x.a).join('\n\n');
+    genWordCard({ lang: k, word: it.w, zh: it.g, pos: '', gender: '' }, [], el, notes);
   });
 }
 

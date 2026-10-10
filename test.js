@@ -434,7 +434,7 @@ function answerFor(body) {
   await pg.evaluate(() => { S.cfg.voiceBy.nl = 'com.apple.voice.enhanced.nl-NL.Claire'; saveCfg(true); paintVoiceSels(); });
   await shot('05-voices');
 
-  // ================= Daily Pulse：熟知的带符号时间戳（回归） =================
+  // ================= 背单词：熟知的带符号时间戳（回归） =================
   await expect(() => {
     S.pulse = {}; pulseState();
     pSetKnown('nl', 'boete', true); pSetKnown('nl', 'weekend', true);
