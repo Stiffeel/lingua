@@ -289,6 +289,17 @@ function answerFor(body) {
   await pg.click('.toast button'); await pg.waitForTimeout(250);            // 撤销删除
   await expect(f => S.cards.some(c => c.front === f), '撤销删除没有恢复卡片', gone);
 
+  // 7b) 删除按钮和发音、移到最后并列在卡片右侧，一点就删，且能撤销
+  await pg.evaluate(() => { LIB.open = {}; paintLib(); });
+  await expect(() => document.querySelectorAll('.lc .side [data-del]').length === S.cards.filter(c => c.lang === LIB.lang).length,
+    '卡片右侧没有和移到最后并列的删除按钮');
+  const n0 = await pg.evaluate(() => S.cards.length);
+  const f0 = await pg.evaluate(() => S.cards.find(c => c.lang === LIB.lang).front);
+  await pg.click('.lc .side [data-del] >> nth=0'); await pg.waitForTimeout(250);
+  await expect(n => S.cards.length === n - 1, '点右侧删除按钮没有删掉卡片', n0);
+  await pg.click('.toast button'); await pg.waitForTimeout(250);
+  await expect(a => S.cards.length === a[0] && S.cards.some(c => c.front === a[1]), '右侧删除之后撤销没有恢复卡片', [n0, f0]);
+
   // 8) 端到端：真的同步一次。索引里不带正文，正文按卡单独上云，pos 要对
   await pg.evaluate(() => {
     S.cfg.oss = { ep: 'oss-eu-central-1.aliyuncs.com', bucket: 'test', ak: 'AK', sk: 'SK', on: true, cache: true };
@@ -443,6 +454,20 @@ function answerFor(body) {
     cloudMerge({ app: 'yulengua', v: 2, ts: 1, pulse: { known: { nl: remote }, cur: {}, gl: {} } });
     return !pIsKnown('nl', 'boete') && pIsKnown('nl', 'weekend');
   }, '取消勾选的熟知词被云端旧副本勾了回来');
+
+  // ================= 背单词：换一批可以撤销 =================
+  await expect(() => {
+    const k = 'nl';
+    BANK[k] = { words: Array.from({ length: 40 }, (_, i) => ({ w: 'w' + i, g: 'g' + i })), err: '' };
+    P.lang = k; S.pulse = {}; pulseState();
+    pulseState().cur[k] = ['w0', 'w1', 'w2'];
+    pulseState().sent[k] = { text: 'hello' };
+    document.getElementById('toast').innerHTML = '';   // 别点到前面留下的撤销
+    pulseNext(null);
+    const changed = pCur(k).join() !== 'w0,w1,w2' && !pulseState().sent[k];
+    document.querySelector('.toast button').click();
+    return changed && pCur(k).join() === 'w0,w1,w2' && pulseState().sent[k] && pulseState().sent[k].text === 'hello';
+  }, '换一批之后撤销没有把词表和造句放回来');
 
   // ================= 词卡关掉后不能跳页（回归） =================
   await pg.evaluate(() => { R.lang = 'bo'; go('lookup'); }); await pg.waitForTimeout(200);

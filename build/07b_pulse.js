@@ -289,12 +289,25 @@ function pulseNext(btn) {
   if (!b || !b.words.length) return;
   if (!b.words.some(x => !pIsKnown(k, x.w))) { toast('这门语言的词库已经全部标记为熟知了'); return; }
   if (btn) { btn.disabled = true; }
-  pulseState().cur[k] = pulseDraw(k, b.words);
-  delete pulseState().sent[k];                  // 换了词，上一句就不该再挂在这里
+  const st = pulseState();
+  const prev = { cur: pCur(k).slice(), sent: st.sent[k] };    // 撤销要把这一批和已造的句子原样放回来
+  st.cur[k] = pulseDraw(k, b.words);
+  delete st.sent[k];                            // 换了词，上一句就不该再挂在这里
   P.serr = '';
   savePulse();
   paintPulse();
   pulseFillGloss(k);
+  toast('已换一批', '撤销', () => undoNext(k, prev));
+}
+/* 熟知标记不随「换一批」改变，所以撤销只需要恢复词表和句子 */
+function undoNext(k, prev) {
+  const st = pulseState();
+  st.cur[k] = prev.cur;
+  if (prev.sent) st.sent[k] = prev.sent; else delete st.sent[k];
+  P.serr = '';
+  savePulse();
+  const top = S.stack[S.stack.length - 1];
+  if (P.lang === k && top && top.view === 'pulse') { paintPulse(); pulseFillGloss(k); }
 }
 
 /* 全选 / 全不选：只动【当前这一批】，不碰历史上标记过的熟知记录 */

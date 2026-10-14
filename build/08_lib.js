@@ -1,6 +1,6 @@
 /* ================= Yulengua · 卡片库（App 内复习）=================
    列表只用索引（S.cards：原文 + 语言 + 时间），详解（翻译、解析、追问）展开时才从
-   本机缓存 / 云端取。点卡片本体展开；右边两个按钮：发音、移到最后。
+   本机缓存 / 云端取。点卡片本体展开；右边三个按钮：发音、移到最后、删除（删除和移到最后都能撤销）。
    墨墨格式不再是主功能，只在展开后留一个「复制墨墨格式」。 */
 
 const LIB = { open: {}, lang: null, cache: new Map() };   // cache: 展开中的卡片正文，id -> {bv, b}
@@ -28,6 +28,7 @@ function agoText(ts) {
 }
 
 const ICON_SPK = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 010 7"/></svg>';
+const ICON_DEL = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
 const ICON_END = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l5 5 5-5M7 10l5 5 5-5M5 20h14"/></svg>';
 
 function paintLib() {
@@ -66,6 +67,7 @@ function paintLib() {
       '<div class="side">' +
       (L.tts ? '<button class="ib" data-spk="' + c.id + '" title="发音" aria-label="发音">' + ICON_SPK + '</button>' : '') +
       '<button class="ib" data-last="' + c.id + '" title="移到最后" aria-label="移到最后">' + ICON_END + '</button>' +
+      '<button class="ib" data-del="' + c.id + '" title="删除" aria-label="删除">' + ICON_DEL + '</button>' +
       '</div></div>' +
       (op ? '<div class="lbody" data-body="' + c.id + '">' + libBodyHtml(c) + '</div>' : '') +
       '</div>';
@@ -89,7 +91,6 @@ function libDetailHtml(c, b) {
     '<div class="acts">' +
     '<button class="btn sm pri" data-copy="' + c.id + '">复制墨墨格式</button>' +
     '<button class="btn sm" data-edit="' + c.id + '">编辑</button>' +
-    '<button class="btn sm" data-del="' + c.id + '">删除</button>' +
     '</div>';
 }
 async function libFill(c) {
