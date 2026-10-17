@@ -43,12 +43,23 @@ vertrekken：[T#!!fff895#出发、离开]。ver- 是[T#U,!d16056#不可分前缀
 [Audio#A,ID/123#]
 上标示例：m[T#up#2]`;
 
+/* 简洁卡片背面：模型只给 JSON，文本由应用本地拼 */
+const BRIEF = {
+  zh: '开往乌得勒支的火车从九号站台发车。',
+  words: [
+    { w: 'trein', pos: '名词 de-woord', zh: '火车', forms: '复数 treinen' },
+    { w: 'vertrekt', pos: '动词', zh: '出发', forms: 'ik vertrek, jij vertrekt, wij vertrekken' },
+    { w: 'naar', pos: '介词', zh: '往', forms: '' }
+  ]
+};
+
 const MODEL_LOG = [];
 let RESP_CALLS = 0, CHAT_CALLS = 0, LAST_DETAIL = '';
 
 function answerFor(body) {
   const c = (body.messages || body.input || []).map(m => m.content).join(' ');
   if (/只回复两个字/.test(c)) return { text: '正常' };
+  if (/简洁卡片背面/.test(c)) return { json: BRIEF };
   if (/撰写「句子详解」/.test(c)) { LAST_DETAIL = c; return { text: DETAIL }; }
   if (/请详细解析其中的词/.test(c)) return { json: WORD };
   if (/生成 1 个全新的例句/.test(c)) return { json: SENT };
@@ -58,8 +69,9 @@ function answerFor(body) {
 (async () => {
   const { srv, port } = await serve(ROOT);
   const URL0 = 'http://127.0.0.1:' + port + '/index.html';
-  const b = await chromium.launch();
-  const ctx = await b.newContext({ viewport: { width: 393, height: 852 }, deviceScaleFactor: 2 });
+  /* 假麦克风：跟读录音要真的走一遍 MediaRecorder */
+  const b = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
+  const ctx = await b.newContext({ viewport: { width: 393, height: 852 }, deviceScaleFactor: 2, permissions: ['microphone'] });
   const pg = await ctx.newPage();
   const errs = [];
   pg.on('pageerror', e => errs.push('PAGEERROR: ' + e.message));
@@ -158,7 +170,19 @@ function answerFor(body) {
 
   // ================= 保存一张卡，再造几张，测卡片库 =================
   await pg.click('button:has-text("保存到卡片库")'); await pg.waitForTimeout(700);
+  // 预览页：卡片背面（简洁版）在最前，其次追问详解，墨墨格式折叠在最后
+  await expect(() => {
+    const bt = document.getElementById('btext'), nt = document.getElementById('ntext'), dt = document.getElementById('dtext');
+    const dd = document.querySelector('details.mjd');
+    return !!bt && /火车/.test(bt.value) && /复数 treinen/.test(bt.value) && bt.value.indexOf('[T#') === -1 &&
+      !!dd && !dd.open && dd.contains(dt) && !dd.contains(bt) && !dd.contains(nt) &&
+      !!(bt.compareDocumentPosition(nt) & Node.DOCUMENT_POSITION_FOLLOWING) && !!(nt.compareDocumentPosition(dd) & Node.DOCUMENT_POSITION_FOLLOWING);
+  }, '预览页应是：卡片背面 → 追问详解 → 默认折叠的墨墨格式');
+  await pg.fill('#btext', '改过的背面\ntrein：火车'); await pg.waitForTimeout(100);
   await pg.click('.split button:has-text("保存到卡片库")'); await pg.waitForTimeout(500);
+  await expect(async () => { const b = await cbLoad(S.cards[0]); return b.b === '改过的背面\ntrein：火车'; }, '编辑过的卡片背面没有存进卡片');
+  await pg.evaluate(async () => { const c = S.cards[0]; const b = await cbLoad(c); const now = Date.now(); c.bv = now; c.ts = now;
+    cbPut(c.id, { d: b.d, n: b.n, b: '开往乌得勒支的火车从九号站台发车。\n\ntrein（名词 de-woord）：火车\n　复数 treinen', bv: now }, false); saveCards(true); });
   await expect(() => S.cards.length === 1 && !('detail' in S.cards[0]) && !('added' in S.cards[0]) && !!S.cards[0].bv,
     '新卡的索引里不该带详解正文，也不该再有「已添加」字段');
   await expect(async () => { const b = await cbLoad(S.cards[0]); return /开往乌得勒支/.test(b.d) && b.n === ''; },
@@ -190,6 +214,13 @@ function answerFor(body) {
   await expect(() => window.__utter.length === 1 && window.__utter[0].text === S.cards[0].front && !document.querySelector('.lbody'),
     '点发音按钮应当直接朗读，且不展开卡片');
   await pg.click('.lc .fr >> nth=0'); await pg.waitForTimeout(350);
+  await expect(() => {
+    const lb = document.querySelector('.lbody'), br = lb.querySelector('.lbrief'), dd = lb.querySelector('details.mjd');
+    return !!br && /火车/.test(br.textContent) && br.textContent.indexOf('[T#') === -1 && !!dd && !dd.open && dd.querySelector('.lrend') &&
+      !!(br.compareDocumentPosition(dd) & Node.DOCUMENT_POSITION_FOLLOWING);
+  }, '展开后应先显示简洁的卡片背面，墨墨格式折叠在后面');
+  await pg.click('.mjd summary'); await pg.waitForTimeout(150);
+  await expect(() => document.querySelector('.mjd').open && LIB.mj[S.cards[0].id] === true, '点「墨墨记忆卡格式」应能展开');
   await expect(() => {
     const el = document.querySelector('.lrend');
     if (!el) return false;
@@ -235,6 +266,15 @@ function answerFor(body) {
   await expect(() => /追问详解/.test(document.querySelector('.lbody').textContent) && /A2/.test(document.querySelector('.lbody').textContent),
     '展开后看不到追问详解');
   await pg.click('.lc .fr >> nth=0'); await pg.waitForTimeout(150);
+
+  // 3b) 老卡（正文里没有简洁背面）：卡片背面留空，其余照常
+  await pg.evaluate(() => { LIB.open = {}; LIB.mj = {}; LIB.cache.clear(); const c = S.cards.find(x => x.front === 'Derde kaart'); LIB.open[c.id] = true; paintLib(); });
+  await pg.waitForTimeout(350);
+  await expect(() => {
+    const lb = document.querySelector('.lbody');
+    return !!lb && /卡片背面/.test(lb.textContent) && !lb.querySelector('.lbrief') && /第三张/.test(lb.querySelector('.mjd').textContent);
+  }, '老卡片的卡片背面应留空，墨墨格式仍可展开查看');
+  await pg.evaluate(() => { LIB.open = {}; LIB.mj = {}; LIB.cache.clear(); paintLib(); });
 
   // 4) 移到最后 + 撤销（只动顺序，不动创建时间，不展开卡片）
   const order0 = await pg.evaluate(() => S.cards.map(c => c.front));
@@ -360,6 +400,21 @@ function answerFor(body) {
 
   await pg.evaluate(() => { S.cfg.oss = null; saveCfg(true); });
 
+  // 10b) 词卡里点「展开详解」的单词解析，也要进追问详解（排在追问前面）
+  await pg.evaluate(async () => {
+    const ctx = 'Zin voor details.';
+    wordCache.set('nl|trein|' + ctx, { _lang: 'nl', _ctx: ctx, _w: 'trein', word: 'trein', pos: '名词', gender: 'de', zh: '火车',
+      forms: [{ k: '复数', v: 'treinen' }], note: 'de-woord', _qa: [{ q: 'Q1', a: 'A1' }] });
+    await detailFor('nl', { text: ctx, zh: '细节', alt: '', translit: '' }, [], document.createElement('button'));
+  });
+  await pg.waitForTimeout(300);
+  await expect(() => {
+    const a = S.stack[S.stack.length - 1].arg;
+    return a.notes === '【单词详解】trein（de，名词）：火车\n复数：treinen\nde-woord\n\n问：（关于句中的「trein」）Q1\n答：A1' && /火车/.test(a.brief);
+  }, '展开过的单词详解没有进追问详解，或简洁背面没生成');
+  await expect(() => wordNotesCount('nl', 'Zin voor details.') === 2 && wordNotesCount('nl', 'andere zin') === 0, '带上内容的计数不对');
+  await pg.evaluate(() => wordCache.clear());
+
   // 11) 追问 → 追问详解：生成详解时，追问要原样进「追问详解」，且不再喂给详解 prompt
   await pg.evaluate(async () => {
     const btn = document.createElement('button');
@@ -386,6 +441,38 @@ function answerFor(body) {
     '重新保存同一句应覆盖正文并更新 bv', oldBv);
   await expect(() => S.cards.filter(c => c.front === 'Hallo wereld').length === 1, '重新保存同一句不该产生重复卡片');
   await pg.evaluate(() => { go('lib'); }); await pg.waitForTimeout(200);
+
+  // ================= 跟读录音：只缓存，退不回去就删，不跟卡片走 =================
+  await pg.evaluate(() => go('read', 'nl')); await pg.waitForTimeout(300);
+  await pg.evaluate(() => {
+    const c = cur();
+    R.hist = [c, { sent: Object.assign({}, c.sent, { text: 'Een andere zin.', tokens: [] }), qa: [], show: false }];
+    R.idx = 1; paintRead();
+  });
+  await pg.click('.card [data-rec=start]'); await pg.waitForTimeout(900);
+  await expect(() => REC.act === 'read|Een andere zin.' && !!document.querySelector('.card [data-rec=stop]'), '点录音后应进入录音状态');
+  await pg.click('.card [data-rec=stop]'); await pg.waitForTimeout(500);
+  await expect(() => REC.map.has('read|Een andere zin.') && !REC.act && !!document.querySelector('.card [data-rec=play]'), '停止后应有可回放的录音');
+  await pg.evaluate(() => prevSent()); await pg.waitForTimeout(200);
+  await expect(() => REC.map.has('read|Een andere zin.'), '句子还能退回去，录音不该被删');
+  await pg.evaluate(() => { R.hist.splice(1, 1); R.idx = 0; paintRead(); });
+  await expect(() => REC.map.size === 0, '句子退不回去之后，录音缓存没有被清掉');
+  await pg.evaluate(() => nextSent()); await pg.waitForTimeout(100);
+  // 重新生成会就地替换当前句：旧句的录音也得跟着走
+  await pg.click('.card [data-rec=start]'); await pg.waitForTimeout(700); await pg.click('.card [data-rec=stop]'); await pg.waitForTimeout(400);
+  await expect(() => REC.map.size === 1, '准备替换句子前应有一条录音');
+  await pg.evaluate(() => { R.hist = [{ sent: Object.assign({}, cur().sent, { text: 'Nieuwe zin.', tokens: [] }), qa: [], show: false }]; R.idx = 0; paintRead(); });
+  await expect(() => REC.map.size === 0, '替换成新句之后，旧句的录音没有被清掉');
+  // 卡片库里也能录；点录音按钮不能把卡片展开；离开卡片库就丢
+  await pg.evaluate(() => go('lib')); await pg.waitForTimeout(300);
+  await pg.click('.lc .side [data-rec=start] >> nth=0'); await pg.waitForTimeout(800);
+  await pg.click('.lc .side [data-rec=stop] >> nth=0'); await pg.waitForTimeout(500);
+  await expect(() => Array.from(REC.map.keys()).some(k => k.indexOf('lib|') === 0) && !document.querySelector('.lbody') &&
+    !!document.querySelector('.lc .side [data-rec=play]'), '卡片库里录音后应有播放按钮，且不该展开卡片');
+  await pg.evaluate(() => back()); await pg.waitForTimeout(200);
+  await pg.evaluate(() => go('lib')); await pg.waitForTimeout(200);
+  await expect(() => REC.map.size === 0, '退出卡片库之后录音应当丢掉');
+  await expect(async () => { const b = await cbLoad(S.cards[0]); return Object.keys(b).every(k => ['d', 'n', 'b', 'bv'].indexOf(k) > -1); }, '录音不该跟着卡片存进正文');
 
   // ================= 模型列表 =================
   await pg.evaluate(() => go('set')); await pg.waitForTimeout(400);

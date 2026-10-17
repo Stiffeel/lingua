@@ -52,6 +52,7 @@ function paintRead() {
     return;
   }
   const s = c.sent;
+  recSweep('read', R.hist.map(h => h.sent.text));      // 退不回去的句子（重新生成、挤出历史、换语言）其录音一并清掉
 
   body += '<div class="card">' + sentHtml();
 
@@ -68,6 +69,7 @@ function paintRead() {
     '<button class="btn sm" onclick="regenSent()" title="换一句">&#8635; 重新生成</button>' +
     '<span class="hint" style="margin-left:auto">' + (R.idx + 1) + ' / ' + R.hist.length + '</span>' +
     '</div>';
+  body += recRow('read', s.text);
   body += '<p class="hint" style="margin-top:14px">点击任意单词查看释义</p></div>';
 
   if (c.qa.length) {
@@ -76,10 +78,10 @@ function paintRead() {
   }
   if (R.busy) body += '<div style="margin-top:18px">' + LOADER + '</div>';
 
-  const nwq = wordQaFor(k, s.text).length;
+  const nwq = wordNotesCount(k, s.text);
   body += '<div class="spacer"></div><div class="spacer"></div>' +
     '<button class="btn pri wide" onclick="makeDetail(this)">保存到卡片库</button>' +
-    (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '') +
+    (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里查看、追问的 ' + nwq + ' 条内容</p>' : '') +
     '<div class="spacer"></div>' +
     '<div class="split">' +
     '<button class="btn" onclick="prevSent()"' + (R.idx <= 0 ? ' disabled' : '') + '>&#8249; 上一句</button>' +
@@ -401,22 +403,63 @@ function wordQaFor(k, ctx, bare) {
   return out;
 }
 
+/* 你在词卡里点「展开详解」得到的单词解析，也属于这句话：连同追问一起进「追问详解」。
+   只收这一句上下文里展开过的词，原样整理成文本，不再调 AI。 */
+function wordDetailText(j) {
+  const t = x => unmark(String(x == null ? '' : x)).trim();
+  const tag = [t(j.gender), t(j.pos)].filter(Boolean).join('，');
+  const lines = ['【单词详解】' + t(j.word || j._w) + (tag ? '（' + tag + '）' : '') + '：' + t(j.zh) + (t(j.en) ? '（' + t(j.en) + '）' : '')];
+  if (t(j.lemma) && t(j.lemma) !== t(j.word)) lines.push('原形：' + t(j.lemma));
+  if (Array.isArray(j.forms) && j.forms.length) lines.push(j.forms.map(f => t(f.k) + '：' + t(f.v)).join('；'));
+  if (j.example && t(j.example.text)) lines.push('例：' + t(j.example.text) + (t(j.example.zh) ? '（' + t(j.example.zh) + '）' : ''));
+  if (t(j.note)) lines.push(t(j.note));
+  return lines.join('\n');
+}
+function wordDetailsFor(k, ctx) {
+  const set = new Set((Array.isArray(ctx) ? ctx : [ctx]).filter(Boolean));
+  const out = [];
+  wordCache.forEach(j => {
+    if (j && j._lang === k && set.has(j._ctx) && String(j.zh || '').trim()) out.push(wordDetailText(j));
+  });
+  return out;
+}
+const wordNotesCount = (k, ctx) => wordQaFor(k, ctx).length + wordDetailsFor(k, ctx).length;
+
+/* 简洁卡片背面：模型只给 JSON，文本在本地拼。失败不拦卡片，留空可在预览页手写 */
+function briefText(k, j) {
+  const t = x => { const v = unmark(String(x == null ? '' : x)).trim(); return k === 'ru' ? ruPlain(v) : v; };
+  const lines = [t(j && j.zh), ''];
+  (j && Array.isArray(j.words) ? j.words : []).forEach(w => {
+    if (!w || !t(w.w)) return;
+    lines.push(t(w.w) + (t(w.pos) ? '（' + t(w.pos) + '）' : '') + (t(w.zh) ? '：' + t(w.zh) : ''));
+    if (t(w.forms)) lines.push('　' + t(w.forms));
+  });
+  return lines.join('\n').trim();
+}
+async function briefFor(k, sent) {
+  try {
+    return briefText(k, await aiJson(briefPrompt(k, sent), k));
+  } catch (e) { toast('简洁背面生成失败，可在预览页手写 · ' + e.message); return ''; }
+}
+
 async function detailFor(k, sent, qa, btn, extraCtx) {
   if (needKey()) return;
   const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在生成详解'; btn.disabled = true;
   try {
-    const allQa = (qa || []).concat(wordQaFor(k, [sent.text].concat(extraCtx || [])));
+    const ctx = [sent.text].concat(extraCtx || []);
+    const allQa = (qa || []).concat(wordQaFor(k, ctx));
     /* 追问不再喂给模型去「整合」进详解：它们原样放进卡片的「追问详解」一栏（保存前可编辑），
-       既不丢，也不会和正文重复讲一遍。 */
-    const notes = allQa.map(x => '问：' + x.q + '\n答：' + x.a).join('\n\n');
-    let txt = await ai(detailPrompt(k, sent, []), false, k);
+       既不丢，也不会和正文重复讲一遍。点词展开过的单词详解排在前面。 */
+    const notes = wordDetailsFor(k, ctx).concat(allQa.map(x => '问：' + x.q + '\n答：' + x.a)).join('\n\n');
+    const [txt0, brief] = await Promise.all([ai(detailPrompt(k, sent, []), false, k), briefFor(k, sent)]);
+    let txt = txt0;
     if (k === 'kk') txt = kkDual(txt);
     if (k === 'ru') txt = ruDual(txt);
     const lint = markjiLint(txt);
     txt = lint.text;
     if (lint.fixed.length) toast('已自动整理墨墨语法：' + lint.fixed[0] + (lint.fixed.length > 1 ? ' 等 ' + lint.fixed.length + ' 处' : ''));
     DE.mode = 'raw';
-    go('dedit', { lang: k, front: sent.text, text: txt.trim(), notes: notes });
+    go('dedit', { lang: k, front: sent.text, text: txt.trim(), notes: notes, brief: brief });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
@@ -429,7 +472,7 @@ function makeDetail(btn) {
 }
 
 /* ---------- 详解预览 / 编辑 ---------- */
-let DE = { mode: 'raw' };
+let DE = { mode: 'raw', mj: false };
 
 function lintBar(text, id) {
   const r = markjiLint(text);
@@ -449,20 +492,37 @@ function applyLint(id) {
   toast(r.fixed.length ? '已整理：' + r.fixed.join('；') : '没有可自动整理的问题');
 }
 
+/* 预览页 / 编辑页三块：简洁背面（直接展示）→ 追问详解 → 折叠的墨墨格式（长，复制导入用）。
+   墨墨格式的 textarea 在折叠的 <details> 里也是存在的，deText() 照样读得到。 */
 function deditBody(d, id) {
   return '<div class="row" style="margin-bottom:12px">' +
     '<button class="btn sm' + (DE.mode === 'raw' ? ' on' : '') + '" onclick="DE.mode=\'raw\';render()">原文</button>' +
     '<button class="btn sm' + (DE.mode === 'view' ? ' on' : '') + '" onclick="DE.mode=\'view\';render()">渲染预览</button>' +
     (existingCard(d) ? '<span class="hint" style="margin-left:auto">卡片库中已有这一条，保存将覆盖</span>' : '') +
     '</div>' +
+    briefBody(d) + notesBody(d) +
+    '<details class="mjd"' + (DE.mj ? ' open' : '') + ' ontoggle="DE.mj=this.open">' +
+    '<summary>墨墨记忆卡格式（较长，复制到墨墨用）</summary>' +
     (DE.mode === 'raw'
       ? '<textarea class="fld" id="' + id + '" style="min-height:54vh;font-size:14px;line-height:1.75;font-family:ui-monospace,Menlo,monospace">' + esc(d.text) + '</textarea>'
       : '<div class="rend">' + renderCodes(d.text) + '</div>') +
-    lintBar(d.text, id);
+    lintBar(d.text, id) + '</details>';
 }
 function bindDedit(id) {
   if (DE.mode === 'raw' && $(id)) $(id).oninput = () => { S.stack[S.stack.length - 1].arg.text = $(id).value; };
   if (DE.mode === 'raw' && $('ntext')) $('ntext').oninput = () => { S.stack[S.stack.length - 1].arg.notes = $('ntext').value; };
+  if (DE.mode === 'raw' && $('btext')) $('btext').oninput = () => { S.stack[S.stack.length - 1].arg.brief = $('btext').value; };
+}
+/* 卡片背面：卡片库里直接展示的简洁版（整句翻译 + 每词释义和变位）。旧卡没有，留空即可 */
+function briefBody(d) {
+  return '<div class="sec">卡片背面</div>' +
+    (DE.mode === 'raw'
+      ? '<textarea class="fld" id="btext" placeholder="整句翻译、每个词的释义和变位。留空也行。" style="min-height:30vh;font-size:14.5px;line-height:1.8">' + esc(d.brief || '') + '</textarea>'
+      : '<div class="lbrief">' + (d.brief ? esc(d.brief) : '<span class="hint">（空）</span>') + '</div>');
+}
+function briefTextNow() {
+  const cu = S.stack[S.stack.length - 1].arg;
+  return ((DE.mode === 'raw' && $('btext')) ? $('btext').value : (cu.brief || '')).trim();
 }
 /* 追问详解：你在阅读里追问得到的解答，和详解正文分开存。保存前可以随便删改，留空也行 */
 function notesBody(d) {
@@ -491,7 +551,7 @@ function existingCard(d) {
 }
 
 VIEWS.dedit = function (d) {
-  const h = '<div class="sec">预览与编辑</div>' + deditBody(d, 'dtext') + notesBody(d) +
+  const h = deditBody(d, 'dtext') +
     '<p class="note">高亮指令 [T#!色#字] / [T#!!色#字] 与答案线 --- 会原样保留。发音标记 [Audio#…] 需你自己后加。' +
     '复制墨墨格式时，追问详解会接在答案面末尾。</p>' +
     '<div class="spacer"></div>' +
@@ -508,14 +568,14 @@ function copyDetail() { copyText(mjCard(deText('dtext'), notesText())); }
 
 async function saveDetail() {
   const cu = S.stack[S.stack.length - 1].arg;
-  const text = deText('dtext'), notes = notesText();
+  const text = deText('dtext'), notes = notesText(), brief = briefTextNow();
   const old = existingCard(cu);
   const now = Date.now();
   if (old) {
     /* 取不到旧正文（离线且没缓存）就当作变了，宁可多覆盖一次也别把新内容丢掉 */
     const ob = await cbLoad(old).catch(() => null);
-    const changed = !ob || ob.d !== text || ob.n !== notes;
-    if (changed) { old.bv = now; cbPut(old.id, { d: text, n: notes, bv: now }, false); }
+    const changed = !ob || ob.d !== text || ob.n !== notes || (ob.b || '') !== brief;
+    if (changed) { old.bv = now; cbPut(old.id, { d: text, n: notes, b: brief, bv: now }, false); }
     old.ts = now; old.pos = now; old.ct = cardCreated(old); unmarkDel(old);
     S.cards = [old].concat(S.cards.filter(x => x !== old));
     saveCards(); back();
@@ -527,7 +587,7 @@ async function saveDetail() {
     lang: cu.lang, front: cu.front,
     ts: now, pos: now, ct: now, bv: now
   };
-  cbPut(fresh.id, { d: text, n: notes, bv: now }, false);
+  cbPut(fresh.id, { d: text, n: notes, b: brief, bv: now }, false);
   S.cards.unshift(fresh);
   unmarkDel(fresh);                 // 删过又重新存的，墓碑要撤掉
   saveCards(); back();

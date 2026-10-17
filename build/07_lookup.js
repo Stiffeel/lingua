@@ -11,6 +11,9 @@ const W_TITLE = { word: '单词查询', sent: '整句翻译', rev: '译成六语
 VIEWS.lookup = function () { paintLookup(); };
 
 function paintLookup() {
+  /* 只留当前还看得到的那几句的录音 */
+  recSweep('lookup', (W.sent ? ['s|' + W.sent.sent.text] : []).concat(
+    W.rev ? W.rev.items.map(it => 'r|' + it.lang + '|' + it.sent.text) : []));
   let body = '<input class="fld" id="wq" autocapitalize="off" spellcheck="false" ' +
     'placeholder="查一个词，粘贴一整句，或输入中文/英文…" value="' + esc(W.q) + '" ' +
     'onkeydown="if(event.key===\'Enter\'){event.preventDefault();doLookup()}">' +
@@ -178,6 +181,7 @@ function transHtml() {
     (L && L.tts ? speakBtn(k, s.text) : '') +
     '<button class="btn sm" onclick="doTranslate(1)">&#8635; 重新翻译</button>' +
     '</div>' +
+    (L ? recRow('lookup', 's|' + s.text) : '') +
     (L ? '<p class="hint" style="margin-top:14px">点击任意单词查看释义' + (k === 'bo' ? '、改注音、录发音' : '') + '</p>' : '') +
     '</div>';
 
@@ -189,10 +193,10 @@ function transHtml() {
   }
 
   if (L) {
-    const nwq = wordQaFor(k, s.text).length;
+    const nwq = wordNotesCount(k, s.text);
     body += '<div class="spacer"></div><div class="spacer"></div>' +
       '<button class="btn pri wide" onclick="transCard(this)">保存到卡片库</button>' +
-      (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '');
+      (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里查看、追问的 ' + nwq + ' 条内容</p>' : '');
   } else {
     body += '<p class="note">这段文字不属于本应用支持的六种语言，只做了翻译，不能生成卡片。' +
       '如果你输入的是中文或英文、想看它在六种语言里怎么说，请改点上面的「译成六语」。</p>' +
@@ -285,6 +289,7 @@ function revHtml() {
       (L.tts ? '<button class="btn sm" data-rspk="' + i + '">&#9654; 发音</button>' : '') +
       '<button class="btn sm" data-rcard="' + i + '">' + (r.kind === 'word' ? '生成卡片' : '保存到卡片库') + '</button>' +
       '</div>' +
+      recRow('lookup', 'r|' + it.lang + '|' + s.text) +
       '<p class="hint" style="margin-top:12px">点击任意单词查看释义' + (k === 'bo' ? '、改注音、录发音' : '') + '</p>' +
       '</div>';
   });

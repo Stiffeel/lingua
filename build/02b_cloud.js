@@ -396,7 +396,7 @@ async function cloudPushBodies() {
     const sent = CB.meta[id].bv;
     const b = await cbRawGet(id);
     if (!b) { delete CB.meta[id]; continue; }      // 本机也没有了，别再重试
-    await ossPutText(cbKey(id), JSON.stringify({ id: id, d: b.d, n: b.n, bv: b.bv }));
+    await ossPutText(cbKey(id), JSON.stringify({ id: id, d: b.d, n: b.n, b: b.b || '', bv: b.bv }));
     if (CB.meta[id] && CB.meta[id].bv === sent) CB.meta[id].up = true;
   }
   if (pend.length) { cbEvict(); saveCbMeta(); }

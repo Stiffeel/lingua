@@ -19,7 +19,7 @@ manifest = {
 mdata = "data:application/manifest+json," + urllib.parse.quote(json.dumps(manifest, ensure_ascii=False), safe="")
 
 parts = ['01_head.html', '02_core.js', '02b_cloud.js', '03_api.js', '04_home.js',
-         '05_reading.js', '05b_bo.js', '06_dialogue.js', '07_lookup.js', '07b_pulse.js',
+         '05_reading.js', '05b_bo.js', '05c_rec.js', '06_dialogue.js', '07_lookup.js', '07b_pulse.js',
          '08_lib.js', '09_tail.html']
 out = ''.join((B / p).read_text() for p in parts)
 fonts = (B / 'fonts.css').read_text().strip()      # 内嵌手写体子集（静态文件，不要手改）

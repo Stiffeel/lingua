@@ -37,6 +37,7 @@ function paintDlg() {
     return;
   }
 
+  recSweep('dlg', D.msgs.filter(m => m.who === 'sys').map(m => m.line));
   let body = '<div class="tbar">' + autoSpeakBtn() +
     '<button class="btn sm" onclick="makeDlgCard()">生成卡片</button>' +
     '<button class="btn sm" onclick="resetDlg()">换一个场景</button></div>' +
@@ -63,7 +64,7 @@ function paintDlg() {
         (L.tts ? '<button data-s="' + i + '">&#9654; 重听</button>' : '') +
         '<button data-rv="' + i + '">显示文本</button>' +
         (isLast ? '<button data-rg="1">&#8635; 重新生成</button>' : '') +
-        '</div>';
+        '</div>' + recRow('dlg', m.line);
     } else {
       body += '<div class="bub ' + scriptCls(k) + '">' +
         (m.who === 'sys' ? tapWords(k, m.line, m.tokens, m.gloss, 's' + i) : esc(m.line)) + '</div>';
@@ -74,7 +75,7 @@ function paintDlg() {
           '<button data-t="' + i + '">' + (m.show ? '隐藏翻译' : '显示翻译') + '</button>' +
           (L.tts ? '<button data-s="' + i + '">&#9654; 发音</button>' : '') +
           (isLast ? '<button data-rg="1">&#8635; 重新生成</button>' : '') +
-          '</div>';
+          '</div>' + recRow('dlg', m.line);
       }
     }
     body += '</div>';

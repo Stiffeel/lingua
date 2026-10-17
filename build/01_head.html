@@ -270,6 +270,14 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .lcd .ib:active{background:var(--soft)}
 .lcd .ib:disabled{opacity:.5}
 .lsec{font-size:12px;letter-spacing:.08em;color:var(--fg3);margin:16px 0 0}
+.lbrief{font-size:14.5px;line-height:1.85;white-space:pre-wrap;margin-top:8px;word-break:break-word}
+.mjd{margin-top:18px;border-top:1px solid var(--line);padding-top:4px}
+.mjd>summary{font-size:13px;color:var(--fg2);padding:10px 0;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.mjd>summary::-webkit-details-marker{display:none}
+.mjd>summary::before{content:'\25B8';display:inline-block;width:16px;color:var(--fg3)}
+.mjd[open]>summary::before{content:'\25BE'}
+.recbox{display:contents}
+.lcd .ib.rec{border-color:var(--fg);animation:pulse 1.1s infinite}
 .ltabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding:2px;-webkit-overflow-scrolling:touch}
 .ltabs button{flex:none;border:1px solid var(--line2);border-radius:999px;background:var(--bg);color:var(--fg2);
   padding:7px 13px;font-size:13px;white-space:nowrap}

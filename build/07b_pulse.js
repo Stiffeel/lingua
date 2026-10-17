@@ -201,6 +201,7 @@ function pulseWordsNow(k) {
 
 function paintPulse() {
   const k = P.lang, L = LANGS[k], b = BANK[k];
+  recSweep('pulse', Object.keys(pulseState().sent).map(l => pulseState().sent[l] && pulseState().sent[l].text));
   let body = '';
 
   if (!b) { shell(L.zh, '<div style="margin-top:22px">' + LOADER + ' 正在读取词库</div>'); return; }
@@ -428,6 +429,7 @@ function pulseSentHtml(k) {
     '<button class="btn sm" onclick="pulseMakeSent(this)">&#8635; 重新造句</button>' +
     '<button class="btn sm" onclick="pulseDropSent()">收起</button>' +
     '</div>' +
+    recRow('pulse', s.text) +
     '<p class="hint" style="margin-top:12px">点句中任意单词查看释义，下方输入框可以就这句话继续追问</p>' +
     '</div>';
 
@@ -439,13 +441,13 @@ function pulseSentHtml(k) {
 
   /* 词卡里的追问有两种来源：在造出来的句子里点词问的，和在上面词表里点词问的。
      两种都属于这句话，生成卡片时都会带上。 */
-  const nwq = wordQaFor(k, [s.text].concat(s.words || [])).length;
+  const nwq = wordNotesCount(k, [s.text].concat(s.words || []));
   h += '<button class="btn pri wide" style="margin-top:16px" onclick="pulseSentCard(this)">把这句存到卡片库</button>' +
     ((qa.length || nwq)
       ? '<p class="note" style="text-align:center;margin-bottom:18px">会一并带上' +
         (qa.length ? '这句话的 ' + qa.length + ' 条追问' : '') +
         (qa.length && nwq ? '，以及' : '') +
-        (nwq ? '词卡里追问的 ' + nwq + ' 条内容' : '') + '</p>'
+        (nwq ? '词卡里查看、追问的 ' + nwq + ' 条内容' : '') + '</p>'
       : '<div style="margin-bottom:18px"></div>');
   return h;
 }

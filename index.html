@@ -277,6 +277,14 @@ label.lb{display:block;font-size:12px;letter-spacing:.14em;text-transform:upperc
 .lcd .ib:active{background:var(--soft)}
 .lcd .ib:disabled{opacity:.5}
 .lsec{font-size:12px;letter-spacing:.08em;color:var(--fg3);margin:16px 0 0}
+.lbrief{font-size:14.5px;line-height:1.85;white-space:pre-wrap;margin-top:8px;word-break:break-word}
+.mjd{margin-top:18px;border-top:1px solid var(--line);padding-top:4px}
+.mjd>summary{font-size:13px;color:var(--fg2);padding:10px 0;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.mjd>summary::-webkit-details-marker{display:none}
+.mjd>summary::before{content:'\25B8';display:inline-block;width:16px;color:var(--fg3)}
+.mjd[open]>summary::before{content:'\25BE'}
+.recbox{display:contents}
+.lcd .ib.rec{border-color:var(--fg);animation:pulse 1.1s infinite}
 .ltabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding:2px;-webkit-overflow-scrolling:touch}
 .ltabs button{flex:none;border:1px solid var(--line2);border-radius:999px;background:var(--bg);color:var(--fg2);
   padding:7px 13px;font-size:13px;white-space:nowrap}
@@ -580,7 +588,7 @@ const saveCbMeta = () => persistKey('cbmeta', CB.meta);
 /* 同步登记 meta，落盘是异步的（IndexedDB 按事务顺序执行，紧跟着读也读得到） */
 function cbPut(id, b, up) {
   CB.meta[id] = { bv: b.bv, at: Date.now(), up: !!up };
-  cbRawSet(id, { d: b.d || '', n: b.n || '', bv: b.bv });
+  cbRawSet(id, { d: b.d || '', n: b.n || '', b: b.b || '', bv: b.bv });
   cbEvict();
   saveCbMeta();
 }
@@ -609,7 +617,7 @@ async function cbLoad(c) {
       if (e.code === 'NoSuchKey') throw new Error('云端还没有这张卡的详解（另一台设备可能还没传完，稍后再试）');
       throw new Error(ossHint(e));
     }
-    const b = { d: String(j.d || ''), n: String(j.n || ''), bv: j.bv || c.bv };
+    const b = { d: String(j.d || ''), n: String(j.n || ''), b: String(j.b || ''), bv: j.bv || c.bv };
     cbPut(c.id, b, true);
     return b;
   })();
@@ -676,7 +684,7 @@ function importBackup(input) {
         const bd = d.bodies && d.bodies[c.id];
         if (bd && typeof c.detail !== 'string') {
           c.bv = c.bv || bd.bv || c.ts || Date.now();
-          cbPut(c.id, { d: bd.d, n: bd.n, bv: c.bv }, false);
+          cbPut(c.id, { d: bd.d, n: bd.n, b: bd.b, bv: c.bv }, false);
         }
         cardSlim(c);
         if (!c.bv) c.bv = c.ts || Date.now();
@@ -1208,6 +1216,8 @@ const VIEWS = {};
 function render() {
   const cur = S.stack[S.stack.length - 1];
   closeSheet();
+  /* 卡片库里的跟读录音只活到离开卡片库（编辑页是从库里点进去的，不算离开） */
+  if (cur.view !== 'lib' && cur.view !== 'cedit') recDropGroup('lib');
   window.scrollTo(0, 0);
   VIEWS[cur.view](cur.arg);
 }
@@ -1858,7 +1868,7 @@ async function cloudPushBodies() {
     const sent = CB.meta[id].bv;
     const b = await cbRawGet(id);
     if (!b) { delete CB.meta[id]; continue; }      // 本机也没有了，别再重试
-    await ossPutText(cbKey(id), JSON.stringify({ id: id, d: b.d, n: b.n, bv: b.bv }));
+    await ossPutText(cbKey(id), JSON.stringify({ id: id, d: b.d, n: b.n, b: b.b || '', bv: b.bv }));
     if (CB.meta[id] && CB.meta[id].bv === sent) CB.meta[id].up = true;
   }
   if (pend.length) { cbEvict(); saveCbMeta(); }
@@ -2330,6 +2340,27 @@ function detailPrompt(k, sent, qa) {
         (k === 'kk' ? '\n\n' + KK_CYR_ONLY : '') +
         (k === 'ru' ? '\n\n' + RU_RULE : '') +
         '\n\n' + MARKJI_RULES + '\n\n' + DETAIL_SPEC + '\n\n' + DETAIL_SAMPLE
+    }
+  ];
+}
+
+/* ---------------- 卡片背面（简洁版）----------------
+   卡片库里直接展示的那一面：整句翻译 + 每个词的释义和变位。长的墨墨格式详解折叠在它后面。
+   模型只出 JSON，成品文本由 05_reading.js 的 briefText() 在本地拼，所以不会混进墨墨标记。 */
+function briefPrompt(k, sent) {
+  const L = LANGS[k];
+  return [
+    { role: 'system', content: BASE },
+    {
+      role: 'user', content:
+        '为下面这句' + L.zh + '写一个【简洁卡片背面】，只要：整句中文翻译，以及句中每个词的中文释义和变位/变形。\n\n原句：' + sent.text +
+        (sent.translit ? '\n（注音）：' + sent.translit : '') +
+        '\n参考翻译：' + sent.zh +
+        '\n\n输出 JSON：{"zh":"整句中文翻译","words":[{"w":"句中出现的词形","pos":"词性；荷兰语名词标 de/het，西班牙语名词标 el/la","zh":"中文释义，尽量短","forms":"变位或变形：动词给不定式和本句用到的人称变位、过去式/过去分词，名词给复数，形容词给比较级；没有就留空字符串"}]}' +
+        '\n"words" 按词在句中出现的顺序，每个词一项（冠词、介词、助词等虚词也要列，forms 留空）。不要写例句、不要长解释。' +
+        (k === 'bo' ? '\n' + boPronRule() : '') +
+        (k === 'kk' ? '\n' + KK_CYR_ONLY : '') +
+        (k === 'ru' ? '\n' + RU_RULE + '\n"w" 与 "forms" 里的俄语不带重音符号。' : '')
     }
   ];
 }
@@ -3141,6 +3172,7 @@ function paintRead() {
     return;
   }
   const s = c.sent;
+  recSweep('read', R.hist.map(h => h.sent.text));      // 退不回去的句子（重新生成、挤出历史、换语言）其录音一并清掉
 
   body += '<div class="card">' + sentHtml();
 
@@ -3157,6 +3189,7 @@ function paintRead() {
     '<button class="btn sm" onclick="regenSent()" title="换一句">&#8635; 重新生成</button>' +
     '<span class="hint" style="margin-left:auto">' + (R.idx + 1) + ' / ' + R.hist.length + '</span>' +
     '</div>';
+  body += recRow('read', s.text);
   body += '<p class="hint" style="margin-top:14px">点击任意单词查看释义</p></div>';
 
   if (c.qa.length) {
@@ -3165,10 +3198,10 @@ function paintRead() {
   }
   if (R.busy) body += '<div style="margin-top:18px">' + LOADER + '</div>';
 
-  const nwq = wordQaFor(k, s.text).length;
+  const nwq = wordNotesCount(k, s.text);
   body += '<div class="spacer"></div><div class="spacer"></div>' +
     '<button class="btn pri wide" onclick="makeDetail(this)">保存到卡片库</button>' +
-    (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '') +
+    (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里查看、追问的 ' + nwq + ' 条内容</p>' : '') +
     '<div class="spacer"></div>' +
     '<div class="split">' +
     '<button class="btn" onclick="prevSent()"' + (R.idx <= 0 ? ' disabled' : '') + '>&#8249; 上一句</button>' +
@@ -3490,22 +3523,63 @@ function wordQaFor(k, ctx, bare) {
   return out;
 }
 
+/* 你在词卡里点「展开详解」得到的单词解析，也属于这句话：连同追问一起进「追问详解」。
+   只收这一句上下文里展开过的词，原样整理成文本，不再调 AI。 */
+function wordDetailText(j) {
+  const t = x => unmark(String(x == null ? '' : x)).trim();
+  const tag = [t(j.gender), t(j.pos)].filter(Boolean).join('，');
+  const lines = ['【单词详解】' + t(j.word || j._w) + (tag ? '（' + tag + '）' : '') + '：' + t(j.zh) + (t(j.en) ? '（' + t(j.en) + '）' : '')];
+  if (t(j.lemma) && t(j.lemma) !== t(j.word)) lines.push('原形：' + t(j.lemma));
+  if (Array.isArray(j.forms) && j.forms.length) lines.push(j.forms.map(f => t(f.k) + '：' + t(f.v)).join('；'));
+  if (j.example && t(j.example.text)) lines.push('例：' + t(j.example.text) + (t(j.example.zh) ? '（' + t(j.example.zh) + '）' : ''));
+  if (t(j.note)) lines.push(t(j.note));
+  return lines.join('\n');
+}
+function wordDetailsFor(k, ctx) {
+  const set = new Set((Array.isArray(ctx) ? ctx : [ctx]).filter(Boolean));
+  const out = [];
+  wordCache.forEach(j => {
+    if (j && j._lang === k && set.has(j._ctx) && String(j.zh || '').trim()) out.push(wordDetailText(j));
+  });
+  return out;
+}
+const wordNotesCount = (k, ctx) => wordQaFor(k, ctx).length + wordDetailsFor(k, ctx).length;
+
+/* 简洁卡片背面：模型只给 JSON，文本在本地拼。失败不拦卡片，留空可在预览页手写 */
+function briefText(k, j) {
+  const t = x => { const v = unmark(String(x == null ? '' : x)).trim(); return k === 'ru' ? ruPlain(v) : v; };
+  const lines = [t(j && j.zh), ''];
+  (j && Array.isArray(j.words) ? j.words : []).forEach(w => {
+    if (!w || !t(w.w)) return;
+    lines.push(t(w.w) + (t(w.pos) ? '（' + t(w.pos) + '）' : '') + (t(w.zh) ? '：' + t(w.zh) : ''));
+    if (t(w.forms)) lines.push('　' + t(w.forms));
+  });
+  return lines.join('\n').trim();
+}
+async function briefFor(k, sent) {
+  try {
+    return briefText(k, await aiJson(briefPrompt(k, sent), k));
+  } catch (e) { toast('简洁背面生成失败，可在预览页手写 · ' + e.message); return ''; }
+}
+
 async function detailFor(k, sent, qa, btn, extraCtx) {
   if (needKey()) return;
   const old = btn.innerHTML; btn.innerHTML = LOADER + ' 正在生成详解'; btn.disabled = true;
   try {
-    const allQa = (qa || []).concat(wordQaFor(k, [sent.text].concat(extraCtx || [])));
+    const ctx = [sent.text].concat(extraCtx || []);
+    const allQa = (qa || []).concat(wordQaFor(k, ctx));
     /* 追问不再喂给模型去「整合」进详解：它们原样放进卡片的「追问详解」一栏（保存前可编辑），
-       既不丢，也不会和正文重复讲一遍。 */
-    const notes = allQa.map(x => '问：' + x.q + '\n答：' + x.a).join('\n\n');
-    let txt = await ai(detailPrompt(k, sent, []), false, k);
+       既不丢，也不会和正文重复讲一遍。点词展开过的单词详解排在前面。 */
+    const notes = wordDetailsFor(k, ctx).concat(allQa.map(x => '问：' + x.q + '\n答：' + x.a)).join('\n\n');
+    const [txt0, brief] = await Promise.all([ai(detailPrompt(k, sent, []), false, k), briefFor(k, sent)]);
+    let txt = txt0;
     if (k === 'kk') txt = kkDual(txt);
     if (k === 'ru') txt = ruDual(txt);
     const lint = markjiLint(txt);
     txt = lint.text;
     if (lint.fixed.length) toast('已自动整理墨墨语法：' + lint.fixed[0] + (lint.fixed.length > 1 ? ' 等 ' + lint.fixed.length + ' 处' : ''));
     DE.mode = 'raw';
-    go('dedit', { lang: k, front: sent.text, text: txt.trim(), notes: notes });
+    go('dedit', { lang: k, front: sent.text, text: txt.trim(), notes: notes, brief: brief });
   } catch (e) {
     btn.innerHTML = old; btn.disabled = false;
     toast('生成失败 · ' + e.message);
@@ -3518,7 +3592,7 @@ function makeDetail(btn) {
 }
 
 /* ---------- 详解预览 / 编辑 ---------- */
-let DE = { mode: 'raw' };
+let DE = { mode: 'raw', mj: false };
 
 function lintBar(text, id) {
   const r = markjiLint(text);
@@ -3538,20 +3612,37 @@ function applyLint(id) {
   toast(r.fixed.length ? '已整理：' + r.fixed.join('；') : '没有可自动整理的问题');
 }
 
+/* 预览页 / 编辑页三块：简洁背面（直接展示）→ 追问详解 → 折叠的墨墨格式（长，复制导入用）。
+   墨墨格式的 textarea 在折叠的 <details> 里也是存在的，deText() 照样读得到。 */
 function deditBody(d, id) {
   return '<div class="row" style="margin-bottom:12px">' +
     '<button class="btn sm' + (DE.mode === 'raw' ? ' on' : '') + '" onclick="DE.mode=\'raw\';render()">原文</button>' +
     '<button class="btn sm' + (DE.mode === 'view' ? ' on' : '') + '" onclick="DE.mode=\'view\';render()">渲染预览</button>' +
     (existingCard(d) ? '<span class="hint" style="margin-left:auto">卡片库中已有这一条，保存将覆盖</span>' : '') +
     '</div>' +
+    briefBody(d) + notesBody(d) +
+    '<details class="mjd"' + (DE.mj ? ' open' : '') + ' ontoggle="DE.mj=this.open">' +
+    '<summary>墨墨记忆卡格式（较长，复制到墨墨用）</summary>' +
     (DE.mode === 'raw'
       ? '<textarea class="fld" id="' + id + '" style="min-height:54vh;font-size:14px;line-height:1.75;font-family:ui-monospace,Menlo,monospace">' + esc(d.text) + '</textarea>'
       : '<div class="rend">' + renderCodes(d.text) + '</div>') +
-    lintBar(d.text, id);
+    lintBar(d.text, id) + '</details>';
 }
 function bindDedit(id) {
   if (DE.mode === 'raw' && $(id)) $(id).oninput = () => { S.stack[S.stack.length - 1].arg.text = $(id).value; };
   if (DE.mode === 'raw' && $('ntext')) $('ntext').oninput = () => { S.stack[S.stack.length - 1].arg.notes = $('ntext').value; };
+  if (DE.mode === 'raw' && $('btext')) $('btext').oninput = () => { S.stack[S.stack.length - 1].arg.brief = $('btext').value; };
+}
+/* 卡片背面：卡片库里直接展示的简洁版（整句翻译 + 每词释义和变位）。旧卡没有，留空即可 */
+function briefBody(d) {
+  return '<div class="sec">卡片背面</div>' +
+    (DE.mode === 'raw'
+      ? '<textarea class="fld" id="btext" placeholder="整句翻译、每个词的释义和变位。留空也行。" style="min-height:30vh;font-size:14.5px;line-height:1.8">' + esc(d.brief || '') + '</textarea>'
+      : '<div class="lbrief">' + (d.brief ? esc(d.brief) : '<span class="hint">（空）</span>') + '</div>');
+}
+function briefTextNow() {
+  const cu = S.stack[S.stack.length - 1].arg;
+  return ((DE.mode === 'raw' && $('btext')) ? $('btext').value : (cu.brief || '')).trim();
 }
 /* 追问详解：你在阅读里追问得到的解答，和详解正文分开存。保存前可以随便删改，留空也行 */
 function notesBody(d) {
@@ -3580,7 +3671,7 @@ function existingCard(d) {
 }
 
 VIEWS.dedit = function (d) {
-  const h = '<div class="sec">预览与编辑</div>' + deditBody(d, 'dtext') + notesBody(d) +
+  const h = deditBody(d, 'dtext') +
     '<p class="note">高亮指令 [T#!色#字] / [T#!!色#字] 与答案线 --- 会原样保留。发音标记 [Audio#…] 需你自己后加。' +
     '复制墨墨格式时，追问详解会接在答案面末尾。</p>' +
     '<div class="spacer"></div>' +
@@ -3597,14 +3688,14 @@ function copyDetail() { copyText(mjCard(deText('dtext'), notesText())); }
 
 async function saveDetail() {
   const cu = S.stack[S.stack.length - 1].arg;
-  const text = deText('dtext'), notes = notesText();
+  const text = deText('dtext'), notes = notesText(), brief = briefTextNow();
   const old = existingCard(cu);
   const now = Date.now();
   if (old) {
     /* 取不到旧正文（离线且没缓存）就当作变了，宁可多覆盖一次也别把新内容丢掉 */
     const ob = await cbLoad(old).catch(() => null);
-    const changed = !ob || ob.d !== text || ob.n !== notes;
-    if (changed) { old.bv = now; cbPut(old.id, { d: text, n: notes, bv: now }, false); }
+    const changed = !ob || ob.d !== text || ob.n !== notes || (ob.b || '') !== brief;
+    if (changed) { old.bv = now; cbPut(old.id, { d: text, n: notes, b: brief, bv: now }, false); }
     old.ts = now; old.pos = now; old.ct = cardCreated(old); unmarkDel(old);
     S.cards = [old].concat(S.cards.filter(x => x !== old));
     saveCards(); back();
@@ -3616,7 +3707,7 @@ async function saveDetail() {
     lang: cu.lang, front: cu.front,
     ts: now, pos: now, ct: now, bv: now
   };
-  cbPut(fresh.id, { d: text, n: notes, bv: now }, false);
+  cbPut(fresh.id, { d: text, n: notes, b: brief, bv: now }, false);
   S.cards.unshift(fresh);
   unmarkDel(fresh);                 // 删过又重新存的，墓碑要撤掉
   saveCards(); back();
@@ -3850,6 +3941,127 @@ function boForget(word) {
   render();
   toast('已删除');
 }
+/* ================= Yulengua · 跟读录音（即时练习，只放内存）=================
+   给每一句话配一个录音：读完马上回放，和标准发音对比。
+   和藏语发音库（05b_bo.js）不同，这里的录音【不落盘、不上云、不跟卡片走】：
+   句子退不回去了（重新生成、被挤出历史、换了语言）、或者离开卡片库，就立刻丢掉。
+   key = 分组 + '|' + 句子标识；各模块在重画时用 recSweep(分组, 还看得到的句子) 清理。 */
+
+const REC = { map: new Map(), act: null, cancel: false, mr: null, stream: null, t0: 0, timer: null };
+
+const ICON_MIC = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>';
+const ICON_PLAYME = '<svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 4l13 8-13 8z"/></svg>';
+
+/* 按钮区。icon = true 是卡片库那种方块图标按钮，否则是普通小按钮 */
+function recCtl(g, id, icon) {
+  const key = g + '|' + id;
+  return '<span class="recbox" data-rk="' + esc(key) + '"' + (icon ? ' data-ic="1"' : '') + '>' + recInner(key, icon) + '</span>';
+}
+function recRow(g, id) {
+  return '<div class="row" style="margin-top:12px">' + recCtl(g, id) +
+    '<span class="hint">跟读录音只缓存，不存进卡片</span></div>';
+}
+function recInner(key, icon) {
+  const on = REC.act === key, has = REC.map.has(key);
+  if (icon) {
+    return (on
+      ? '<button class="ib rec" data-rec="stop" title="停止录音" aria-label="停止录音">' + ICON_MIC + '</button>'
+      : '<button class="ib" data-rec="start" title="' + (has ? '重录' : '录音') + '" aria-label="录音">' + ICON_MIC + '</button>') +
+      (has && !on ? '<button class="ib" data-rec="play" title="播放我的录音" aria-label="播放我的录音">' + ICON_PLAYME + '</button>' : '');
+  }
+  if (on) return '<button class="btn sm rec" data-rec="stop">&#9632; 停止 <span class="recclk">0:00</span></button>';
+  return '<button class="btn sm" data-rec="start">&#9679; ' + (has ? '重录' : '录音') + '</button>' +
+    (has ? '<button class="btn sm" data-rec="play">&#9654; 我的录音</button>' : '');
+}
+function recRefresh(key) {
+  document.querySelectorAll('[data-rk]').forEach(el => {
+    if (el.dataset.rk === key) el.innerHTML = recInner(key, !!el.dataset.ic);
+  });
+}
+
+/* 用捕获阶段统一接管：卡片库的整行点击展开、其它页面的各种委托都不会被这些按钮误触发 */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-rec]');
+  const box = b && b.closest('[data-rk]');
+  if (!box) return;
+  e.stopPropagation(); e.preventDefault();
+  const key = box.dataset.rk;
+  if (b.dataset.rec === 'start') recStart(key);
+  else if (b.dataset.rec === 'stop') recStop();
+  else if (b.dataset.rec === 'play') recPlay(key);
+}, true);
+
+async function recStart(key) {
+  if (REC.act) { toast('先停止正在进行的录音'); return; }
+  if (typeof BO !== 'undefined' && BO.rec) { toast('藏语词卡里正在录音，先停止它'); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+    toast('这个浏览器不支持录音。iOS 请用 Safari，并确保是 https 打开的');
+    return;
+  }
+  REC.act = key; REC.cancel = false;                // 先占位，避免权限弹窗期间被连点出第二路录音
+  try {
+    REC.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) {
+    REC.act = null; recRefresh(key);
+    toast(/NotAllowed|Permission/i.test(String(e.name || e.message))
+      ? '麦克风权限被拒绝。到 iOS 设置 → Safari → 麦克风 里允许'
+      : '打不开麦克风 · ' + e.message);
+    return;
+  }
+  const mime = boMime();
+  let mr;
+  try { mr = mime ? new MediaRecorder(REC.stream, { mimeType: mime }) : new MediaRecorder(REC.stream); }
+  catch (e) { mr = new MediaRecorder(REC.stream); }
+  REC.mr = mr;
+  const chunks = [];
+  mr.ondataavailable = ev => { if (ev.data && ev.data.size) chunks.push(ev.data); };
+  mr.onstop = () => {
+    const dur = Date.now() - REC.t0, cancelled = REC.cancel;
+    try { REC.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+    clearInterval(REC.timer);
+    REC.act = null; REC.mr = null; REC.stream = null; REC.timer = null;
+    const blob = new Blob(chunks, { type: mr.mimeType || mime || 'audio/mp4' });
+    if (!cancelled && blob.size) {
+      const old = REC.map.get(key);
+      if (old) { try { URL.revokeObjectURL(old.url); } catch (e) {} }
+      REC.map.set(key, { url: URL.createObjectURL(blob), dur: dur });
+    } else if (!cancelled) toast('没有录到声音');
+    recRefresh(key);
+  };
+  REC.t0 = Date.now();
+  mr.start();
+  recRefresh(key);
+  REC.timer = setInterval(() => {
+    document.querySelectorAll('.recclk').forEach(c => { c.textContent = boDur(Date.now() - REC.t0); });
+    if (Date.now() - REC.t0 > 60000) recStop();      // 60 秒硬上限，防止误触一直录
+  }, 250);
+}
+
+function recStop() {
+  if (!REC.act || !REC.mr) return;
+  try { REC.mr.stop(); } catch (e) { REC.cancel = true; }
+}
+
+function recPlay(key) {
+  const r = REC.map.get(key);
+  if (!r) return;
+  primeAudio();                                       // iOS 必须在手势里同步执行
+  playUrl(r.url);
+}
+
+function recDrop(key) {
+  if (REC.act === key) { REC.cancel = true; recStop(); }
+  const r = REC.map.get(key);
+  if (r) { try { URL.revokeObjectURL(r.url); } catch (e) {} REC.map.delete(key); }
+}
+/* live：这个分组里此刻还看得到的句子标识；其余的录音全部丢掉 */
+function recSweep(g, live) {
+  const keep = new Set(live.filter(x => x != null).map(x => g + '|' + x));
+  Array.from(REC.map.keys()).concat(REC.act ? [REC.act] : []).forEach(key => {
+    if (key.indexOf(g + '|') === 0 && !keep.has(key)) recDrop(key);
+  });
+}
+const recDropGroup = g => recSweep(g, []);
 /* ================= Yulengua · 场景对话 ================= */
 
 const D = { lang: null, started: false, topic: '', scene: '', role: '', msgs: [], busy: false, err: '' };
@@ -3889,6 +4101,7 @@ function paintDlg() {
     return;
   }
 
+  recSweep('dlg', D.msgs.filter(m => m.who === 'sys').map(m => m.line));
   let body = '<div class="tbar">' + autoSpeakBtn() +
     '<button class="btn sm" onclick="makeDlgCard()">生成卡片</button>' +
     '<button class="btn sm" onclick="resetDlg()">换一个场景</button></div>' +
@@ -3915,7 +4128,7 @@ function paintDlg() {
         (L.tts ? '<button data-s="' + i + '">&#9654; 重听</button>' : '') +
         '<button data-rv="' + i + '">显示文本</button>' +
         (isLast ? '<button data-rg="1">&#8635; 重新生成</button>' : '') +
-        '</div>';
+        '</div>' + recRow('dlg', m.line);
     } else {
       body += '<div class="bub ' + scriptCls(k) + '">' +
         (m.who === 'sys' ? tapWords(k, m.line, m.tokens, m.gloss, 's' + i) : esc(m.line)) + '</div>';
@@ -3926,7 +4139,7 @@ function paintDlg() {
           '<button data-t="' + i + '">' + (m.show ? '隐藏翻译' : '显示翻译') + '</button>' +
           (L.tts ? '<button data-s="' + i + '">&#9654; 发音</button>' : '') +
           (isLast ? '<button data-rg="1">&#8635; 重新生成</button>' : '') +
-          '</div>';
+          '</div>' + recRow('dlg', m.line);
       }
     }
     body += '</div>';
@@ -4096,6 +4309,9 @@ const W_TITLE = { word: '单词查询', sent: '整句翻译', rev: '译成六语
 VIEWS.lookup = function () { paintLookup(); };
 
 function paintLookup() {
+  /* 只留当前还看得到的那几句的录音 */
+  recSweep('lookup', (W.sent ? ['s|' + W.sent.sent.text] : []).concat(
+    W.rev ? W.rev.items.map(it => 'r|' + it.lang + '|' + it.sent.text) : []));
   let body = '<input class="fld" id="wq" autocapitalize="off" spellcheck="false" ' +
     'placeholder="查一个词，粘贴一整句，或输入中文/英文…" value="' + esc(W.q) + '" ' +
     'onkeydown="if(event.key===\'Enter\'){event.preventDefault();doLookup()}">' +
@@ -4263,6 +4479,7 @@ function transHtml() {
     (L && L.tts ? speakBtn(k, s.text) : '') +
     '<button class="btn sm" onclick="doTranslate(1)">&#8635; 重新翻译</button>' +
     '</div>' +
+    (L ? recRow('lookup', 's|' + s.text) : '') +
     (L ? '<p class="hint" style="margin-top:14px">点击任意单词查看释义' + (k === 'bo' ? '、改注音、录发音' : '') + '</p>' : '') +
     '</div>';
 
@@ -4274,10 +4491,10 @@ function transHtml() {
   }
 
   if (L) {
-    const nwq = wordQaFor(k, s.text).length;
+    const nwq = wordNotesCount(k, s.text);
     body += '<div class="spacer"></div><div class="spacer"></div>' +
       '<button class="btn pri wide" onclick="transCard(this)">保存到卡片库</button>' +
-      (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里追问的 ' + nwq + ' 条内容</p>' : '');
+      (nwq ? '<p class="note" style="text-align:center">会一并带上你在词卡里查看、追问的 ' + nwq + ' 条内容</p>' : '');
   } else {
     body += '<p class="note">这段文字不属于本应用支持的六种语言，只做了翻译，不能生成卡片。' +
       '如果你输入的是中文或英文、想看它在六种语言里怎么说，请改点上面的「译成六语」。</p>' +
@@ -4370,6 +4587,7 @@ function revHtml() {
       (L.tts ? '<button class="btn sm" data-rspk="' + i + '">&#9654; 发音</button>' : '') +
       '<button class="btn sm" data-rcard="' + i + '">' + (r.kind === 'word' ? '生成卡片' : '保存到卡片库') + '</button>' +
       '</div>' +
+      recRow('lookup', 'r|' + it.lang + '|' + s.text) +
       '<p class="hint" style="margin-top:12px">点击任意单词查看释义' + (k === 'bo' ? '、改注音、录发音' : '') + '</p>' +
       '</div>';
   });
@@ -4672,6 +4890,7 @@ function pulseWordsNow(k) {
 
 function paintPulse() {
   const k = P.lang, L = LANGS[k], b = BANK[k];
+  recSweep('pulse', Object.keys(pulseState().sent).map(l => pulseState().sent[l] && pulseState().sent[l].text));
   let body = '';
 
   if (!b) { shell(L.zh, '<div style="margin-top:22px">' + LOADER + ' 正在读取词库</div>'); return; }
@@ -4899,6 +5118,7 @@ function pulseSentHtml(k) {
     '<button class="btn sm" onclick="pulseMakeSent(this)">&#8635; 重新造句</button>' +
     '<button class="btn sm" onclick="pulseDropSent()">收起</button>' +
     '</div>' +
+    recRow('pulse', s.text) +
     '<p class="hint" style="margin-top:12px">点句中任意单词查看释义，下方输入框可以就这句话继续追问</p>' +
     '</div>';
 
@@ -4910,13 +5130,13 @@ function pulseSentHtml(k) {
 
   /* 词卡里的追问有两种来源：在造出来的句子里点词问的，和在上面词表里点词问的。
      两种都属于这句话，生成卡片时都会带上。 */
-  const nwq = wordQaFor(k, [s.text].concat(s.words || [])).length;
+  const nwq = wordNotesCount(k, [s.text].concat(s.words || []));
   h += '<button class="btn pri wide" style="margin-top:16px" onclick="pulseSentCard(this)">把这句存到卡片库</button>' +
     ((qa.length || nwq)
       ? '<p class="note" style="text-align:center;margin-bottom:18px">会一并带上' +
         (qa.length ? '这句话的 ' + qa.length + ' 条追问' : '') +
         (qa.length && nwq ? '，以及' : '') +
-        (nwq ? '词卡里追问的 ' + nwq + ' 条内容' : '') + '</p>'
+        (nwq ? '词卡里查看、追问的 ' + nwq + ' 条内容' : '') + '</p>'
       : '<div style="margin-bottom:18px"></div>');
   return h;
 }
@@ -4961,7 +5181,7 @@ function pulseSentCard(btn) {
    本机缓存 / 云端取。点卡片本体展开；右边三个按钮：发音、移到最后、删除（删除和移到最后都能撤销）。
    墨墨格式不再是主功能，只在展开后留一个「复制墨墨格式」。 */
 
-const LIB = { open: {}, lang: null, cache: new Map() };   // cache: 展开中的卡片正文，id -> {bv, b}
+const LIB = { open: {}, mj: {}, lang: null, cache: new Map() };   // mj: 展开的卡里「墨墨格式」折叠区是否打开   // cache: 展开中的卡片正文，id -> {bv, b}
 
 VIEWS.lib = function () { paintLib(); };
 
@@ -5023,6 +5243,7 @@ function paintLib() {
       '<div class="top" data-tog="' + c.id + '">' +
       '<div class="fr ' + scriptCls(c.lang) + '">' + esc(c.front) + '</div>' +
       '<div class="side">' +
+      recCtl('lib', c.id, true) +
       (L.tts ? '<button class="ib" data-spk="' + c.id + '" title="发音" aria-label="发音">' + ICON_SPK + '</button>' : '') +
       '<button class="ib" data-last="' + c.id + '" title="移到最后" aria-label="移到最后">' + ICON_END + '</button>' +
       '<button class="ib" data-del="' + c.id + '" title="删除" aria-label="删除">' + ICON_DEL + '</button>' +
@@ -5042,9 +5263,14 @@ function libBodyHtml(c) {
   if (hit && hit.bv === c.bv) return libDetailHtml(c, hit.b);
   return '<div class="note" style="margin:12px 0">' + LOADER + ' 正在取详解</div>';
 }
+/* 展开后的三块：卡片背面（简洁版，旧卡为空）→ 追问详解 → 折叠的墨墨格式 */
 function libDetailHtml(c, b) {
-  return '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(b.d) + '</div>' +
+  return '<div class="lsec" style="margin-top:6px">卡片背面</div>' +
+    (b.b ? '<div class="lbrief ' + scriptCls(c.lang) + '">' + escp(b.b) + '</div>' : '<div class="hint" style="margin-top:6px">（空）</div>') +
     (b.n ? '<div class="lsec">追问详解</div><div class="rend lrend">' + renderCodes(b.n) + '</div>' : '') +
+    '<details class="mjd"' + (LIB.mj[c.id] ? ' open' : '') + ' ontoggle="LIB.mj[\'' + c.id + '\']=this.open">' +
+    '<summary>墨墨记忆卡格式</summary>' +
+    '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(b.d) + '</div></details>' +
     '<div class="mt">' + esc(agoText(cardCreated(c))) + ' · ' + new Date(cardCreated(c)).toLocaleDateString('zh-CN') + '</div>' +
     '<div class="acts">' +
     '<button class="btn sm pri" data-copy="' + c.id + '">复制墨墨格式</button>' +
@@ -5089,14 +5315,14 @@ function bindLib() {
       const hit = LIB.cache.get(id);
       if (!hit) return;
       if (d.copy) copyText(mjCard(hit.b.d, hit.b.n));
-      if (d.edit) go('cedit', { id: id, lang: c.lang, text: hit.b.d, notes: hit.b.n });
+      if (d.edit) go('cedit', { id: id, lang: c.lang, text: hit.b.d, notes: hit.b.n, brief: hit.b.b || '' });
       return;
     }
     const tog = t.closest('[data-tog]');
     if (tog) {
       const id = tog.dataset.tog;
       LIB.open[id] = !LIB.open[id];
-      if (!LIB.open[id]) LIB.cache.delete(id);               // 收起就把正文放掉，不在内存里攒
+      if (!LIB.open[id]) { LIB.cache.delete(id); delete LIB.mj[id]; }   // 收起就把正文放掉，不在内存里攒
       paintLib();
     }
   };
@@ -5137,7 +5363,7 @@ function delCards(ids) {
   });
   if (!items.length) return;
   items.sort((a, b) => b.i - a.i).forEach(o => S.cards.splice(o.i, 1));
-  items.forEach(o => { markDel(o.c); LIB.open[o.c.id] = false; LIB.cache.delete(o.c.id); });   // 留墓碑，否则下一次云端同步会把它们原样长回来
+  items.forEach(o => { markDel(o.c); LIB.open[o.c.id] = false; LIB.cache.delete(o.c.id); recDrop('lib|' + o.c.id); });   // 留墓碑，否则下一次云端同步会把它们原样长回来
   S.trash = { items: items.slice().sort((a, b) => a.i - b.i) };
   saveCards(); paintLib();
   toast('已删除 ' + items.length + ' 张', '撤销', undoDel);
@@ -5154,7 +5380,7 @@ function undoDel() {
 
 /* edit an existing card's detail */
 VIEWS.cedit = function (d) {
-  const h = deditBody({ text: d.text, lang: d.lang }, 'ctext') + notesBody(d) +
+  const h = deditBody({ text: d.text, lang: d.lang, brief: d.brief, notes: d.notes }, 'ctext') +
     '<div class="spacer"></div>' +
     '<div class="split">' +
     '<button class="btn" onclick="copyText(mjCard(deText(\'ctext\'), notesText()))">复制墨墨格式</button>' +
@@ -5170,7 +5396,7 @@ function saveEdit() {
   if (c) {
     const now = Date.now();
     c.bv = now; c.ts = now;                     // 正文变了：bv 让别的设备的缓存失效，ts 让索引合并认这一版
-    cbPut(c.id, { d: deText('ctext'), n: notesText(), bv: now }, false);
+    cbPut(c.id, { d: deText('ctext'), n: notesText(), b: briefTextNow(), bv: now }, false);
     LIB.cache.delete(c.id);
     saveCards();
   }

@@ -366,6 +366,27 @@ function detailPrompt(k, sent, qa) {
   ];
 }
 
+/* ---------------- 卡片背面（简洁版）----------------
+   卡片库里直接展示的那一面：整句翻译 + 每个词的释义和变位。长的墨墨格式详解折叠在它后面。
+   模型只出 JSON，成品文本由 05_reading.js 的 briefText() 在本地拼，所以不会混进墨墨标记。 */
+function briefPrompt(k, sent) {
+  const L = LANGS[k];
+  return [
+    { role: 'system', content: BASE },
+    {
+      role: 'user', content:
+        '为下面这句' + L.zh + '写一个【简洁卡片背面】，只要：整句中文翻译，以及句中每个词的中文释义和变位/变形。\n\n原句：' + sent.text +
+        (sent.translit ? '\n（注音）：' + sent.translit : '') +
+        '\n参考翻译：' + sent.zh +
+        '\n\n输出 JSON：{"zh":"整句中文翻译","words":[{"w":"句中出现的词形","pos":"词性；荷兰语名词标 de/het，西班牙语名词标 el/la","zh":"中文释义，尽量短","forms":"变位或变形：动词给不定式和本句用到的人称变位、过去式/过去分词，名词给复数，形容词给比较级；没有就留空字符串"}]}' +
+        '\n"words" 按词在句中出现的顺序，每个词一项（冠词、介词、助词等虚词也要列，forms 留空）。不要写例句、不要长解释。' +
+        (k === 'bo' ? '\n' + boPronRule() : '') +
+        (k === 'kk' ? '\n' + KK_CYR_ONLY : '') +
+        (k === 'ru' ? '\n' + RU_RULE + '\n"w" 与 "forms" 里的俄语不带重音符号。' : '')
+    }
+  ];
+}
+
 /* ---------------- 追问 ---------------- */
 function askPrompt(k, sent, qa, q) {
   const L = LANGS[k];

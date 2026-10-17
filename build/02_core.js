@@ -255,7 +255,7 @@ const saveCbMeta = () => persistKey('cbmeta', CB.meta);
 /* 同步登记 meta，落盘是异步的（IndexedDB 按事务顺序执行，紧跟着读也读得到） */
 function cbPut(id, b, up) {
   CB.meta[id] = { bv: b.bv, at: Date.now(), up: !!up };
-  cbRawSet(id, { d: b.d || '', n: b.n || '', bv: b.bv });
+  cbRawSet(id, { d: b.d || '', n: b.n || '', b: b.b || '', bv: b.bv });
   cbEvict();
   saveCbMeta();
 }
@@ -284,7 +284,7 @@ async function cbLoad(c) {
       if (e.code === 'NoSuchKey') throw new Error('云端还没有这张卡的详解（另一台设备可能还没传完，稍后再试）');
       throw new Error(ossHint(e));
     }
-    const b = { d: String(j.d || ''), n: String(j.n || ''), bv: j.bv || c.bv };
+    const b = { d: String(j.d || ''), n: String(j.n || ''), b: String(j.b || ''), bv: j.bv || c.bv };
     cbPut(c.id, b, true);
     return b;
   })();
@@ -351,7 +351,7 @@ function importBackup(input) {
         const bd = d.bodies && d.bodies[c.id];
         if (bd && typeof c.detail !== 'string') {
           c.bv = c.bv || bd.bv || c.ts || Date.now();
-          cbPut(c.id, { d: bd.d, n: bd.n, bv: c.bv }, false);
+          cbPut(c.id, { d: bd.d, n: bd.n, b: bd.b, bv: c.bv }, false);
         }
         cardSlim(c);
         if (!c.bv) c.bv = c.ts || Date.now();
@@ -883,6 +883,8 @@ const VIEWS = {};
 function render() {
   const cur = S.stack[S.stack.length - 1];
   closeSheet();
+  /* 卡片库里的跟读录音只活到离开卡片库（编辑页是从库里点进去的，不算离开） */
+  if (cur.view !== 'lib' && cur.view !== 'cedit') recDropGroup('lib');
   window.scrollTo(0, 0);
   VIEWS[cur.view](cur.arg);
 }

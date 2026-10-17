@@ -3,7 +3,7 @@
    本机缓存 / 云端取。点卡片本体展开；右边三个按钮：发音、移到最后、删除（删除和移到最后都能撤销）。
    墨墨格式不再是主功能，只在展开后留一个「复制墨墨格式」。 */
 
-const LIB = { open: {}, lang: null, cache: new Map() };   // cache: 展开中的卡片正文，id -> {bv, b}
+const LIB = { open: {}, mj: {}, lang: null, cache: new Map() };   // mj: 展开的卡里「墨墨格式」折叠区是否打开   // cache: 展开中的卡片正文，id -> {bv, b}
 
 VIEWS.lib = function () { paintLib(); };
 
@@ -65,6 +65,7 @@ function paintLib() {
       '<div class="top" data-tog="' + c.id + '">' +
       '<div class="fr ' + scriptCls(c.lang) + '">' + esc(c.front) + '</div>' +
       '<div class="side">' +
+      recCtl('lib', c.id, true) +
       (L.tts ? '<button class="ib" data-spk="' + c.id + '" title="发音" aria-label="发音">' + ICON_SPK + '</button>' : '') +
       '<button class="ib" data-last="' + c.id + '" title="移到最后" aria-label="移到最后">' + ICON_END + '</button>' +
       '<button class="ib" data-del="' + c.id + '" title="删除" aria-label="删除">' + ICON_DEL + '</button>' +
@@ -84,9 +85,14 @@ function libBodyHtml(c) {
   if (hit && hit.bv === c.bv) return libDetailHtml(c, hit.b);
   return '<div class="note" style="margin:12px 0">' + LOADER + ' 正在取详解</div>';
 }
+/* 展开后的三块：卡片背面（简洁版，旧卡为空）→ 追问详解 → 折叠的墨墨格式 */
 function libDetailHtml(c, b) {
-  return '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(b.d) + '</div>' +
+  return '<div class="lsec" style="margin-top:6px">卡片背面</div>' +
+    (b.b ? '<div class="lbrief ' + scriptCls(c.lang) + '">' + escp(b.b) + '</div>' : '<div class="hint" style="margin-top:6px">（空）</div>') +
     (b.n ? '<div class="lsec">追问详解</div><div class="rend lrend">' + renderCodes(b.n) + '</div>' : '') +
+    '<details class="mjd"' + (LIB.mj[c.id] ? ' open' : '') + ' ontoggle="LIB.mj[\'' + c.id + '\']=this.open">' +
+    '<summary>墨墨记忆卡格式</summary>' +
+    '<div class="rend lrend ' + scriptCls(c.lang) + '">' + renderCodes(b.d) + '</div></details>' +
     '<div class="mt">' + esc(agoText(cardCreated(c))) + ' · ' + new Date(cardCreated(c)).toLocaleDateString('zh-CN') + '</div>' +
     '<div class="acts">' +
     '<button class="btn sm pri" data-copy="' + c.id + '">复制墨墨格式</button>' +
@@ -131,14 +137,14 @@ function bindLib() {
       const hit = LIB.cache.get(id);
       if (!hit) return;
       if (d.copy) copyText(mjCard(hit.b.d, hit.b.n));
-      if (d.edit) go('cedit', { id: id, lang: c.lang, text: hit.b.d, notes: hit.b.n });
+      if (d.edit) go('cedit', { id: id, lang: c.lang, text: hit.b.d, notes: hit.b.n, brief: hit.b.b || '' });
       return;
     }
     const tog = t.closest('[data-tog]');
     if (tog) {
       const id = tog.dataset.tog;
       LIB.open[id] = !LIB.open[id];
-      if (!LIB.open[id]) LIB.cache.delete(id);               // 收起就把正文放掉，不在内存里攒
+      if (!LIB.open[id]) { LIB.cache.delete(id); delete LIB.mj[id]; }   // 收起就把正文放掉，不在内存里攒
       paintLib();
     }
   };
@@ -179,7 +185,7 @@ function delCards(ids) {
   });
   if (!items.length) return;
   items.sort((a, b) => b.i - a.i).forEach(o => S.cards.splice(o.i, 1));
-  items.forEach(o => { markDel(o.c); LIB.open[o.c.id] = false; LIB.cache.delete(o.c.id); });   // 留墓碑，否则下一次云端同步会把它们原样长回来
+  items.forEach(o => { markDel(o.c); LIB.open[o.c.id] = false; LIB.cache.delete(o.c.id); recDrop('lib|' + o.c.id); });   // 留墓碑，否则下一次云端同步会把它们原样长回来
   S.trash = { items: items.slice().sort((a, b) => a.i - b.i) };
   saveCards(); paintLib();
   toast('已删除 ' + items.length + ' 张', '撤销', undoDel);
@@ -196,7 +202,7 @@ function undoDel() {
 
 /* edit an existing card's detail */
 VIEWS.cedit = function (d) {
-  const h = deditBody({ text: d.text, lang: d.lang }, 'ctext') + notesBody(d) +
+  const h = deditBody({ text: d.text, lang: d.lang, brief: d.brief, notes: d.notes }, 'ctext') +
     '<div class="spacer"></div>' +
     '<div class="split">' +
     '<button class="btn" onclick="copyText(mjCard(deText(\'ctext\'), notesText()))">复制墨墨格式</button>' +
@@ -212,7 +218,7 @@ function saveEdit() {
   if (c) {
     const now = Date.now();
     c.bv = now; c.ts = now;                     // 正文变了：bv 让别的设备的缓存失效，ts 让索引合并认这一版
-    cbPut(c.id, { d: deText('ctext'), n: notesText(), bv: now }, false);
+    cbPut(c.id, { d: deText('ctext'), n: notesText(), b: briefTextNow(), bv: now }, false);
     LIB.cache.delete(c.id);
     saveCards();
   }
