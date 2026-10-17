@@ -65,7 +65,6 @@ function paintLib() {
       '<div class="top" data-tog="' + c.id + '">' +
       '<div class="fr ' + scriptCls(c.lang) + '">' + esc(c.front) + '</div>' +
       '<div class="side">' +
-      recCtl('lib', c.id, true) +
       (L.tts ? '<button class="ib" data-spk="' + c.id + '" title="发音" aria-label="发音">' + ICON_SPK + '</button>' : '') +
       '<button class="ib" data-last="' + c.id + '" title="移到最后" aria-label="移到最后">' + ICON_END + '</button>' +
       '<button class="ib" data-del="' + c.id + '" title="删除" aria-label="删除">' + ICON_DEL + '</button>' +
@@ -87,7 +86,8 @@ function libBodyHtml(c) {
 }
 /* 展开后的三块：卡片背面（简洁版，旧卡为空）→ 追问详解 → 折叠的墨墨格式 */
 function libDetailHtml(c, b) {
-  return '<div class="lsec" style="margin-top:6px">卡片背面</div>' +
+  return '<div class="row" style="margin:4px 0 2px">' + recCtl('lib', c.id) + '</div>' +
+    '<div class="lsec" style="margin-top:6px">卡片背面</div>' +
     (b.b ? '<div class="lbrief ' + scriptCls(c.lang) + '">' + escp(b.b) + '</div>' : '<div class="hint" style="margin-top:6px">（空）</div>') +
     (b.n ? '<div class="lsec">追问详解</div><div class="rend lrend">' + renderCodes(b.n) + '</div>' : '') +
     '<details class="mjd"' + (LIB.mj[c.id] ? ' open' : '') + ' ontoggle="LIB.mj[\'' + c.id + '\']=this.open">' +

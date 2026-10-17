@@ -463,12 +463,14 @@ function answerFor(body) {
   await expect(() => REC.map.size === 1, '准备替换句子前应有一条录音');
   await pg.evaluate(() => { R.hist = [{ sent: Object.assign({}, cur().sent, { text: 'Nieuwe zin.', tokens: [] }), qa: [], show: false }]; R.idx = 0; paintRead(); });
   await expect(() => REC.map.size === 0, '替换成新句之后，旧句的录音没有被清掉');
-  // 卡片库里也能录；点录音按钮不能把卡片展开；离开卡片库就丢
+  // 卡片库里也能录：按钮在展开区里（收起时行内太挤，不放）；点录音不能把卡片收起；离开卡片库就丢
   await pg.evaluate(() => go('lib')); await pg.waitForTimeout(300);
-  await pg.click('.lc .side [data-rec=start] >> nth=0'); await pg.waitForTimeout(800);
-  await pg.click('.lc .side [data-rec=stop] >> nth=0'); await pg.waitForTimeout(500);
-  await expect(() => Array.from(REC.map.keys()).some(k => k.indexOf('lib|') === 0) && !document.querySelector('.lbody') &&
-    !!document.querySelector('.lc .side [data-rec=play]'), '卡片库里录音后应有播放按钮，且不该展开卡片');
+  await expect(() => !document.querySelector('.lc [data-rec]'), '卡片库收起时行内不该有录音按钮');
+  await pg.click('.lc .fr >> nth=0'); await pg.waitForTimeout(350);
+  await pg.click('.lbody [data-rec=start]'); await pg.waitForTimeout(800);
+  await pg.click('.lbody [data-rec=stop]'); await pg.waitForTimeout(500);
+  await expect(() => Array.from(REC.map.keys()).some(k => k.indexOf('lib|') === 0) && !!document.querySelector('.lbody') &&
+    !!document.querySelector('.lbody [data-rec=play]'), '展开后录音应出现播放按钮，且点录音不该收起卡片');
   await pg.evaluate(() => back()); await pg.waitForTimeout(200);
   await pg.evaluate(() => go('lib')); await pg.waitForTimeout(200);
   await expect(() => REC.map.size === 0, '退出卡片库之后录音应当丢掉');
